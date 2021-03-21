@@ -1,0 +1,35 @@
+{
+  "name": "fire-call-web",
+  "version": "1.0.0",
+  "description": "Data analysis tool for emergency first responder team and resource management based on call data.",
+  "main": "index.js",
+  "dependencies": {
+    "bulma": "^0.9.2",
+    "chalk": "^4.1.0",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "node-fetch": "^2.6.1",
+    "nodemon": "^2.0.7",
+    "prismjs": "^1.23.0",
+    "recursive-readdir": "^2.2.2",
+  },
+  "devDependencies": {
+    "eslint": "^7.22.0",
+    "eslint-config-airbnb-base": "^14.2.1",
+    "eslint-plugin-import": "^2.22.1"
+  },
+  "scripts": {
+    "start": "nodemon server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JCCTVFire/fire-call-web.git"
+  },
+  "author": "Jonah Pool",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/JCCTVFire/fire-call-web/issues"
+  },
+  "homepage": "https://github.com/JCCTVFire/fire-call-web#readme"
+}

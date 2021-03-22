@@ -1,2 +1,2 @@
-# Description
-All web app files go in this directory.
+## Description
+Base directory for the web app. All web app files go in this directory.

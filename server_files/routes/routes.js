@@ -4,7 +4,7 @@ import db from '../database/initDB.js';
 
 const router = express.Router();
 
-router.get('/calls', async (request, response) => {
+router.get('/incidents', async (request, response) => {
   try {
     const all_calls = await db.calls.findAll();
     const reply = all_calls.length > 0 ? {data: all_calls} : {message: 'No results found.'};
@@ -15,7 +15,7 @@ router.get('/calls', async (request, response) => {
   }
 });
 
-router.get('/calls/:call_id', async (request, response) => {
+router.get('/incidents/:incident_id', async (request, response) => {
   try {
     const call = await db.calls.findAll({
       where: {

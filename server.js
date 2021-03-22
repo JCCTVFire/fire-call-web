@@ -1,6 +1,6 @@
 import express from 'express';
-import db from './database/initDB.js';
-import routes from './routes/routes.js';
+import db from './server_files/database/initDB.js';
+import routes from './server_files/routes/routes.js';
 
 // Have you changed your database/config.js values
 

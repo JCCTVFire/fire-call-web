@@ -2,7 +2,7 @@
   "name": "fire-call-web",
   "version": "1.0.0",
   "description": "Data analysis tool for emergency first responder team and resource management based on call data.",
-  "main": "./server_files/server.js",
+  "main": "server.js",
   "type": "module",
   "engines": {
     "node": ">=14.0.0"
@@ -26,7 +26,7 @@
     "eslint-plugin-import": "^2.22.1"
   },
   "scripts": {
-    "start": "nodemon ./server_files/server.js",
+    "start": "nodemon server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

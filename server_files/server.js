@@ -2,6 +2,8 @@ import express from 'express';
 import db from './database/initDB.js';
 import routes from './routes/routes.js';
 
+// Have you changed your database/config.js values
+
 const app = express();
 const PORT = process.env.PORT || 3000;
 

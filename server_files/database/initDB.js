@@ -5,6 +5,8 @@ import modelList from '../models/index.js';
 
 const { DataTypes } = Sequelize;
 
+// Have you changed your database/config.js values?
+
 const env = process.env.NODE_ENV || 'development';
 const config = configOptions[env];
 let sequelizeDB;

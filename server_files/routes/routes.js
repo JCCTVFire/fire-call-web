@@ -4,10 +4,19 @@ import db from '../database/initDB.js';
 
 const router = express.Router();
 
-router.get('/calls', async (request, response) => {
+
+
+// INCIDENTS
+router.get('/incidents', async (request, response) => {
   try {
-    const all_calls = await db.call.findAll();
-    const reply = all_calls.length > 0 ? {data: all_calls} : {message: 'No results found.'};
+    const all_incidents = await db.incidents.findAll({
+      include: [
+        {
+          model: db.calls, 
+        }
+      ]
+    });
+    const reply = all_incidents.length > 0 ? {data: all_incidents} : {message: 'No results found.'};
     response.json(reply);
   } catch (err) {
     console.error(err);
@@ -15,17 +24,49 @@ router.get('/calls', async (request, response) => {
   }
 });
 
-router.get('/calls/:call_id', async (request, response) => {
+router.get('/incidents/:incident_id', async (request, response) => {
   try {
-    const call = await db.call.findAll({
+    const incident = await db.incidents.findAll({
       where: {
-        call_id: request.params.call_id
+        incident_id: request.params.incident_id
       }
     });
-    response.json(call);
+    response.json(incident);
   } catch (err) {
     console.error(err);
     response.error('Server Error!');
+  }
+});
+
+// Gets the unit from an incident
+router.get('incidents/:incident_id/unit', async (request, response) => {
+  try {
+    const units = await db.incidents.findAll({
+      include: {
+
+      }
+    });
+    
+  } catch (err) {
+    console.error(err);
+    response.error('Server Error');
+  }
+});
+
+
+// CALLS
+router.get('/calls')
+
+
+
+router.post('/calls/:call_id', async(request, response) => {
+  try {
+    const call = await db.calls.create({
+
+    });
+  } catch (err) {
+    console.error(err);
+    response.error('Server Error');
   }
 });
 

@@ -34,7 +34,7 @@ export default (database, DataTypes) => {
   );
 
   Incidents.associate = function (db) {
-    Incidents.hasMany(db.calls, {foreignKey: 'call_id'});
+    Incidents.hasOne(db.calls, {foreignKey: 'call_id'});
 
     db.calls.belongsTo(Incidents, {foreignKey: 'call_id'});
 

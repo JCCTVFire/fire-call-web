@@ -1,7 +1,7 @@
 import express from 'express';
 
 import db from '../database/initDB.js';
-
+import Op from 'sequelize';
 const router = express.Router();
 
 
@@ -38,20 +38,91 @@ router.get('/incidents/:incident_id', async (request, response) => {
   }
 });
 
-// Gets the unit from an incident
-router.get('incidents/:incident_id/unit', async (request, response) => {
+router.get('/incidents/on_dates', async (request, response) => {
   try {
-    const units = await db.incidents.findAll({
-      where: { 
-        incident_id: request.params.incident_id
-      },
-      include: dispatch
+    const incidents = await db.incidents.findAll({
+      where: {
+        date: {
+          [Op.between]: [request.body.date_1, request.body.date_2]
+        }
+      }
     });
   } catch (err) {
     console.error(err);
     response.error('Server Error!');
   }
 });
+
+router.post('/incidents', async (request, response) => {
+  try {
+    const newIncident = await db.incidents.create({
+      incident_id:  request.body.incident_id,
+      date: request.body.date,
+      description: request.body.description,
+      postal_code: request.body.postal_code,
+      district_code: request.body.district_code,
+      call_id: request.body.call_id,
+      dispatch_id: request.body.dispatch_id
+    });
+    response.json(newIncident);
+  } catch (err) {
+    console.error(err);
+    response.error('Server Error!');
+  }
+});
+
+router.delete('/incidents/:incident_id', async (request, response) => {
+  try {
+    await db.incidents.destroy({
+      where: {
+        incident_id: request.params.incident_id
+      }
+    });
+    response.send('Successful deletion.');
+  } catch (err) {
+    console.error(err);
+    response.error('Server Error!');
+  }
+});
+
+router.put('/incidents', async (request, response) => {
+  try {
+    await db.incidents.update({
+      date: request.body.date,
+      description: request.body.description,
+      postal_code: request.body.postal_code,
+      district_code: request.body.district
+    },
+    {
+      where: {
+        incident_id: request.body.incident_id
+      }
+    });
+    response.send('Successful update.');
+  } catch (err) {
+    console.error(err);
+    response.error('Server Error!');
+  }
+})
+
+
+// // Gets the unit from an incident
+// router.get('incidents/:incident_id/unit', async (request, response) => {
+//   try {
+//     const units = await db.incidents.findAll({
+//       where: { 
+//         incident_id: request.params.incident_id
+//       },
+//       include: {
+//         dispatch,
+//         calls
+//       }
+//     });
+//   } catch (err) {
+//     console.error(err);
+//     response.error('Server Error!');
+//   }
+// });
 
 
 // CALLS

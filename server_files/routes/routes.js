@@ -49,13 +49,20 @@ router.get('incidents/:incident_id/unit', async (request, response) => {
     
   } catch (err) {
     console.error(err);
-    response.error('Server Error');
+    response.error('Server Error!');
   }
 });
 
 
 // CALLS
-router.get('/calls')
+router.get('/calls', async(request, response) => {
+  try {
+    const calls = await db.calls.findAll();
+  } catch (err) {
+    console.error(err);
+    response.error('Server Error!')
+  }
+});
 
 
 
@@ -66,7 +73,7 @@ router.post('/calls/:call_id', async(request, response) => {
     });
   } catch (err) {
     console.error(err);
-    response.error('Server Error');
+    response.error('Server Error!');
   }
 });
 

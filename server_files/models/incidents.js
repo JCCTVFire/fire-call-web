@@ -24,7 +24,7 @@ export default (database, DataTypes) => {
         type: DataTypes.INTEGER,
         // allowNull: false
       },
-      dispach_id: {
+      dispatch_id: {
         type: DataTypes.INTEGER
       }
     },
@@ -34,17 +34,13 @@ export default (database, DataTypes) => {
   );
 
   Incidents.associate = function (db) {
-    Incidents.hasMany(db.calls, {
-      foreignKey: 'call_id'
-    });
+    Incidents.hasMany(db.calls, {foreignKey: 'call_id'});
 
-    db.calls.belongsTo(Incidents);
+    db.calls.belongsTo(Incidents, {foreignKey: 'call_id'});
 
-    Incidents.hasOne(db.dispatch, {
-      foreignKey: 'dispatch_id'
-    });
+    Incidents.hasOne(db.dispatch, {foreignKey: 'dispatch_id'});
 
-    db.dispatch.belongsTo(Incidents);
+    db.dispatch.belongsTo(Incidents, {foreignKey: 'dispatch_id'});
   }
   return Incidents;
 }

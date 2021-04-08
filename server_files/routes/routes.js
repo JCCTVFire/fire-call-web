@@ -40,13 +40,16 @@ router.get('/incidents/:incident_id', async (request, response) => {
 
 router.get('/incidents/on_dates', async (request, response) => {
   try {
-    const incidents = await db.incidents.findAll({
-      where: {
-        date: {
-          [Op.between]: [request.body.date_1, request.body.date_2]
-        }
-      }
+    const incidents = await db.incidents.findAll();
+
+    const startDate = request.body.startDate;
+    const endDate = request.body.endDate;
+
+    const incident_range = incidents.filter((incident) => {
+      const date = new Date(incident.date);
+      return (date >= startDate && date <= endDate);
     });
+    response.json(incident_range);
   } catch (err) {
     console.error(err);
     response.error('Server Error!');

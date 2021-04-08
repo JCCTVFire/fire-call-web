@@ -4,8 +4,8 @@ async function getDates() {
 
     const date_text = document.getElementById('button1');
     const data = {
-        start_date = new Date('2018-05-08');
-        end_date = new Date('2018-05-10');
+        start_date = new Date('2018-05-08'),
+        end_date = new Date('2018-05-10')
     }
     const endpoint = '/api/incidents/on_dates';
     const response = await fetch (endpoint, body: JSON.stringify(data);

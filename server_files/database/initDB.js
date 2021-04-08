@@ -9,6 +9,7 @@ const { DataTypes } = Sequelize;
 
 const env = process.env.NODE_ENV || 'development';
 const config = configOptions[env];
+
 let sequelizeDB;
 if (config.use_env_variable) {
   sequelizeDB = new Sequelize(process.env[config.use_env_variable], config);
@@ -32,9 +33,9 @@ if (config.use_env_variable) {
 const db = Object.keys(modelList).reduce((collection, modelName) => {
   if (!collection[modelName]) {
     collection[modelName] = modelList[modelName](sequelizeDB, DataTypes);
-    console.log(collection[modelName]);
+    // console.log(collection[modelName]);
   }
-  console.log(modelList[modelName] == collection[modelName]);
+  // console.log(modelList[modelName] == collection[modelName]);
   return collection;
 }, {});
 

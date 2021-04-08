@@ -12,7 +12,7 @@ router.get('/incidents', async (request, response) => {
     const all_incidents = await db.incidents.findAll({
       include: [
         {
-          model: db.calls, 
+          model: db.calls
         }
       ]
     });
@@ -42,11 +42,11 @@ router.get('/incidents/:incident_id', async (request, response) => {
 router.get('incidents/:incident_id/unit', async (request, response) => {
   try {
     const units = await db.incidents.findAll({
-      include: {
-
-      }
+      where: { 
+        incident_id: request.params.incident_id
+      },
+      include: dispatch
     });
-    
   } catch (err) {
     console.error(err);
     response.error('Server Error!');

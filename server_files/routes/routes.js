@@ -24,26 +24,12 @@ router.get('/incidents', async (req, res) => {
   }
 });
 
-router.get('/incidents/:incident_id', async (req, res) => {
-  try {
-    const incident = await db.incidents.findAll({
-      where: {
-        incident_id: req.params.incident_id
-      }
-    });
-    res.json(incident);
-  } catch (err) {
-    console.error(err);
-    res.error('Server Error!');
-  }
-});
-
-router.post('/incidents/on_dates', async (req, res) => {
+router.get('/incidents/on_dates', async (req, res) => {
   try {
     // req.body.startDate req.body.endDate
-    console.log(req.body);
-    const startDate = new Date(req.body.startDate);
-    const endDate = new Date(req.body.startDate);
+    console.log(req.query);
+    const startDate = new Date(req.query.startDate);
+    const endDate = new Date(req.query.endDate);
     const incidents = await db.incidents.findAll({
       where: {
         date: {
@@ -62,6 +48,22 @@ router.post('/incidents/on_dates', async (req, res) => {
     res.error('Server Error!');
   }
 });
+
+router.get('/incidents/:incident_id', async (req, res) => {
+  try {
+    const incident = await db.incidents.findAll({
+      where: {
+        incident_id: req.params.incident_id
+      }
+    });
+    res.json(incident);
+  } catch (err) {
+    console.error(err);
+    res.error('Server Error!');
+  }
+});
+
+
 
 router.post('/incidents/new', async (req, res) => {
   try {

@@ -63,7 +63,7 @@ router.post('/incidents/on_dates', async (req, res) => {
   }
 });
 
-router.post('/incidents', async (req, res) => {
+router.post('/incidents/new', async (req, res) => {
   try {
     const newIncident = await db.incidents.create({
       incident_id:  req.body.incident_id,
@@ -81,7 +81,7 @@ router.post('/incidents', async (req, res) => {
   }
 });
 
-router.delete('/incidents/:incident_id', async (req, res) => {
+router.delete('/incidents/delete/:incident_id', async (req, res) => {
   try {
     console.log(req.body)
     await db.incidents.destroy({
@@ -96,7 +96,7 @@ router.delete('/incidents/:incident_id', async (req, res) => {
   }
 });
 
-router.put('/incidents', async (req, res) => {
+router.put('/incidents/update/:incident_id', async (req, res) => {
   try {
     await db.incidents.update({
       date: req.body.date,
@@ -106,7 +106,7 @@ router.put('/incidents', async (req, res) => {
     },
     {
       where: {
-        incident_id: req.body.incident_id
+        incident_id: req.params.incident_id
       }
     });
     res.send('Successful update.');

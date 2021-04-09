@@ -24,7 +24,7 @@ async function testDelete() {
     }
     console.log(data)
     // const delete_button = document.getElementById('button4');
-    const endpoint = `/api/incidents/${test_record}`;
+    const endpoint = `/api/incidents/delete/${test_record}`;
     const response = await fetch(endpoint, {method: 'DELETE', headers: myHeaders});
     const result =  await response.text();
     return result;
@@ -41,18 +41,18 @@ async function testCreate() {
         dispatch_id: null
     }
     
-    const response = await fetch('api/incidents', { method: 'POST', headers: myHeaders, body: JSON.stringify(data)});
+    const response = await fetch('api/incidents/new', { method: 'POST', headers: myHeaders, body: JSON.stringify(data)});
     const result = await response.json()
     return result;
 }
 
 async function testUpdate() {
+    const test_id = 1821899;
     const data = {
-        incident_id: 1821899,
         description: 'This has been updated.'
     }
     console.log(data, JSON.stringify(data));
-    const response = await fetch('api/incidents', { method: 'PUT', headers: myHeaders, body: JSON.stringify(data)});
+    const response = await fetch(`api/incidents/update/${test_id}`, { method: 'PUT', headers: myHeaders, body: JSON.stringify(data)});
     const result = await response.text();
     return result;
 }

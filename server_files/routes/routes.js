@@ -5,6 +5,26 @@ const Op = sequelize.Op;
 const router = express.Router();
 
 
+function getReply(results) {
+  return results.length > 0 ? {data: results} : {message: 'No results found.'};
+}
+// New route template
+
+router.route('/newRoute')
+  .get(async (req, res) => {
+    res.send('Action not available');
+  })
+  .post(async (req, res) => {
+    res.send('Action not available.');
+  })
+  .put(async (req, res) => {
+    res.send('Action not available.');
+  })
+  .delete(async (req, res) => {
+    res.send('Action unavailable.');
+  });
+
+
 
 // INCIDENTS
 router.route('/incidents')
@@ -42,9 +62,6 @@ router.route('/incidents')
     res.send('Action unavailable.');
   });
   
-  
-
-
 router.get('/incidents/on_dates', async (req, res) => {
   try {
     // req.body.startDate req.body.endDate
@@ -136,51 +153,153 @@ router.route('/incidents/:incident_id')
     }
   });
 
-  
+router.route('/incidents/:incident_id/units')
+  .get(async (req, res) => {
+    try {
+      const hasUnits = await db.incidents_has_units.findAll({
+        where: {
+          incidents_incident_id: req.params.incident_id
+        }
+      });
 
+      const unit_numbers = hasUnits.map((unit) => {
+        return unit.unit_number;
+      });
+      console.log(unit_numbers);
+      const allUnits = await db.units.findAll({
+        where: {
+          unit_number: {
+            [Op.in]: unit_numbers
+          }
+        }
+      });
+      const reply = getReply(allUnits);
+      res.json(reply);
+    } catch (err) {
+      console.error(err);
+      res.send(err);
+    }
+    // res.send('Action not available');
+  })
+  .post(async (req, res) => {
+    res.send('Action not available.');
+  })
+  .put(async (req, res) => {
+    res.send('Action not available.');
+  })
+  .delete(async (req, res) => {
+    res.send('Action unavailable.');
+  });
 
-
-
-// // Gets the unit from an incident
-// router.get('incidents/:incident_id/unit', async (req, res) => {
-//   try {
-//     const units = await db.incidents.findAll({
-//       where: { 
-//         incident_id: req.params.incident_id
-//       },
-//       include: {
-//         dispatch,
-//         calls
-//       }
-//     });
-//   } catch (err) {
-//     console.error(err);
-//     res.error('Server Error!');
-//   }
-// });
-
+router.route('/incidents/:incident_id/dispatch')
+  .get(async (req, res) => {
+    res.send('Action not available');
+  })
+  .post(async (req, res) => {
+    res.send('Action not available.');
+  })
+  .put(async (req, res) => {
+    res.send('Action not available.');
+  })
+  .delete(async (req, res) => {
+    res.send('Action unavailable.');
+  });
 
 // CALLS
-router.get('/calls', async(req, res) => {
-  try {
-    const calls = await db.calls.findAll();
-  } catch (err) {
-    console.error(err);
-    res.error('Server Error!')
-  }
-});
+router.route('/calls')
+  .get(async (req, res) => {
+    try {
+      const calls = await db.calls.findAll();
+      reply = getReply(calls);
+      res.json(reply);
+    } catch (err) {
+      console.error(err);
+      res.error('Server Error!')
+    }
+  })
+  .post(async (req, res) => {
+    res.send('Action not available.');
+  })
+  .put(async (req, res) => {
+    res.send('Action not available.');
+  })
+  .delete(async (req, res) => {
+    res.send('Action unavailable.');
+  });
 
-
+  // router.route('/')
+  // .get(async (req, res) => {
+  //   res.send('Action not available');
+  // })
+  // .post(async (req, res) => {
+  //   res.send('Action not available.');
+  // })
+  // .put(async (req, res) => {
+  //   res.send('Action not available.');
+  // })
+  // .delete(async (req, res) => {
+  //   res.send('Action unavailable.');
+  // });
+  
 
 router.post('/calls/:call_id', async(req, res) => {
   try {
     const call = await db.calls.create({
-
     });
   } catch (err) {
     console.error(err);
     res.error('Server Error!');
   }
 });
+
+// Employees
+router.route('/employees')
+  .get(async (req, res) => {
+    try {
+      const all_employees = await db.employees.findAll();
+      const reply  = all_employees.length > 0 ? {data: all_employees} : {message: 'No results found.'};
+      res.json(reply);
+    } catch (err) {
+      console.error(err);
+      res.send('Server Error!');
+    }
+    // res.send('Action not available');
+  })
+  .post(async (req, res) => {
+    res.send('Action not available.');
+  })
+  .put(async (req, res) => {
+    res.send('Action not available.');
+  })
+  .delete(async (req, res) => {
+    res.send('Action unavailable.');
+  });
+
+
+
+// Custom query
+router.route('/custom')
+  .get(async (req, res) => {
+    try {
+      const custom = await db.sequelizeDB.query(req.body.query, {
+        type: sequelize.QueryTypes.SELECT
+      });
+      req.json(custom);
+    } catch (err) {
+      console.log(err);
+      res.send('Server Error!')
+    }
+  })
+  .post(async (req, res) => {
+    res.send('Action not available.');
+  })
+  .put(async (req, res) => {
+    res.send('Action not available.');
+  })
+  .delete(async (req, res) => {
+    res.send('Action unavailable.');
+  });
+
+
 
 export default router;

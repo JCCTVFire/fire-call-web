@@ -31,7 +31,7 @@ router.route('/incidents')
   .get(async (req, res) => {
     try {
       const all_incidents = await db.incidents.findAll();
-      const reply = all_incidents.length > 0 ? {data: all_incidents} : {message: 'No results found.'};
+      const reply = getRoutes(all_incidents);
       res.json(reply);
     } catch (err) {
       console.error(err);
@@ -52,7 +52,7 @@ router.route('/incidents')
       res.json(newIncident);
     } catch (err) {
       console.error(err);
-      res.error('Server Error!');
+      res.send('Server Error!');
     }
   })
   .put(async (req, res) => {
@@ -61,32 +61,6 @@ router.route('/incidents')
   .delete(async (req, res) => {
     res.send('Action unavailable.');
   });
-  
-router.get('/incidents/on_dates', async (req, res) => {
-  try {
-    // req.body.startDate req.body.endDate
-    console.log(req.query);
-    const startDate = new Date(req.query.startDate);
-    const endDate = new Date(req.query.endDate);
-    const incidents = await db.incidents.findAll({
-      where: {
-        date: {
-          // [Op.placeholder]: ,
-          [Op.between]: [startDate, endDate]
-        }
-      }
-    });
-    console.log(incidents);
-    // const incident_range = incidents.filter((incident) => {
-    //   const date = new Date(incident.date);
-    //   return (date >= startDate && date <= endDate);
-    // });
-    res.json(incidents);
-  } catch (err) {
-    console.error(err);
-    res.error('Server Error!');
-  }
-});
 
 router.route('/incidents/:incident_id')
   .get(async (req, res) => {
@@ -103,21 +77,7 @@ router.route('/incidents/:incident_id')
     }
   })
   .post(async (req, res) => {
-    try {
-      const newIncident = await db.incidents.create({
-        incident_id:  req.params.incident_id,
-        date: req.body.date,
-        description: req.body.description,
-        postal_code: req.body.postal_code,
-        district_code: req.body.district_code,
-        call_id: req.body.call_id,
-        dispatch_id: req.body.dispatch_id
-      });
-      res.json(newIncident);
-    } catch (err) {
-      console.error(err);
-      res.error('Server Error!');
-    }
+    res.send('Action not available.');
   })
   .put(async (req, res) => {
     try {
@@ -153,43 +113,32 @@ router.route('/incidents/:incident_id')
     }
   });
 
-router.route('/incidents/:incident_id/units')
-  .get(async (req, res) => {
-    try {
-      const hasUnits = await db.incidents_has_units.findAll({
-        where: {
-          incidents_incident_id: req.params.incident_id
+router.get('/incidents/:incident_id/unitsResponding', async (req, res) => {
+  try {
+    const hasUnits = await db.incidents_has_units.findAll({
+      where: {
+        incidents_incident_id: req.params.incident_id
+      }
+    });
+    const unit_numbers = hasUnits.map((unit) => {
+      return unit.unit_number;
+    });
+    console.log(unit_numbers);
+    const allUnits = await db.units.findAll({
+      where: {
+        unit_number: {
+          [Op.in]: unit_numbers
         }
-      });
-
-      const unit_numbers = hasUnits.map((unit) => {
-        return unit.unit_number;
-      });
-      console.log(unit_numbers);
-      const allUnits = await db.units.findAll({
-        where: {
-          unit_number: {
-            [Op.in]: unit_numbers
-          }
-        }
-      });
-      const reply = getReply(allUnits);
-      res.json(reply);
-    } catch (err) {
-      console.error(err);
-      res.send(err);
-    }
+      }
+    });
+    const reply = getReply(allUnits);
+    res.json(reply);
+  } catch (err) {
+    console.error(err);
+    res.send(err);
+  }
     // res.send('Action not available');
-  })
-  .post(async (req, res) => {
-    res.send('Action not available.');
-  })
-  .put(async (req, res) => {
-    res.send('Action not available.');
-  })
-  .delete(async (req, res) => {
-    res.send('Action unavailable.');
-  });
+});
 
 router.route('/incidents/:incident_id/dispatch')
   .get(async (req, res) => {
@@ -275,6 +224,20 @@ router.route('/employees')
     res.send('Action unavailable.');
   });
 
+// Stations
+router.route('/stations')
+  .get(async (req, res) => {
+
+  })
+  .post(async (req, res) => {
+    res.send('Action not available.');
+  })
+  .put(async (req, res) => {
+    res.send('Action not available.');
+  })
+  .delete(async (req, res) => {
+    res.send('Action unavailable.');
+  });
 
 
 // Custom query
@@ -300,6 +263,4 @@ router.route('/custom')
     res.send('Action unavailable.');
   });
 
-
-
-export default router;
+  export default router;

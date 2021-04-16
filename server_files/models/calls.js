@@ -1,6 +1,6 @@
 export default (database, DataTypes) => {
-  const calls = database.define(
-    "calls",
+  const Calls = database.define(
+    'calls',
     {
       call_id: {
         type: DataTypes.INTEGER,
@@ -8,18 +8,23 @@ export default (database, DataTypes) => {
         primaryKey: true
       },
       call_type: {
-        type: DataTypes.STRING(45)
+        type: DataTypes.STRING
       },
       call_class: {
-        type: DataTypes.STRING(45)
+        type: DataTypes.STRING
       },
       call_time: {
         type: DataTypes.TIME
       }
     },
     {
-      freezeTableName: true, timestamps: false
+      freezeTableName: true, 
+      timestamps: false,
     }
   );
-  return calls;
+
+  // Calls.associate = function (db) {
+  //   Calls.belongsTo(db.incidents);
+  // }; 
+  return Calls;
 }

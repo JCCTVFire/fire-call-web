@@ -6,10 +6,14 @@ import dispatch from './dispatch.js';
 import incidents from './incidents.js'; // Parent of calls and dispatch. Must be defined first.
 import jurisdiction from './jurisdiction.js';
 
+import stations from './stations.js';
+
+
 
 export default {
     calls,
     dispatch,
     incidents, 
-    jurisdiction
+    jurisdiction,
+    stations
 }

@@ -139,6 +139,69 @@ router.get('/incidents/:incident_id/unitsResponding', async (req, res) => {
     res.send(err);
   }
 });
+// STATIONS
+router.route('/stations')
+  .get(async (req, res) => {
+    try {
+      const stations = await db.stations.findAll();
+    } catch (err) {
+      console.error(err);
+      res.send('Server Error!');
+    }
+  })
+  .post(async (req, res) => {
+    res.send('Action not available.');
+  })
+  .put(async (req, res) => {
+    res.send('Action not available.');
+  })
+  .delete(async (req, res) => {
+    res.send('Action unavailable.');
+  });
+  
+// JURISDICTION
+router.route('/jurisdiction')
+  .get(async (req, res) => {
+    try {
+      const jurisdiction = await db.jurisdiction.findAll();
+    } catch (err) {
+      console.error(err);
+      res.send('Server Error!');
+    }
+  })
+  .post(async (req, res) => {
+    res.send('Action not available.');
+  })
+  .put(async (req, res) => {
+    res.send('Action not available.');
+  })
+  .delete(async (req, res) => {
+    res.send('Action not available.');
+  });
+
+
+// // Gets the unit from an incident
+// router.get('incidents/:incident_id/unit', async (req, res) => {
+//   try {
+//     const units = await db.incidents.findAll({
+//       where: { 
+//         incident_id: req.params.incident_id
+//       },
+//       include: {
+//         dispatch,
+//         calls
+//       }
+//     });
+//   } catch (err) {
+//     console.error(err);
+//     res.error('Server Error!');
+//   }
+// });
+
+
+// CALLS
+router.get('/calls', async(req, res) => {
+
 
 router.route('/incidents/:incident_id/dispatch')
   .get(async (req, res) => {
@@ -224,5 +287,26 @@ router.route('/custom')
   .delete(async (req, res) => {
     res.send('Action unavailable.');
   });
+
+// EMPLOYEES
+router.route('/employees')
+  .get(async (req, res) => {
+    try {
+      const employees = await db.employees.findAll();
+    } catch (err) {
+      console.error(err);
+      res.send('Server Error!');
+    }
+  })
+  .post(async (req, res) => {
+    res.send('Action not available.');
+  })
+  .put(async (req, res) => {
+    res.send('Action not available.');
+  })
+  .delete(async (req, res) => {
+    res.send('Action unavailable.');
+  });
+
 
 export default router;

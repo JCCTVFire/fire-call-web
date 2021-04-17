@@ -144,6 +144,8 @@ router.route('/stations')
   .get(async (req, res) => {
     try {
       const stations = await db.stations.findAll();
+      const reply = getReply(stations);
+      res.json(reply);
     } catch (err) {
       console.error(err);
       res.send('Server Error!');

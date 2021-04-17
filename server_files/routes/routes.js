@@ -224,6 +224,8 @@ router.route('/employees')
 .get(async (req, res) => {
   try {
     const employees = await db.employees.findAll();
+    const reply = getReply(employees);
+    res.json(reply);
   } catch (err) {
     console.error(err);
     res.send('Server Error!');

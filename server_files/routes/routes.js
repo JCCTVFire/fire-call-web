@@ -138,23 +138,23 @@ router.route('/incidents/:incident_id')
 
   // STATIONS
   router.route('/stations')
-  .get(async (req, res) => {
-    try {
-      const stations = await db.stations.findAll();
-    } catch (err) {
-      console.error(err);
-      res.send('Server Error!');
-    }
-  })
-  .post(async (req, res) => {
-    res.send('Action not available.');
-  })
-  .put(async (req, res) => {
-    res.send('Action not available.');
-  })
-  .delete(async (req, res) => {
-    res.send('Action unavailable.');
-  });
+    .get(async (req, res) => {
+      try {
+        const stations = await db.stations.findAll();
+      } catch (err) {
+        console.error(err);
+        res.send('Server Error!');
+      }
+    })
+    .post(async (req, res) => {
+      res.send('Action not available.');
+    })
+    .put(async (req, res) => {
+      res.send('Action not available.');
+    })
+    .delete(async (req, res) => {
+      res.send('Action unavailable.');
+    });
 
 
 

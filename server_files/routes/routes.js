@@ -202,7 +202,24 @@ router.route('/jurisdiction')
 
 
 // CALLS
-router.get('/calls', async(req, res) => {
+router.route('/calls')
+  .get(async (req, res) => {
+    try {
+      const all_calls = await db.calls.findAll();
+    } catch (err) {
+      console.error(err);
+      res.send('Server Error!');
+    }
+  })
+  .post(async (req, res) => {
+    res.send('Action not available.');
+  })
+  .put(async (req, res) => {
+    res.send('Action not available.');
+  })
+  .delete(async (req, res) => {
+    res.send('Action not available.');
+  });
 
 
 router.route('/incidents/:incident_id/dispatch')

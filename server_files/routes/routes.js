@@ -219,4 +219,25 @@ router.post('/calls/:call_id', async(req, res) => {
   }
 });
 
+// EMPLOYEES
+router.route('/employees')
+.get(async (req, res) => {
+  try {
+    const employees = await db.employees.findAll();
+  } catch (err) {
+    console.error(err);
+    res.send('Server Error!');
+  }
+})
+.post(async (req, res) => {
+  res.send('Action not available.');
+})
+.put(async (req, res) => {
+  res.send('Action not available.');
+})
+.delete(async (req, res) => {
+  res.send('Action unavailable.');
+});
+
+
 export default router;

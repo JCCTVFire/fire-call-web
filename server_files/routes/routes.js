@@ -156,7 +156,25 @@ router.route('/incidents/:incident_id')
     res.send('Action unavailable.');
   });
 
-
+// JURISDICTION
+router.route('/jurisdiction')
+.get(async (req, res) => {
+  try {
+    const jurisdiction = await db.jurisdiction.findAll();
+  } catch (err) {
+    console.error(err);
+    res.send('Server Error!');
+  }
+})
+.post(async (req, res) => {
+  res.send('Action not available.');
+})
+.put(async (req, res) => {
+  res.send('Action not available.');
+})
+.delete(async (req, res) => {
+  res.send('Action not available.');
+});
 
 
 // // Gets the unit from an incident

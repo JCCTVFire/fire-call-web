@@ -7,6 +7,7 @@ import incidents from './incidents.js'; // Parent of calls and dispatch. Must be
 import jurisdiction from './jurisdiction.js';
 
 import stations from './stations.js';
+import employees from './employees';
 
 
 
@@ -15,5 +16,6 @@ export default {
     dispatch,
     incidents, 
     jurisdiction,
-    stations
+    stations,
+    employees
 }

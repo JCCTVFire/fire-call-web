@@ -241,7 +241,7 @@ router.route('/calls')
   .get(async (req, res) => {
     try {
       const calls = await db.calls.findAll();
-      reply = getReply(calls);
+      const reply = getReply(calls);
       res.json(reply);
     } catch (err) {
       console.error(err);

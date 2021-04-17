@@ -8,14 +8,17 @@ import jurisdiction from './jurisdiction.js';
 
 import stations from './stations.js';
 import employees from './employees';
+import units from './units.js'
 
-
+import incidents_has_units from './incidentsHasUnits.js'
 
 export default {
     calls,
     dispatch,
     incidents, 
     jurisdiction,
+    units,
+    incidents_has_units,
     stations,
     employees
 }

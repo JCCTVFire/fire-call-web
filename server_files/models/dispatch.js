@@ -14,23 +14,19 @@ export default (database, DataTypes) => {
         type: DataTypes.TIME
       },
       response_time: {
-        type: DataTypes.TIME
+        type: DataTypes.DECIMAL
       },
       arrival_unit: {
-        type: DataTypes.INTEGER
+        type: DataTypes.STRING
       },
       cleared_time: {
         type: DataTypes.TIME
       }
     },
     {
-      freezeTableName: true, timestamp: false
+      freezeTableName: true, timestamps: false
     }
   );
 
-  // Dispatch.associate = function (db) {
-  //   Dispatch.belongsTo(db.incidents);
-  //   // dispatch.hasMany(models.units, { foreignKey: 'arrival_unit' });
-  // };
   return Dispatch;
 }

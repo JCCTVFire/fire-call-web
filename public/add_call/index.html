@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Add Record</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css">
+  </head>
+  <body> 
+    <h1>Create Record</h1>
+
+    <div class="field">
+      <label class="label">Call ID</label>
+      <div class="control">
+        <input class="input" style="width: 450px;" type="text">
+      </div>
+    </div>
+
+    <div class="field">
+      <label class="label mt-5">Call Type</label>
+      <div class="control">
+        <input class="input" style="width: 450px;" type="text">
+      </div>
+    </div>
+
+    <div class="field">
+      <label class="label">Call Class</label>
+      <div class="control">
+        <div class="select">
+          <select>
+            <option>Fire</option>
+            <option>HazMat</option>
+            <option>Medical</option>
+            <option>Rescue</option>
+            <option>Other</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <div class="field is-grouped">
+      <div class="control">
+        <button class="button is-link mt-2">Submit</button>
+      </div>
+    </div>  
+  </body>

@@ -1,15 +1,14 @@
-
 export default (database, DataTypes) => {
-    const Jurisdiction = database.define(
-      'jurisdiction',
+    const Unit_Class = database.define(
+      'unit_class',
       {
-        jurisdiction_id: {
+        unit_class_id: {
           type: DataTypes.INTEGER,
           allowNull: false,
           primaryKey: true
         },
-        jurisdiction_name: {
-          type: DataTypes.STRING,
+        unit_class_name: {
+          type: DataTypes.STRING
         }
       },
       {
@@ -18,5 +17,9 @@ export default (database, DataTypes) => {
       }
     );
   
-    return Jurisdiction;
+    // Units.associate = function (db) {
+    //   Units.hasMany()
+    // }
+
+    return Unit_Class;
   }

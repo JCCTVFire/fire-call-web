@@ -47,7 +47,26 @@
                 <h1 class="title">Home</h1>
             </section>
 
-            
+            <form name="userSearch" id="search" class="field">
+                <div id="control" name="control" class="control">
+                    <label for="searchbox"></label>
+                  <input class="input" name="searchbox" id="searchbox" type="text" placeholder="Find Fire Stations">
+                  <button type="submit" id="submit" name="submit" title="Submit">Submit</button>
+                </div>
+            </form>
+          
+            <div id="suggestions-list" name="suggestions-list" class="suggestions-list"> 
+              <ul id="suggestions" name="suggestions" class="suggestions">
+                    <!-- List items appear here -->
+              </ul>       
+            </div>
+              
+
+            <div class="column">
+              <div id="mapid"></div>
+            </div>
+
+            <script src="script.js"></script>            
         </div>
     </body>
 </html>

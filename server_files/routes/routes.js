@@ -317,7 +317,7 @@ router.route('/search/mapVis')
         [Op.or]: [
           {
             call_type: {
-              [Op.startsWith]: `${req.query.queryText} 00:00:00`
+              [Op.startsWith]: req.query.queryText
             } 
           },
           {
@@ -343,7 +343,7 @@ router.route('/search/mapVis')
       })
     }
     console.log(`${req.query.endDate} 23:59:59`)
-    const startDate = Date.parse(`${req.query.startDate}T00:00:00-00:00`, );
+    const startDate = Date.parse(`${req.query.startDate}T00:00:00-00:00`);
     const endDate = Date.parse(`${req.query.endDate}T23:59:59-00:00`);
     const matchIncidents = await db.incidents.findAll({
       where: {

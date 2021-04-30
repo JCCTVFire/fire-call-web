@@ -6,7 +6,19 @@ const router = express.Router();
 
 
 function getReply(results) {
-  return results.length > 0 ? {data: results} : {message: 'No results found.'};
+  try {
+    return results.length > 0 && typeof results[0] === 'object' ? {data: results} : {message: 'No results found.'};
+  } catch (err) {
+    if (typeof results[0] === 'undefined') {
+      return {message: 'No results found. (In catch.)'}
+    } 
+    if (typeof results[0] === 'object') {
+      entries(results).forEach((key, value) => {
+        value.length > 0 ? `{${key}: ${value}}` : {message: 'No results found.'};
+      });
+    } else {}
+  }
+  
 }
 // New route template
 
@@ -115,24 +127,21 @@ router.route('/incidents/:incident_id')
   });
 
 // Gets the unit from an incident
-router.get('/incidents/:incident_id/unitsResponding', async (req, res) => {
+router.get('/incidents/:incident_id/unit', async (req, res) => {
   try {
-    const hasUnits = await db.incidents_has_units.findAll({
+    const getUnit = await db.incidents.findAll({
       where: {
-        incidents_incident_id: req.params.incident_id
+        incident_id: req.params.incident_id
       }
-    });
-    const unit_ids = hasUnits.map((unit) => {
-      return unit.unit_id;
-    });
-    console.log(unit_numbers);
+    });    
+    console.log(getUnit);
+    
     const allUnits = await db.units.findAll({
       where: {
-        unit_id: {
-          [Op.in]: unit_ids
-        }
+        unit_id: getUnit[0].dataValues.unit_id
       }
     });
+
     const reply = getReply(allUnits);
     res.json(reply);
   } catch (err) {
@@ -140,6 +149,44 @@ router.get('/incidents/:incident_id/unitsResponding', async (req, res) => {
     res.send(err);
   }
 });
+
+//Get calls from an incident
+router.get('/incidents/:incident_id/calls', async (req, res) => {
+  try {
+    const getIncidents = await db.incidents.findAll({
+      where: {
+        incident_id: req.params.incident_id
+      }
+    });    
+    
+    const allCalls = await db.calls.findAll({
+      where: {
+        call_id: getIncidents[0].dataValues.call_id
+      }
+    });
+
+    const reply = getReply(allCalls);
+    res.json(reply);
+  }
+   catch (err) {
+     console.error(err);
+     res.send(error);
+   }
+});
+
+router.route('/incidents/:incident_id/dispatch')
+  .get(async (req, res) => {
+    res.send('Action not available');
+  })
+  .post(async (req, res) => {
+    res.send('Action not available.');
+  })
+  .put(async (req, res) => {
+    res.send('Action not available.');
+  })
+  .delete(async (req, res) => {
+    res.send('Action unavailable.');
+  });
 
 // STATIONS
 router.route('/stations')
@@ -185,19 +232,7 @@ router.route('/jurisdiction')
     res.send('Action not available.');
   });
 
-router.route('/incidents/:incident_id/dispatch')
-  .get(async (req, res) => {
-    res.send('Action not available');
-  })
-  .post(async (req, res) => {
-    res.send('Action not available.');
-  })
-  .put(async (req, res) => {
-    res.send('Action not available.');
-  })
-  .delete(async (req, res) => {
-    res.send('Action unavailable.');
-  });
+
 
 // LOCATION
 router.route('locations')
@@ -320,6 +355,87 @@ router.route('/dispatch')
   .delete(async (req, res) => {
     res.send('Action unavailable.');
   });
+
+
+router.route('/search/mapVis')
+.get(async (req, res) => {
+  try {
+    // console.log(req)
+    let replyData = []
+    const matchCalls = await db.calls.findAll({
+      where: {
+        [Op.or]: [
+          {
+            call_type: {
+              [Op.startsWith]: req.query.queryText
+            } 
+          },
+          {
+            call_class: {
+              [Op.startsWith]: req.query.queryText
+            }
+          }
+        ]
+      }
+    });
+    let callsToIncidents;
+    if (matchCalls !== 'undefined') {
+      const call_ids = matchCalls.map((call) => {
+        // console.log(call.dataValues.call_id);
+        return call.dataValues.call_id;
+      });
+      callsToIncidents = await db.incidents.findAll({
+        where: {
+          call_id: {
+            [Op.in]: call_ids
+          }
+        }
+      })
+    }
+    
+    console.log(`${req.query.endDate} 23:59:59`)
+    const startDate = Date.parse(`${req.query.startDate}T00:00:00-00:00`);
+    const endDate = Date.parse(`${req.query.endDate}T23:59:59-00:00`);
+
+    const matchIncidents = await db.incidents.findAll({
+      where: {
+        [Op.and]: [{
+          [Op.or]: [
+            { description: {
+              [Op.startsWith]: req.query.queryText
+            } },
+            { postal_code: {
+              [Op.startsWith]: req.query.queryText
+            } },
+          ]},
+          {
+            date: {
+              [Op.between]: [startDate, endDate]
+            }
+          }
+      ]}
+    });
+    console.log(matchIncidents);
+    const incidentData = matchIncidents + callsToIncidents;
+    // console.log(incidentData);
+    replyData += [{'incidents': incidentData}];
+    // console.log(replyData);
+    const reply = getReply(replyData);
+    res.json(reply);
+  } catch (err) {
+    console.error(err);
+    res.send('Server Error!');
+  }
+})
+.post(async (req, res) => {
+  res.send('Action not available.');
+})
+.put(async (req, res) => {
+  res.send('Action not available.');
+})
+.delete(async (req, res) => {
+  res.send('Action unavailable.');
+});
 
 
 export default router;

@@ -12,9 +12,6 @@ export default (database, DataTypes) => {
       },
       unit_class_name: {
         type: DataTypes.STRING
-      },
-      unit_class_unit_class_id: {
-        type: DataTypes.INTEGER
       }
     },
     {
@@ -23,9 +20,5 @@ export default (database, DataTypes) => {
     }
   );
 
-  Units.associate = function (db) {
-    Units.belongsToMany(db.incidents, {through: db.incidents_has_units});
-    db.incidents.belongsToMany(Units, {through: db.incidents_has_units});
-  }
   return Units;
 }

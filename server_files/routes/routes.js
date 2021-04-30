@@ -129,25 +129,49 @@ router.route('/incidents/:incident_id')
 // Gets the unit from an incident
 router.get('/incidents/:incident_id/unit', async (req, res) => {
   try {
-    const hasUnits = await db.incidents_has_units.findAll({
+    const getUnit = await db.incidents.findAll({
       where: {
-        incidents_incident_id: req.params.incident_id
+        incident_id: req.params.incident_id
       }
-    });
-    console.log(hasUnits);
-    const match_unit_id = hasUnits[0].dataValues.units_unit_id;
-    console.log(unit_ids);
+    });    
+    console.log(getUnit);
+    
     const allUnits = await db.units.findAll({
       where: {
-        unit_id: match_unit_id
+        unit_id: getUnit[0].dataValues.unit_id
       }
     });
+
     const reply = getReply(allUnits);
     res.json(reply);
   } catch (err) {
     console.error(err);
     res.send(err);
   }
+});
+
+//Get calls from an incident
+router.get('/incidents/:incident_id/calls', async (req, res) => {
+  try {
+    const getIncidents = await db.incidents.findAll({
+      where: {
+        incident_id: req.params.incident_id
+      }
+    });    
+    
+    const allCalls = await db.calls.findAll({
+      where: {
+        call_id: getIncidents[0].dataValues.call_id
+      }
+    });
+
+    const reply = getReply(allCalls);
+    res.json(reply);
+  }
+   catch (err) {
+     console.error(err);
+     res.send(error);
+   }
 });
 
 router.route('/incidents/:incident_id/dispatch')

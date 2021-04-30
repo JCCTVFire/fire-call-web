@@ -2,7 +2,7 @@ export default (database, DataTypes) => {
     const Locations = database.define(
       'locations',
       {
-        location_id: {
+        locations_id: {
           type: DataTypes.INTEGER,
           allowNull: false,
           primaryKey: true
@@ -14,7 +14,7 @@ export default (database, DataTypes) => {
           type: DataTypes.DECIMAL
         },
         incidents_incident_id: {
-          type: DataTypes.INT
+          type: DataTypes.INTEGER
         }
       },
       {
@@ -24,8 +24,8 @@ export default (database, DataTypes) => {
     );
   
     Locations.associate = function (db) {
-      Locations.hasOne(db.incidents);
-      db.incidents.belongsTo(Locations);
+      Locations.hasOne(db.incidents, {foreignKey: 'incident_id'});
+      db.incidents.belongsTo(Locations, {foreignKey: 'incident_id'});
     }; 
-    return Calls;
+    return Locations;
   }

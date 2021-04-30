@@ -23,7 +23,7 @@ export default (database, DataTypes) => {
     }
   );
 
-  Units.associate = function () {
+  Units.associate = function (db) {
     Units.belongsToMany(db.incidents, {through: db.incidents_has_units});
     db.incidents.belongsToMany(Units, {through: db.incidents_has_units});
   }

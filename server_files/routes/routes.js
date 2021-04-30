@@ -168,6 +168,8 @@ router.route('/jurisdiction')
   .get(async (req, res) => {
     try {
       const jurisdiction = await db.jurisdiction.findAll();
+      const reply = getReply(jurisdiction);
+      res.json(reply)
     } catch (err) {
       console.error(err);
       res.send('Server Error!');
@@ -201,10 +203,9 @@ router.route('/incidents/:incident_id/dispatch')
 router.route('locations')
   .get(async (req, res) => {
     try {
-      const calls = await db.locations.findAll();
+      const locations = await db.locations.findAll();
       const reply = getReply(locations);
       res.json(reply);
-      
     } catch (err) {
       console.error(err);
       res.error('Server Error!')

@@ -1,4 +1,3 @@
-
 export default (database, DataTypes) => {
     const Jurisdiction = database.define(
       'jurisdiction',

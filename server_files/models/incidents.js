@@ -40,12 +40,13 @@ export default (database, DataTypes) => {
 
   Incidents.associate = function (db) {
     Incidents.hasOne(db.calls, {foreignKey: 'call_id'});
-
     db.calls.belongsTo(Incidents, {foreignKey: 'call_id'});
 
     Incidents.hasOne(db.dispatch, {foreignKey: 'dispatch_id'});
-
     db.dispatch.belongsTo(Incidents, {foreignKey: 'dispatch_id'});
+
+    Incidents.hasOne(db.units, {foreignKey: 'unit_id'});
+    db.units.belongsTo(Incidents, {foreignKey: 'unit_id'});
   }
   return Incidents;
 }

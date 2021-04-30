@@ -22,9 +22,6 @@ export default (database, DataTypes) => {
       timestamps: false,
     }
   );
-
-  // Calls.associate = function (db) {
-  //   Calls.belongsTo(db.incidents);
-  // }; 
+  
   return Calls;
 }

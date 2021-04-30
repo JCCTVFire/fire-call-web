@@ -8,9 +8,11 @@ import jurisdiction from './jurisdiction.js';
 
 import stations from './stations.js';
 import employees from './employees.js';
-import units from './units.js'
+import units from './units.js';
 
-import incidents_has_units from './incidentsHasUnits.js'
+import incidents_has_units from './incidentsHasUnits.js';
+
+import locations from './locations.js';
 
 export default {
     calls,
@@ -20,5 +22,6 @@ export default {
     units,
     incidents_has_units,
     stations,
-    employees
+    employees,
+    locations
 }

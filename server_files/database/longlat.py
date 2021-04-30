@@ -2,6 +2,7 @@ import random
 import csv
 import pandas as pd
 import requests
+import numpy as np
 
 # Form endoints for table requests
 endpoint = 'http://localhost:3000/api'
@@ -27,19 +28,26 @@ dispatch = dispatch_raw['data']
 d_df = pd.DataFrame.from_records(dispatch)
 
 # Generate random lat and long data.
+ids = []
 x_coord = []
 y_coord = []
+incidents_incident_id = []
 
-number_len = range(0,10000)
+number_len = range(0,len(i_df.incident_id))
 for n in number_len: 
+    this_id = n + 14000
     num1 = random.uniform(38.845323,38.891033)
     num2 = random.uniform(-77.065005,-77.113044)
+    incident_id  = i_df.incident_id[n]
+    
+    ids.append(this_id)
     x_coord.append(num1)
     y_coord.append(num2)
+    incidents_incident_id.append(incident_id)
+    
+headers = ['locations_id', 'lat', 'long', 'incidents_incident_id']
 
-headers = ['lat', 'long']
-
-lat_long_df = pd.DataFrame({'lat': x_coord, 'long': y_coord}, columns = headers)
+lat_long_df = pd.DataFrame({'locations_id': ids, 'lat': x_coord, 'long': y_coord, 'incidents_incident_id': incidents_incident_id}, columns = headers)
 print(lat_long_df)
 
 # old_df = pd.read_csv('longlat.csv')

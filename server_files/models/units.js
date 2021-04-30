@@ -2,10 +2,13 @@ export default (database, DataTypes) => {
   const Units = database.define(
     'units',
     {
-      unit_number: {
+      unit_id: {
         type: DataTypes.INTEGER,
         allowNull: false,
         primaryKey: true
+      },
+      unit_number: {
+        type: DataTypes.INTEGER,
       },
       unit_class_name: {
         type: DataTypes.STRING
@@ -20,8 +23,9 @@ export default (database, DataTypes) => {
     }
   );
 
-  // Units.associate = function (db) {
-  //   Units.hasMany()
-  // }
+  Units.associate = function () {
+    Units.belongsToMany(db.incidents, {through: db.incidents_has_units});
+    db.incidents.belongsToMany(Units, {through: db.incidents_has_units});
+  }
   return Units;
 }

@@ -122,14 +122,14 @@ router.get('/incidents/:incident_id/unitsResponding', async (req, res) => {
         incidents_incident_id: req.params.incident_id
       }
     });
-    const unit_numbers = hasUnits.map((unit) => {
-      return unit.unit_number;
+    const unit_ids = hasUnits.map((unit) => {
+      return unit.unit_id;
     });
     console.log(unit_numbers);
     const allUnits = await db.units.findAll({
       where: {
-        unit_number: {
-          [Op.in]: unit_numbers
+        unit_id: {
+          [Op.in]: unit_ids
         }
       }
     });
@@ -274,5 +274,27 @@ router.route('/employees')
   .delete(async (req, res) => {
     res.send('Action unavailable.');
   });
+
+router.route('/dispatch')
+  .get(async (req, res) => {
+    try {
+      const dispatch = await db.dispatch.findAll();
+      const reply = getReply(dispatch);
+      res.json(reply);
+    } catch (err) {
+      console.error(err);
+      res.send('Server Error!');
+    }
+  })
+  .post(async (req, res) => {
+    res.send('Action not available.');
+  })
+  .put(async (req, res) => {
+    res.send('Action not available.');
+  })
+  .delete(async (req, res) => {
+    res.send('Action unavailable.');
+  });
+
 
 export default router;

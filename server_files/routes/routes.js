@@ -141,28 +141,6 @@ router.get('/incidents/:incident_id/unitsResponding', async (req, res) => {
   }
 });
 
-// DISPATCH
-router.route('/dispatch')
-  .get(async (req, res) => {
-    try {
-      const allDispatch = await db.dispatch.findAll();
-      const reply = getReply(allDispatch);
-      res.json(reply);
-    } catch (err) {
-      console.error(err);
-      res.send(err);
-    }
-  })
-  .post(async (req, res) => {
-    res.send('Action not available.');
-  })
-  .put(async (req, res) => {
-    res.send('Action not available.');
-  })
-  .delete(async (req, res) => {
-    res.send('Action unavailable.');
-  });  
-
 // STATIONS
 router.route('/stations')
   .get(async (req, res) => {

@@ -114,6 +114,7 @@ router.route('/incidents/:incident_id')
     }
   });
 
+// Gets the unit from an incident
 router.get('/incidents/:incident_id/unitsResponding', async (req, res) => {
   try {
     const hasUnits = await db.incidents_has_units.findAll({
@@ -139,6 +140,7 @@ router.get('/incidents/:incident_id/unitsResponding', async (req, res) => {
     res.send(err);
   }
 });
+
 // STATIONS
 router.route('/stations')
   .get(async (req, res) => {
@@ -181,26 +183,6 @@ router.route('/jurisdiction')
     res.send('Action not available.');
   });
 
-
-// // Gets the unit from an incident
-// router.get('incidents/:incident_id/unit', async (req, res) => {
-//   try {
-//     const units = await db.incidents.findAll({
-//       where: { 
-//         incident_id: req.params.incident_id
-//       },
-//       include: {
-//         dispatch,
-//         calls
-//       }
-//     });
-//   } catch (err) {
-//     console.error(err);
-//     res.error('Server Error!');
-//   }
-// });
-
-
 router.route('/incidents/:incident_id/dispatch')
   .get(async (req, res) => {
     res.send('Action not available');
@@ -236,21 +218,6 @@ router.route('/calls')
   .delete(async (req, res) => {
     res.send('Action unavailable.');
   });
-
-  // router.route('/')
-  // .get(async (req, res) => {
-  //   res.send('Action not available');
-  // })
-  // .post(async (req, res) => {
-  //   res.send('Action not available.');
-  // })
-  // .put(async (req, res) => {
-  //   res.send('Action not available.');
-  // })
-  // .delete(async (req, res) => {
-  //   res.send('Action unavailable.');
-  // });
-  
 
 router.post('/calls/:call_id', async(req, res) => {
   try {
@@ -307,6 +274,5 @@ router.route('/employees')
   .delete(async (req, res) => {
     res.send('Action unavailable.');
   });
-
 
 export default router;

@@ -84,6 +84,7 @@ function mapInit() {
       markers = [];
   
       evt.preventDefault();
+
       const matchArray = findMatches(restaurants);
   
       matchArray.forEach((place) => {
@@ -112,5 +113,4 @@ function mapInit() {
     const map = mapInit();
     await dataHandler(map);
   }
-  
-  window.onload = windowActions;
+window.onload = windowActions;

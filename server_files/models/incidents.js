@@ -22,10 +22,15 @@ export default (database, DataTypes) => {
       },
       call_id: {
         type: DataTypes.INTEGER,
-        // allowNull: false
+        allowNull: false
       },
       dispatch_id: {
-        type: DataTypes.INTEGER
+        type: DataTypes.INTEGER,
+        allowNull: false
+      },
+      unit_id: {
+        type: DataTypes.INTEGER,
+        allowNull: false
       }
     },
     {

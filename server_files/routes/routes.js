@@ -150,6 +150,20 @@ router.get('/incidents/:incident_id/unit', async (req, res) => {
   }
 });
 
+router.route('/incidents/:incident_id/dispatch')
+  .get(async (req, res) => {
+    res.send('Action not available');
+  })
+  .post(async (req, res) => {
+    res.send('Action not available.');
+  })
+  .put(async (req, res) => {
+    res.send('Action not available.');
+  })
+  .delete(async (req, res) => {
+    res.send('Action unavailable.');
+  });
+
 // STATIONS
 router.route('/stations')
   .get(async (req, res) => {
@@ -193,19 +207,7 @@ router.route('/jurisdiction')
     res.send('Action not available.');
   });
 
-router.route('/incidents/:incident_id/dispatch')
-  .get(async (req, res) => {
-    res.send('Action not available');
-  })
-  .post(async (req, res) => {
-    res.send('Action not available.');
-  })
-  .put(async (req, res) => {
-    res.send('Action not available.');
-  })
-  .delete(async (req, res) => {
-    res.send('Action unavailable.');
-  });
+
 
 // CALLS
 router.route('/calls')
@@ -342,9 +344,11 @@ router.route('/search/mapVis')
         }
       })
     }
+    
     console.log(`${req.query.endDate} 23:59:59`)
     const startDate = Date.parse(`${req.query.startDate}T00:00:00-00:00`);
     const endDate = Date.parse(`${req.query.endDate}T23:59:59-00:00`);
+
     const matchIncidents = await db.incidents.findAll({
       where: {
         [Op.and]: [{

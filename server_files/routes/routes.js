@@ -197,6 +197,30 @@ router.route('/incidents/:incident_id/dispatch')
     res.send('Action unavailable.');
   });
 
+// LOCATION
+router.route('locations')
+  .get(async (req, res) => {
+    try {
+      const calls = await db.locations.findAll();
+      const reply = getReply(locations);
+      res.json(reply);
+      
+    } catch (err) {
+      console.error(err);
+      res.error('Server Error!')
+    }
+  })
+  .post(async (req, res) => {
+    res.send('Action not available.');
+  })
+  .put(async (req, res) => {
+    res.send('Action not available.');
+  })
+  .delete(async (req, res) => {
+    res.send('Action unavailable.');
+  });
+  
+
 // CALLS
 router.route('/calls')
   .get(async (req, res) => {

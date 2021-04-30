@@ -1,5 +1,6 @@
 import express from 'express';
 import sequelize from 'sequelize';
+import { defaultValueSchemable } from 'sequelize/types/lib/utils';
 import db from '../database/initDB.js';
 const Op = sequelize.Op;
 const router = express.Router();
@@ -148,6 +149,31 @@ router.get('/incidents/:incident_id/unit', async (req, res) => {
     console.error(err);
     res.send(err);
   }
+});
+
+//Get calls from an incident
+router.get('/incident/:incident_id/calls', async (req, res) => {
+  try {
+    const hasCalls = await db.calls.findAll({
+      where: {
+        incidents_incident_id: req.params.incident_id
+      }
+    });
+    console.log(hasCalls);
+    const match_calls = hasCalls[0].dataValues.calls_call_id;
+    //console.log(match_calls);
+    const allCalls = await db.calls.findAll({
+      where: {
+        call_id: match_calls
+      }
+    });
+    const reply = getReply(allCalls);
+    res.json(reply);
+  }
+   catch (err) {
+     console.error(err);
+     res.send(error);
+   }
 });
 
 router.route('/incidents/:incident_id/dispatch')

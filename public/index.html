@@ -4,10 +4,69 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=, initial-scale=1.0">
         <link rel="stylesheet" href="styles.css">
-        <script src="script.js"></script>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css">
+        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A==" crossorigin=""/>
+        <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js" integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA==" crossorigin=""></script>
+        
         <title>Arlington County Fire Calls</title>
     </head>
+
     <body>
-        <h1>Group 29 (JCCTV)</h1>
+
+        <nav class="navbar is-black" role="navigation" aria-label="main navigation">
+            <div class="navbar-brand">
+                <a class="navbar-item" href="./index.html">
+                    <strong>JCCTV</strong>
+                </a>
+            </div>
+          
+            <div id="navbarBasicExample" class="navbar-menu">
+              <div class="navbar-start">
+                <a class="navbar-item" href="./index.html">
+                    Home
+                </a>
+          
+                <a class="navbar-item" href="./about/index.html">
+                    About
+                </a>
+
+                <a class="navbar-item" href="./add_call/index.html">
+                    Add Call
+                </a>
+
+                <a class="navbar-item" href="./manage_calls/index.html">
+                    Manage Calls
+                </a>
+          
+              </div>
+            </div>
+          </nav>
+        
+        <div class="container is-max-desktop">
+            <section class="section">
+                <h1 class="title">Home</h1>
+            </section>
+
+            <form name="userSearch" id="search" class="field">
+                <div id="control" name="control" class="control">
+                    <label for="searchbox"></label>
+                  <input class="input" name="searchbox" id="searchbox" type="text" placeholder="Find Fire Stations">
+                  <button type="submit" id="submit" name="submit" title="Submit">Submit</button>
+                </div>
+            </form>
+          
+            <div id="suggestions-list" name="suggestions-list" class="suggestions-list"> 
+              <ul id="suggestions" name="suggestions" class="suggestions">
+                    <!-- List items appear here -->
+              </ul>       
+            </div>
+              
+
+            <div class="column">
+              <div id="mapid"></div>
+            </div>
+
+            <script src="script.js"></script>            
+        </div>
     </body>
 </html>

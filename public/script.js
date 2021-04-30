@@ -18,8 +18,8 @@ function mapInit() {
   async function dataHandler(mapObjectFromFunction) {
     // use your assignment 1 data handling code here
     // and target mapObjectFromFunction to attach markers
-    const request = await fetch('/api/stations');
-    const stations = await request.json();
+    const request = await fetch('/api');
+    const restaurants = await request.json();
   
     let markers = [];
   
@@ -84,7 +84,8 @@ function mapInit() {
       markers = [];
   
       evt.preventDefault();
-      const matchArray = findMatches(stations);
+
+      const matchArray = findMatches(restaurants);
   
       matchArray.forEach((place) => {
         // Add map markers to layer group. This group will be added to the map later.
@@ -112,5 +113,4 @@ function mapInit() {
     const map = mapInit();
     await dataHandler(map);
   }
-  
-  window.onload = windowActions;
+window.onload = windowActions;

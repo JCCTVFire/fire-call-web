@@ -231,8 +231,6 @@ router.route('/jurisdiction')
     res.send('Action not available.');
   });
 
-
-
 // CALLS
 router.route('/calls')
   .get(async (req, res) => {
@@ -255,15 +253,54 @@ router.route('/calls')
     res.send('Action unavailable.');
   });
 
-router.post('/calls/:call_id', async(req, res) => {
-  try {
-    const call = await db.calls.create({
-    });
-  } catch (err) {
-    console.error(err);
-    res.error('Server Error!');
-  }
-});
+router.route('/calls/:call_id')
+  .get(async (req, res) => {
+    try {
+      const call = await db.calls.findAll({
+        where: {
+          call_id: req.params.call_id
+        }
+      });
+    } catch (err) {
+      console.error(err);
+      res.error('Server Error!');
+    }
+  })
+  .post(async (req, res) => {
+    res.send('Action not available.');
+  })
+  .put(async (req, res) => {
+    try {
+      await db.calls.update({
+        call_type: req.body.call_type,
+        call_class: req.body.call_class,
+        call_time: req.body.call_time
+      },
+      {
+        where: {
+          call_id: req.params.call_id
+        }
+      });
+      res.send('Successful update.');
+    } catch (err) {
+      console.error(err);
+      res.error('Server Error!');
+    }
+  })
+  .delete(async (req, res) => {
+    try {
+      console.log(req.params)
+      await db.calls.destroy({
+        where: {
+          call_id: req.params.call_id
+        }
+      });
+      res.send('Successful deletion.');
+    } catch (err) {
+      console.error(err);
+      res.error('Server Error!');
+    }
+  });
 
 
 // Custom query
@@ -332,6 +369,57 @@ router.route('/dispatch')
     res.send('Action unavailable.');
   });
 
+router.route('/dispatch/:dispatch_id')
+  .get(async (req, res) => {
+    try {
+      const dispatch = await db.dispatch.findAll({
+        where: {
+          dispatch_id: req.params.dispatch_id
+        }
+      });
+      const reply = getReply(dispatch);
+      res.json(reply);
+    } catch (err) {
+      console.error(err);
+      res.error('Server Error!');
+    }
+  })
+  .post(async (req, res) => {
+    res.send('Action not available.');
+  })
+  .put(async (req, res) => {
+    try {
+      await db.dispatch.update({
+        dispatch_time: req.body.dispatch_time,
+        arrival_time: req.body.arrival_time,
+        response_time: req.body.response_time,
+        arrival_unit: req.body.arrival_unit,
+        cleared_time: req.body.cleared_time,
+      {
+        where: {
+          dispatch_id: req.params.dispatch_id
+        }
+      });
+      res.send('Successful update.');
+    } catch (err) {
+      console.error(err);
+      res.error('Server Error!');
+    }
+  })
+  .delete(async (req, res) => {
+    try {
+      // console.log(req.params)
+      await db.dispatch.destroy({
+        where: {
+          dispatch_id: req.params.dispatch_id
+        }
+      });
+      res.send('Successful deletion.');
+    } catch (err) {
+      console.error(err);
+      res.error('Server Error!');
+    }
+  });
 
 router.route('/search/mapVis')
 .get(async (req, res) => {

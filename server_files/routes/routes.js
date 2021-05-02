@@ -207,7 +207,7 @@ router.route('/calls')
         call_class: req.body.call_class,
         call_time: req.body.call_time
       })
-      res.send('New call created!');
+      res.json(newCall);
     } catch (err) {
       console.error(err);
       res.send('Server Error!')
@@ -228,6 +228,8 @@ router.route('/calls/:call_id')
           call_id: req.params.call_id
         }
       });
+      const reply = getReply(call);
+      res.json(reply)
     } catch (err) {
       console.error(err);
       res.error('Server Error!');
@@ -281,7 +283,20 @@ router.route('/dispatch')
     }
   })
   .post(async (req, res) => {
-    res.send('Action not available.');
+    try {
+      const newDispatch = await db.dispatch.create({
+        dispatch_id: req.body.dispatch_id,
+        dispatch_time: req.body.dispatch_time,
+        arrival_time: req.body.arrival_time,
+        response_time: req.body.response_time,
+        arrival_unit: req.body.arrival_unit,
+        cleared_time: req.body.cleared_time,
+      });
+      res.json(newDispatch);
+    } catch (err) {
+      console.error(err);
+      res.send('Server Error')
+    }
   })
   .put(async (req, res) => {
     res.send('Action not available.');
@@ -343,7 +358,87 @@ router.route('/dispatch/:dispatch_id')
     }
   });
 
+// unitS
+router.route('/units')
+  .get(async (req, res) => {
+    try {
+      const units = await db.units.findAll();
+      const reply = getReply(units);
+      res.json(reply);
+    } catch (err) {
+      console.error(err);
+      res.error('Server Error!')
+    }
+  })
+  .post(async (req, res) => {
+    try {
+      const newUnit = await db.units.create({
+        unit_id: req.body.unit_id,
+        unit_number: req.body.unit_number,
+        unit_class: req.body.unit_class
+      })
+      res.send('New unit created!');
+    } catch (err) {
+      console.error(err);
+      res.send('Server Error!')
+    }
+  })
+  .put(async (req, res) => {
+    res.send('Action not available.');
+  })
+  .delete(async (req, res) => {
+    res.send('Action unavailable.');
+  });
 
+router.route('/units/:unit_id')
+  .get(async (req, res) => {
+    try {
+      const unit = await db.units.findAll({
+        where: {
+          unit_id: req.params.unit_id
+        }
+      });
+      const reply = getReply(unit);
+      res.json(reply)
+    } catch (err) {
+      console.error(err);
+      res.error('Server Error!');
+    }
+  })
+  .post(async (req, res) => {
+    res.send('Action not available.');
+  })
+  .put(async (req, res) => {
+    try {
+      await db.units.update({
+        unit_number: req.body.unit_number,
+        unit_class: req.body.unit_class
+      },
+      {
+        where: {
+          unit_id: req.params.unit_id
+        }
+      });
+      res.send('Successful update.');
+    } catch (err) {
+      console.error(err);
+      res.error('Server Error!');
+    }
+  })
+  .delete(async (req, res) => {
+    try {
+      console.log(req.params)
+      await db.units.destroy({
+        where: {
+          unit_id: req.params.unit_id
+        }
+      });
+      res.send('Successful deletion.');
+    } catch (err) {
+      console.error(err);
+      res.error('Server Error!');
+    }
+  });
 
 
 // Custom search query for map.

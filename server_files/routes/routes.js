@@ -395,6 +395,7 @@ router.route('/dispatch/:dispatch_id')
         response_time: req.body.response_time,
         arrival_unit: req.body.arrival_unit,
         cleared_time: req.body.cleared_time,
+      },
       {
         where: {
           dispatch_id: req.params.dispatch_id

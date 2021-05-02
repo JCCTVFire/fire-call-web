@@ -6,10 +6,21 @@ const router = express.Router();
 
 
 function getReply(results) {
-  return results.length > 0 ? {data: results} : {message: 'No results found.'};
+  try {
+    return results.length > 0 && typeof results[0] === 'object' ? {data: results} : {message: 'No results found.'};
+  } catch (err) {
+    if (typeof results[0] === 'undefined') {
+      return {message: 'No results found. (In catch.)'}
+    } 
+    if (typeof results[0] === 'object') {
+      entries(results).forEach((key, value) => {
+        value.length > 0 ? `{${key}: ${value}}` : {message: 'No results found.'};
+      });
+    } else {}
+  }
 }
-// New route template
 
+// New route template
 router.route('/newRoute')
   .get(async (req, res) => {
     res.send('Action not available');
@@ -35,7 +46,7 @@ router.route('/incidents')
       res.json(reply);
     } catch (err) {
       console.error(err);
-      res.error('Server Error!');
+      res.send('Server Error!');
     }
   })
   .post(async (req, res) => {
@@ -47,7 +58,8 @@ router.route('/incidents')
         postal_code: req.body.postal_code,
         district_code: req.body.district_code,
         call_id: req.body.call_id,
-        dispatch_id: req.body.dispatch_id
+        dispatch_id: req.body.dispatch_id,
+        unit_id: req.body.unit_id
       });
       res.json(newIncident);
     } catch (err) {
@@ -74,7 +86,7 @@ router.route('/incidents/:incident_id')
       res.json(reply);
     } catch (err) {
       console.error(err);
-      res.error('Server Error!');
+      res.send('Server Error!');
     }
   })
   .post(async (req, res) => {
@@ -96,7 +108,7 @@ router.route('/incidents/:incident_id')
       res.send('Successful update.');
     } catch (err) {
       console.error(err);
-      res.error('Server Error!');
+      res.send('Server Error!');
     }
   })
   .delete(async (req, res) => {
@@ -110,29 +122,26 @@ router.route('/incidents/:incident_id')
       res.send('Successful deletion.');
     } catch (err) {
       console.error(err);
-      res.error('Server Error!');
+      res.send('Server Error!');
     }
   });
 
 // Gets the unit from an incident
-router.get('/incidents/:incident_id/unitsResponding', async (req, res) => {
+router.get('/incidents/:incident_id/unit', async (req, res) => {
   try {
-    const hasUnits = await db.incidents_has_units.findAll({
+    const getUnit = await db.incidents.findAll({
       where: {
-        incidents_incident_id: req.params.incident_id
+        incident_id: req.params.incident_id
       }
-    });
-    const unit_ids = hasUnits.map((unit) => {
-      return unit.unit_id;
-    });
-    console.log(unit_numbers);
+    });    
+    console.log(getUnit);
+    
     const allUnits = await db.units.findAll({
       where: {
-        unit_id: {
-          [Op.in]: unit_ids
-        }
+        unit_id: getUnit[0].dataValues.unit_id
       }
     });
+
     const reply = getReply(allUnits);
     res.json(reply);
   } catch (err) {
@@ -141,47 +150,29 @@ router.get('/incidents/:incident_id/unitsResponding', async (req, res) => {
   }
 });
 
-// STATIONS
-router.route('/stations')
-  .get(async (req, res) => {
-    try {
-      const stations = await db.stations.findAll();
-      const reply = getReply(stations);
-      res.json(reply);
-    } catch (err) {
-      console.error(err);
-      res.send('Server Error!');
-    }
-  })
-  .post(async (req, res) => {
-    res.send('Action not available.');
-  })
-  .put(async (req, res) => {
-    res.send('Action not available.');
-  })
-  .delete(async (req, res) => {
-    res.send('Action unavailable.');
-  });
-  
-// JURISDICTION
-router.route('/jurisdiction')
-  .get(async (req, res) => {
-    try {
-      const jurisdiction = await db.jurisdiction.findAll();
-    } catch (err) {
-      console.error(err);
-      res.send('Server Error!');
-    }
-  })
-  .post(async (req, res) => {
-    res.send('Action not available.');
-  })
-  .put(async (req, res) => {
-    res.send('Action not available.');
-  })
-  .delete(async (req, res) => {
-    res.send('Action not available.');
-  });
+//Get calls from an incident
+router.get('/incidents/:incident_id/calls', async (req, res) => {
+  try {
+    const getIncidents = await db.incidents.findAll({
+      where: {
+        incident_id: req.params.incident_id
+      }
+    });    
+    
+    const allCalls = await db.calls.findAll({
+      where: {
+        call_id: getIncidents[0].dataValues.call_id
+      }
+    });
+
+    const reply = getReply(allCalls);
+    res.json(reply);
+  }
+   catch (err) {
+     console.error(err);
+     res.send(error);
+   }
+});
 
 router.route('/incidents/:incident_id/dispatch')
   .get(async (req, res) => {
@@ -210,7 +201,17 @@ router.route('/calls')
     }
   })
   .post(async (req, res) => {
-    res.send('Action not available.');
+    try {
+      const newCall = await db.calls.create({
+        call_type: req.body.call_type,
+        call_class: req.body.call_class,
+        call_time: req.body.call_time
+      })
+      res.json(newCall);
+    } catch (err) {
+      console.error(err);
+      res.send('Server Error!')
+    }
   })
   .put(async (req, res) => {
     res.send('Action not available.');
@@ -219,16 +220,307 @@ router.route('/calls')
     res.send('Action unavailable.');
   });
 
-router.post('/calls/:call_id', async(req, res) => {
+router.route('/calls/:call_id')
+  .get(async (req, res) => {
+    try {
+      const call = await db.calls.findAll({
+        where: {
+          call_id: req.params.call_id
+        }
+      });
+      const reply = getReply(call);
+      res.json(reply)
+    } catch (err) {
+      console.error(err);
+      res.error('Server Error!');
+    }
+  })
+  .post(async (req, res) => {
+    res.send('Action not available.');
+  })
+  .put(async (req, res) => {
+    try {
+      await db.calls.update({
+        call_type: req.body.call_type,
+        call_class: req.body.call_class,
+        call_time: req.body.call_time
+      },
+      {
+        where: {
+          call_id: req.params.call_id
+        }
+      });
+      res.send('Successful update.');
+    } catch (err) {
+      console.error(err);
+      res.error('Server Error!');
+    }
+  })
+  .delete(async (req, res) => {
+    try {
+      console.log(req.params)
+      await db.calls.destroy({
+        where: {
+          call_id: req.params.call_id
+        }
+      });
+      res.send('Successful deletion.');
+    } catch (err) {
+      console.error(err);
+      res.error('Server Error!');
+    }
+  });
+
+router.route('/dispatch')
+  .get(async (req, res) => {
+    try {
+      const dispatch = await db.dispatch.findAll();
+      const reply = getReply(dispatch);
+      res.json(reply);
+    } catch (err) {
+      console.error(err);
+      res.send('Server Error!');
+    }
+  })
+  .post(async (req, res) => {
+    try {
+      const newDispatch = await db.dispatch.create({
+        dispatch_id: req.body.dispatch_id,
+        dispatch_time: req.body.dispatch_time,
+        arrival_time: req.body.arrival_time,
+        response_time: req.body.response_time,
+        arrival_unit: req.body.arrival_unit,
+        cleared_time: req.body.cleared_time,
+      });
+      res.json(newDispatch);
+    } catch (err) {
+      console.error(err);
+      res.send('Server Error')
+    }
+  })
+  .put(async (req, res) => {
+    res.send('Action not available.');
+  })
+  .delete(async (req, res) => {
+    res.send('Action unavailable.');
+  });
+
+router.route('/dispatch/:dispatch_id')
+  .get(async (req, res) => {
+    try {
+      const dispatch = await db.dispatch.findAll({
+        where: {
+          dispatch_id: req.params.dispatch_id
+        }
+      });
+      const reply = getReply(dispatch);
+      res.json(reply);
+    } catch (err) {
+      console.error(err);
+      res.error('Server Error!');
+    }
+  })
+  .post(async (req, res) => {
+    res.send('Action not available.');
+  })
+  .put(async (req, res) => {
+    try {
+      await db.dispatch.update({
+        dispatch_time: req.body.dispatch_time,
+        arrival_time: req.body.arrival_time,
+        response_time: req.body.response_time,
+        arrival_unit: req.body.arrival_unit,
+        cleared_time: req.body.cleared_time,
+      },
+      {
+        where: {
+          dispatch_id: req.params.dispatch_id
+        }
+      });
+      res.send('Successful update.');
+    } catch (err) {
+      console.error(err);
+      res.error('Server Error!');
+    }
+  })
+  .delete(async (req, res) => {
+    try {
+      // console.log(req.params)
+      await db.dispatch.destroy({
+        where: {
+          dispatch_id: req.params.dispatch_id
+        }
+      });
+      res.send('Successful deletion.');
+    } catch (err) {
+      console.error(err);
+      res.error('Server Error!');
+    }
+  });
+
+// unitS
+router.route('/units')
+  .get(async (req, res) => {
+    try {
+      const units = await db.units.findAll();
+      const reply = getReply(units);
+      res.json(reply);
+    } catch (err) {
+      console.error(err);
+      res.error('Server Error!')
+    }
+  })
+  .post(async (req, res) => {
+    try {
+      const newUnit = await db.units.create({
+        unit_id: req.body.unit_id,
+        unit_number: req.body.unit_number,
+        unit_class: req.body.unit_class
+      })
+      res.send('New unit created!');
+    } catch (err) {
+      console.error(err);
+      res.send('Server Error!')
+    }
+  })
+  .put(async (req, res) => {
+    res.send('Action not available.');
+  })
+  .delete(async (req, res) => {
+    res.send('Action unavailable.');
+  });
+
+router.route('/units/:unit_id')
+  .get(async (req, res) => {
+    try {
+      const unit = await db.units.findAll({
+        where: {
+          unit_id: req.params.unit_id
+        }
+      });
+      const reply = getReply(unit);
+      res.json(reply)
+    } catch (err) {
+      console.error(err);
+      res.error('Server Error!');
+    }
+  })
+  .post(async (req, res) => {
+    res.send('Action not available.');
+  })
+  .put(async (req, res) => {
+    try {
+      await db.units.update({
+        unit_number: req.body.unit_number,
+        unit_class: req.body.unit_class
+      },
+      {
+        where: {
+          unit_id: req.params.unit_id
+        }
+      });
+      res.send('Successful update.');
+    } catch (err) {
+      console.error(err);
+      res.error('Server Error!');
+    }
+  })
+  .delete(async (req, res) => {
+    try {
+      console.log(req.params)
+      await db.units.destroy({
+        where: {
+          unit_id: req.params.unit_id
+        }
+      });
+      res.send('Successful deletion.');
+    } catch (err) {
+      console.error(err);
+      res.error('Server Error!');
+    }
+  });
+
+
+// Custom search query for map.
+router.route('/search/mapVis')
+.get(async (req, res) => {
   try {
-    const call = await db.calls.create({
+    // console.log(req)
+    let replyData = []
+    const matchCalls = await db.calls.findAll({
+      where: {
+        [Op.or]: [
+          {
+            call_type: {
+              [Op.startsWith]: req.query.queryText
+            } 
+          },
+          {
+            call_class: {
+              [Op.startsWith]: req.query.queryText
+            }
+          }
+        ]
+      }
     });
+    let callsToIncidents;
+    if (matchCalls !== 'undefined') {
+      const call_ids = matchCalls.map((call) => {
+        // console.log(call.dataValues.call_id);
+        return call.dataValues.call_id;
+      });
+      callsToIncidents = await db.incidents.findAll({
+        where: {
+          call_id: {
+            [Op.in]: call_ids
+          }
+        }
+      })
+    }
+    
+    console.log(`${req.query.endDate} 23:59:59`)
+    const startDate = Date.parse(`${req.query.startDate}T00:00:00-00:00`);
+    const endDate = Date.parse(`${req.query.endDate}T23:59:59-00:00`);
+
+    const matchIncidents = await db.incidents.findAll({
+      where: {
+        [Op.and]: [{
+          [Op.or]: [
+            { description: {
+              [Op.startsWith]: req.query.queryText
+            } },
+            { postal_code: {
+              [Op.startsWith]: req.query.queryText
+            } },
+          ]},
+          {
+            date: {
+              [Op.between]: [startDate, endDate]
+            }
+          }
+      ]}
+    });
+    console.log(matchIncidents);
+    const incidentData = matchIncidents + callsToIncidents;
+    // console.log(incidentData);
+    replyData += [{'incidents': incidentData}];
+    // console.log(replyData);
+    const reply = getReply(replyData);
+    res.json(reply);
   } catch (err) {
     console.error(err);
-    res.error('Server Error!');
+    res.send('Server Error!');
   }
+})
+.post(async (req, res) => {
+  res.send('Action not available.');
+})
+.put(async (req, res) => {
+  res.send('Action not available.');
+})
+.delete(async (req, res) => {
+  res.send('Action unavailable.');
 });
-
 
 // Custom query
 router.route('/custom')
@@ -253,48 +545,72 @@ router.route('/custom')
     res.send('Action unavailable.');
   });
 
-// EMPLOYEES
-router.route('/employees')
-  .get(async (req, res) => {
-    try {
-      const employees = await db.employees.findAll();
-      const reply = getReply(employees);
-      res.json(reply);
-    } catch (err) {
-      console.error(err);
-      res.send('Server Error!');
-    }
-  })
-  .post(async (req, res) => {
-    res.send('Action not available.');
-  })
-  .put(async (req, res) => {
-    res.send('Action not available.');
-  })
-  .delete(async (req, res) => {
-    res.send('Action unavailable.');
-  });
-
-router.route('/dispatch')
-  .get(async (req, res) => {
-    try {
-      const dispatch = await db.dispatch.findAll();
-      const reply = getReply(dispatch);
-      res.json(reply);
-    } catch (err) {
-      console.error(err);
-      res.send('Server Error!');
-    }
-  })
-  .post(async (req, res) => {
-    res.send('Action not available.');
-  })
-  .put(async (req, res) => {
-    res.send('Action not available.');
-  })
-  .delete(async (req, res) => {
-    res.send('Action unavailable.');
-  });
-
-
 export default router;
+
+//////////////////
+///// UNUSED /////
+//////////////////
+// JURISDICTION
+router.route('/jurisdiction')
+  .get(async (req, res) => {
+    try {
+      const jurisdiction = await db.jurisdiction.findAll();
+      const reply  = getReply(jurisdiction);
+    } catch (err) {
+      console.error(err);
+      res.send('Server Error!');
+    }
+  })
+  .post(async (req, res) => {
+    res.send('Action not available.');
+  })
+  .put(async (req, res) => {
+    res.send('Action not available.');
+  })
+  .delete(async (req, res) => {
+    res.send('Action not available.');
+  });
+
+  // EMPLOYEES
+router.route('/employees')
+.get(async (req, res) => {
+  try {
+    const employees = await db.employees.findAll();
+    const reply = getReply(employees);
+    res.json(reply);
+  } catch (err) {
+    console.error(err);
+    res.send('Server Error!');
+  }
+})
+.post(async (req, res) => {
+  res.send('Action not available.');
+})
+.put(async (req, res) => {
+  res.send('Action not available.');
+})
+.delete(async (req, res) => {
+  res.send('Action unavailable.');
+});
+
+// STATIONS
+router.route('/stations')
+  .get(async (req, res) => {
+    try {
+      const stations = await db.stations.findAll();
+      const reply = getReply(stations);
+      res.json(reply);
+    } catch (err) {
+      console.error(err);
+      res.send('Server Error!');
+    }
+  })
+  .post(async (req, res) => {
+    res.send('Action not available.');
+  })
+  .put(async (req, res) => {
+    res.send('Action not available.');
+  })
+  .delete(async (req, res) => {
+    res.send('Action unavailable.');
+  });

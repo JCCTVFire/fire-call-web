@@ -1,46 +1,85 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="utf-8">
-    <title>Manage Call</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css">
-  </head>
-  <body> 
-    <h1 style="padding-left: 1rem;">Manage Call</h1>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=, initial-scale=1.0">
+        <link rel="stylesheet" href="styles.css">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css">
+        
+        <title>Manage Calls - Arlington County Fire Calls</title>
+    </head>
 
-    <div class="field pl-4 mt-5">
-        <div class="control">
-          <input class="input is-small" style="width: 450px;" type="searc" placeholder="Search Call ID">
-        </div>
-      </div>
+    <body>
 
-    <div class="field pl-4">
-        <label class="label mt-5">Call ID</label>
-        <div class="control">
-          <input class="input" style="width: 450px;" type="text">
-        </div>
-      </div>
-  
-      <div class="field pl-4">
-        <label class="label">Call Type</label>
-        <div class="control">
-          <input class="input" style="width: 450px;" type="text">
-        </div>
-      </div>
+        <nav class="navbar is-black" role="navigation" aria-label="main navigation">
+            <div class="navbar-brand">
+                <a class="navbar-item" href="../index.html">
+                    <strong>JCCTV</strong>
+                </a>
+            </div>
+          
+            <div id="navbarBasicExample" class="navbar-menu">
+              <div class="navbar-start">
+                <a class="navbar-item" href="../index.html">
+                    Home
+                </a>
+          
+                <a class="navbar-item" href="../about/index.html">
+                    About
+                </a>
 
-      <div class="field pl-4">
-        <label class="label">Call Class</label>
-        <div class="control">
-          <input class="input" style="width: 450px;" type="text">
-        </div>
-      </div>
+                <a class="navbar-item" href="../add_call/index.html">
+                    Add Call
+                </a>
 
-      <div class="field is-grouped pl-4">
-        <div class="control">
-          <button class="button is-link mt-2">Save</button>
+                <a class="navbar-item" href="./index.html">
+                    Manage Calls
+                </a>
+          
+              </div>
+            </div>
+          </nav>
+        
+        <div class="container is-max-desktop">
+            <section class="section">
+                <h1 class="title">Manage Calls</h1>
+            </section>
+            
+            <div class="field mb-6 pl-5">
+                <div class="control">
+                    <input class="input is-small" style="width: 450px;" type="search" placeholder="Search Call ID">
+                </div>
+            </div>
+
+            <div class="field pl-5">
+                <label class="label">Call ID</label>
+                <div class="control">
+                  <input class="input" style="width: 450px;" type="text">
+                </div>
+            </div>
+
+            <div class="field pl-5">
+                <label class="label">Call Type</label>
+                <div class="control">
+                  <input class="input" style="width: 450px;" type="text">
+                </div>
+            </div>
+
+            <div class="field pl-5">
+                <label class="label">Call Class</label>
+                <div class="control">
+                  <input class="input" style="width: 450px;" type="text">
+                </div>
+            </div>
+
+            <div class="field is-grouped pl-5">
+                <div class="control">
+                  <button class="button is-link mt-2">Save</button>
+                </div>
+                <div class="control">
+                    <button class="button is-danger mt-2">Delete</button>
+                </div>
+            </div>  
         </div>
-        <div class="control">
-            <button class="button is-danger mt-2">Delete</button>
-        </div>
-      </div>  
-  </body>
+    </body>
+</html>

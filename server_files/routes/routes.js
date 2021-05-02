@@ -203,6 +203,7 @@ router.route('/calls')
   .post(async (req, res) => {
     try {
       const newCall = await db.calls.create({
+        call_id: req.body.call_id,
         call_type: req.body.call_type,
         call_class: req.body.call_class,
         call_time: req.body.call_time

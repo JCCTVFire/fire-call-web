@@ -18,10 +18,9 @@ function getReply(results) {
       });
     } else {}
   }
-  
 }
-// New route template
 
+// New route template
 router.route('/newRoute')
   .get(async (req, res) => {
     res.send('Action not available');

@@ -47,7 +47,7 @@ router.route('/incidents')
       res.json(reply);
     } catch (err) {
       console.error(err);
-      res.error('Server Error!');
+      res.send('Server Error!');
     }
   })
   .post(async (req, res) => {
@@ -59,7 +59,8 @@ router.route('/incidents')
         postal_code: req.body.postal_code,
         district_code: req.body.district_code,
         call_id: req.body.call_id,
-        dispatch_id: req.body.dispatch_id
+        dispatch_id: req.body.dispatch_id,
+        unit_id: req.body.unit_id
       });
       res.json(newIncident);
     } catch (err) {
@@ -86,7 +87,7 @@ router.route('/incidents/:incident_id')
       res.json(reply);
     } catch (err) {
       console.error(err);
-      res.error('Server Error!');
+      res.send('Server Error!');
     }
   })
   .post(async (req, res) => {
@@ -108,7 +109,7 @@ router.route('/incidents/:incident_id')
       res.send('Successful update.');
     } catch (err) {
       console.error(err);
-      res.error('Server Error!');
+      res.send('Server Error!');
     }
   })
   .delete(async (req, res) => {
@@ -122,7 +123,7 @@ router.route('/incidents/:incident_id')
       res.send('Successful deletion.');
     } catch (err) {
       console.error(err);
-      res.error('Server Error!');
+      res.send('Server Error!');
     }
   });
 
@@ -188,49 +189,6 @@ router.route('/incidents/:incident_id/dispatch')
     res.send('Action unavailable.');
   });
 
-// STATIONS
-router.route('/stations')
-  .get(async (req, res) => {
-    try {
-      const stations = await db.stations.findAll();
-      const reply = getReply(stations);
-      res.json(reply);
-    } catch (err) {
-      console.error(err);
-      res.send('Server Error!');
-    }
-  })
-  .post(async (req, res) => {
-    res.send('Action not available.');
-  })
-  .put(async (req, res) => {
-    res.send('Action not available.');
-  })
-  .delete(async (req, res) => {
-    res.send('Action unavailable.');
-  });
-  
-// JURISDICTION
-router.route('/jurisdiction')
-  .get(async (req, res) => {
-    try {
-      const jurisdiction = await db.jurisdiction.findAll();
-      const reply  = getReply(jurisdiction);
-    } catch (err) {
-      console.error(err);
-      res.send('Server Error!');
-    }
-  })
-  .post(async (req, res) => {
-    res.send('Action not available.');
-  })
-  .put(async (req, res) => {
-    res.send('Action not available.');
-  })
-  .delete(async (req, res) => {
-    res.send('Action not available.');
-  });
-
 // CALLS
 router.route('/calls')
   .get(async (req, res) => {
@@ -244,7 +202,17 @@ router.route('/calls')
     }
   })
   .post(async (req, res) => {
-    res.send('Action not available.');
+    try {
+      const newCall = await db.calls.create({
+        call_type: req.body.call_type,
+        call_class: req.body.call_class,
+        call_time: req.body.call_time
+      })
+      res.send('New call created!');
+    } catch (err) {
+      console.error(err);
+      res.send('Server Error!')
+    }
   })
   .put(async (req, res) => {
     res.send('Action not available.');
@@ -300,52 +268,6 @@ router.route('/calls/:call_id')
       console.error(err);
       res.error('Server Error!');
     }
-  });
-
-
-// Custom query
-router.route('/custom')
-  .get(async (req, res) => {
-    try {
-      const custom = await db.sequelizeDB.query(req.body.query, {
-        type: sequelize.QueryTypes.SELECT
-      });
-      req.json(custom);
-    } catch (err) {
-      console.log(err);
-      res.send('Server Error!')
-    }
-  })
-  .post(async (req, res) => {
-    res.send('Action not available.');
-  })
-  .put(async (req, res) => {
-    res.send('Action not available.');
-  })
-  .delete(async (req, res) => {
-    res.send('Action unavailable.');
-  });
-
-// EMPLOYEES
-router.route('/employees')
-  .get(async (req, res) => {
-    try {
-      const employees = await db.employees.findAll();
-      const reply = getReply(employees);
-      res.json(reply);
-    } catch (err) {
-      console.error(err);
-      res.send('Server Error!');
-    }
-  })
-  .post(async (req, res) => {
-    res.send('Action not available.');
-  })
-  .put(async (req, res) => {
-    res.send('Action not available.');
-  })
-  .delete(async (req, res) => {
-    res.send('Action unavailable.');
   });
 
 router.route('/dispatch')
@@ -422,6 +344,10 @@ router.route('/dispatch/:dispatch_id')
     }
   });
 
+
+
+
+// Custom search query for map.
 router.route('/search/mapVis')
 .get(async (req, res) => {
   try {
@@ -502,5 +428,95 @@ router.route('/search/mapVis')
   res.send('Action unavailable.');
 });
 
+// Custom query
+router.route('/custom')
+  .get(async (req, res) => {
+    try {
+      const custom = await db.sequelizeDB.query(req.body.query, {
+        type: sequelize.QueryTypes.SELECT
+      });
+      req.json(custom);
+    } catch (err) {
+      console.log(err);
+      res.send('Server Error!')
+    }
+  })
+  .post(async (req, res) => {
+    res.send('Action not available.');
+  })
+  .put(async (req, res) => {
+    res.send('Action not available.');
+  })
+  .delete(async (req, res) => {
+    res.send('Action unavailable.');
+  });
 
 export default router;
+
+//////////////////
+///// UNUSED /////
+//////////////////
+// JURISDICTION
+router.route('/jurisdiction')
+  .get(async (req, res) => {
+    try {
+      const jurisdiction = await db.jurisdiction.findAll();
+      const reply  = getReply(jurisdiction);
+    } catch (err) {
+      console.error(err);
+      res.send('Server Error!');
+    }
+  })
+  .post(async (req, res) => {
+    res.send('Action not available.');
+  })
+  .put(async (req, res) => {
+    res.send('Action not available.');
+  })
+  .delete(async (req, res) => {
+    res.send('Action not available.');
+  });
+
+  // EMPLOYEES
+router.route('/employees')
+.get(async (req, res) => {
+  try {
+    const employees = await db.employees.findAll();
+    const reply = getReply(employees);
+    res.json(reply);
+  } catch (err) {
+    console.error(err);
+    res.send('Server Error!');
+  }
+})
+.post(async (req, res) => {
+  res.send('Action not available.');
+})
+.put(async (req, res) => {
+  res.send('Action not available.');
+})
+.delete(async (req, res) => {
+  res.send('Action unavailable.');
+});
+
+// STATIONS
+router.route('/stations')
+  .get(async (req, res) => {
+    try {
+      const stations = await db.stations.findAll();
+      const reply = getReply(stations);
+      res.json(reply);
+    } catch (err) {
+      console.error(err);
+      res.send('Server Error!');
+    }
+  })
+  .post(async (req, res) => {
+    res.send('Action not available.');
+  })
+  .put(async (req, res) => {
+    res.send('Action not available.');
+  })
+  .delete(async (req, res) => {
+    res.send('Action unavailable.');
+  });

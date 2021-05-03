@@ -479,6 +479,38 @@ router.route('/search/mapVis')
       })
     }
     
+    const matchUnits = await db.units.findAll({
+      where: {
+        [Op.or]: [
+          {
+            unit_number: {
+              [Op.iRegexp]: req.query.queryText
+            }
+          },
+          {
+            unit_class: {
+              [Op.iRegexp]: req.query.queryText
+            }
+          }
+        ]
+      }
+    });
+    
+    let unitsToIncidents;
+    if (matchUnits !== 'undefined') {
+      const unit_ids = matchCalls.map((unit) => {
+        return unit.dataValues.unit_id
+      });
+
+      unitsToIncidents = await db.incidents.findAll({
+        where: {
+          unit_id: {
+            [Op.in]: unit_ids
+          }
+        }
+      })
+    }
+
     console.log(`${req.query.endDate} 23:59:59`)
     const startDate = Date.parse(`${req.query.startDate}T00:00:00-00:00`);
     const endDate = Date.parse(`${req.query.endDate}T23:59:59-00:00`);
@@ -487,20 +519,27 @@ router.route('/search/mapVis')
       where: {
         [Op.and]: [{
           [Op.or]: [
-            { description: {
-              [Op.startsWith]: req.query.queryText
-            } },
-            { postal_code: {
-              [Op.startsWith]: req.query.queryText
-            } },
+            { 
+              description: {
+                [Op.startsWith]: req.query.queryText
+              } 
+            },
+            { 
+              postal_code: {
+                [Op.startsWith]: req.query.queryText
+              } 
+            },
           ]},
           {
             date: {
               [Op.between]: [startDate, endDate]
             }
           }
-      ]}
+        ]
+      }
     });
+
+    
     console.log(matchIncidents);
     const incidentData = matchIncidents + callsToIncidents;
     // console.log(incidentData);

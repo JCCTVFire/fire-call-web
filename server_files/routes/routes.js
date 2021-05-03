@@ -127,7 +127,7 @@ router.route('/incidents/:incident_id')
   });
 
 // Gets the unit from an incident
-router.get('/incidents/:incident_id/unit', async (req, res) => {
+router.get('/incidents/:incident_id/units', async (req, res) => {
   try {
     const getUnit = await db.incidents.findAll({
       where: {
@@ -203,9 +203,9 @@ router.get('/incidents/:incident_id/locations', async (req, res) => {
       
       } 
     });    
-    const getlocations = await db.locations.findAll({
+    const getLocations = await db.locations.findAll({
       where: {
-        locations_id: getIncidents[0].dataValues.locations_id
+        incidents_incident_id: getIncidents[0].dataValues.incident_id
       }
     });
     const reply = getReply(getLocations);

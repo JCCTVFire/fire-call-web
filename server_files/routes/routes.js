@@ -127,7 +127,7 @@ router.route('/incidents/:incident_id')
   });
 
 // Gets the unit from an incident
-router.get('/incidents/:incident_id/unit', async (req, res) => {
+router.get('/incidents/:incident_id/units', async (req, res) => {
   try {
     const getUnit = await db.incidents.findAll({
       where: {
@@ -174,19 +174,66 @@ router.get('/incidents/:incident_id/calls', async (req, res) => {
    }
 });
 
-router.route('/incidents/:incident_id/dispatch')
-  .get(async (req, res) => {
-    res.send('Action not available');
-  })
-  .post(async (req, res) => {
-    res.send('Action not available.');
-  })
-  .put(async (req, res) => {
-    res.send('Action not available.');
-  })
-  .delete(async (req, res) => {
-    res.send('Action unavailable.');
-  });
+router.get('/incidents/:incident_id/dispatch', async (req, res) => {
+  try { 
+    const getIncidents = await db.incidents.findAll({
+      where: {
+        incident_id: req.params.incident_id
+      }
+    });    
+    const getDispatch = await db.dispatch.findAll({
+      where: {
+        dispatch_id: getIncidents[0].dataValues.dispatch_id
+      }
+    });
+    const reply = getReply(getDispatch);
+    res.json(reply);
+  }
+  catch (err) {
+    console.error(err);
+    res.send(error);
+  }
+});
+
+router.get('/incidents/:incident_id/locations', async (req, res) => {
+  try { 
+    const getIncidents = await db.incidents.findAll({
+      where: {
+        incident_id: req.params.incident_id
+      
+      } 
+    });    
+    const getLocations = await db.locations.findAll({
+      where: {
+        incidents_incident_id: getIncidents[0].dataValues.incident_id
+      }
+    });
+    const reply = getReply(getLocations);
+    res.json(reply);
+  }
+  catch (err) {
+    console.error(err);
+    res.send(error);
+  }
+});
+
+// router.get('/incidents/:incident_id/incident', async (req, res) => {
+//   try { 
+//     const getIncidents = await db.incidents.findAll({
+//       where: {
+//         incident_id: req.params.incident_id
+//       }
+//     });    
+//     const reply = getReply(getIncidents);
+//     res.json(reply);
+//   }
+//   catch (err) {
+//     console.error(err);
+//     res.send(error);
+//   }
+// });
+
+ 
 
 // CALLS
 router.route('/calls')
@@ -269,6 +316,28 @@ router.route('/calls/:call_id')
       console.error(err);
       res.error('Server Error!');
     }
+  });
+
+// LOCATION
+router.route('locations')
+  .get(async (req, res) => {
+    try {
+      const locations = await db.locations.findAll();
+      const reply = getReply(locations);
+      res.json(reply);
+    } catch (err) {
+      console.error(err);
+      res.error('Server Error!')
+    }
+  })
+  .post(async (req, res) => {
+    res.send('Action not available.');
+  })
+  .put(async (req, res) => {
+    res.send('Action not available.');
+  })
+  .delete(async (req, res) => {
+    res.send('Action unavailable.');
   });
 
 router.route('/dispatch')

@@ -31,6 +31,9 @@ export default (database, DataTypes) => {
       unit_id: {
         type: DataTypes.INTEGER,
         // allowNull: false
+      },
+      locations_id: {
+        type: DataTypes.INTEGER,
       }
     },
     {
@@ -39,8 +42,7 @@ export default (database, DataTypes) => {
   );
 
   Incidents.associate = function (db) {
-    Incidents.hasOne(db.locations, {foreignKey: 'incidents_incident_id'});
-
+    Incidents.belongsTo(db.locations, {foreignKey: 'locations_id', sourceKey: 'locations_id', as: 'location'});
     Incidents.belongsTo(db.calls, {foreignKey: 'call_id', sourceKey: 'call_id', as: 'call'});
     Incidents.belongsTo(db.dispatch, {foreignKey: 'dispatch_id', sourceKey: 'dispatch_id', as: 'dispatch'});
     Incidents.belongsTo(db.units, {foreignKey: 'unit_id', sourceKey: 'unit_id', as: 'unit'});

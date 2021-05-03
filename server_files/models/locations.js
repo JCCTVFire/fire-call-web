@@ -12,9 +12,6 @@ export default (database, DataTypes) => {
         },
         long: {
           type: DataTypes.DECIMAL
-        },
-        incidents_incident_id: {
-          type: DataTypes.INTEGER
         }
       },
       {
@@ -25,7 +22,7 @@ export default (database, DataTypes) => {
     );
   
     Locations.associate = function (db) {
-      Locations.belongsTo(db.incidents, {foreignKey: 'incident_id', sourceKey: 'incidents_incident_id', as: 'incident'});
+      Locations.hasOne(db.incidents, {foreignKey: 'locations_id', sourceKey: 'locations_id', as: 'location'});
     }; 
     return Locations;
   }

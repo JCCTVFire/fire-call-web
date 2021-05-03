@@ -1,7 +1,7 @@
 import express from 'express';
 import sequelize from 'sequelize';
 import db from '../database/initDB.js';
-import incidents from '../models/incidents.js';
+
 const Op = sequelize.Op;
 const router = express.Router();
 
@@ -199,7 +199,7 @@ router.get('/incidents/:incident_id/locations', async (req, res) => {
     });    
     const getLocations = await db.locations.findAll({
       where: {
-        incidents_incident_id: getIncidents[0].dataValues.incident_id
+        locations_id: getIncidents[0].dataValues.locations_id
       }
     });
     const reply = getReply(getLocations);
@@ -588,6 +588,7 @@ router.route('/search')
     const endDate = Date.parse(`${req.query.endDate}T23:59:59-00:00`);
 
     const matchIncidents = await db.incidents.findAll({
+      attributes: ['incident_id', 'date', 'description', 'postal_code', 'district_code'],
       where: {
         [Op.and]: [
           {
@@ -602,7 +603,7 @@ router.route('/search')
                   [Op.startsWith]: req.query.queryText
                 } 
               },
-              { 
+              {
                 postal_code: {
                   [Op.startsWith]: req.query.queryText
                 } 
@@ -620,10 +621,20 @@ router.route('/search')
       include: [
         {
           model: db.calls,
-          
+          as: 'call'
+
         },
         {
-          model: db.units
+          model: db.units,
+          as: 'unit'
+        },
+        {
+          model: db.dispatch,
+          as: 'dispatch'
+        },
+        {
+          model: db.locations,
+          as: 'location'
         }
       ]
     });

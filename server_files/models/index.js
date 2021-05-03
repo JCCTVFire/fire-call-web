@@ -24,5 +24,5 @@ export default {
     jurisdiction,
     incidents_has_units,
     stations,
-    employees    
+    employees
 }

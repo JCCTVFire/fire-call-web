@@ -24,9 +24,13 @@ export default (database, DataTypes) => {
       }
     },
     {
-      freezeTableName: true, timestamps: false
+      freezeTableName: true, timestamps: false, underscored: true
     }
   );
+
+  Dispatch.associate = function (db) {
+    Dispatch.hasOne(db.incidents, {foreignKey: 'dispatch_id', sourceKey: 'dispatch_id', as: 'dispatch'});
+  }
 
   return Dispatch;
 }

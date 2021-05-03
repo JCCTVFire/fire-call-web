@@ -7,16 +7,10 @@ const router = express.Router();
 
 function getReply(results) {
   try {
-    return results.length > 0 && typeof results[0] === 'object' ? {data: results} : {message: 'No results found.'};
+    return results.length > 0 ? {data: results} : {message: 'No results found.'};
   } catch (err) {
-    if (typeof results[0] === 'undefined') {
-      return {message: 'No results found. (In catch.)'}
-    } 
-    if (typeof results[0] === 'object') {
-      entries(results).forEach((key, value) => {
-        value.length > 0 ? `{${key}: ${value}}` : {message: 'No results found.'};
-      });
-    } else {}
+    console.log(err);
+    return {message: 'Server error!'};
   }
   
 }
@@ -404,7 +398,7 @@ router.route('/dispatch')
   });
 
 
-router.route('/search/mapVis')
+router.route('/search')
 .get(async (req, res) => {
   try {
     // console.log(req)

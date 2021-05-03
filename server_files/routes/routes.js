@@ -8,7 +8,7 @@ const router = express.Router();
 
 function getReply(results) {
   try {
-    return results.length > 0 ? {data: results} : {message: 'No results found.'};
+    return results.length > 0 ? {data: results, count: results.length} : {message: 'No results found.'};
   } catch (err) {
     console.log(err);
     return {message: 'Server error!'};
@@ -108,12 +108,18 @@ router.route('/incidents/:incident_id')
   .delete(async (req, res) => {
     try {
       console.log(req.params)
-      await db.incidents.destroy({
+      const deleted = await db.incidents.destroy({
         where: {
           incident_id: req.params.incident_id
         }
       });
-      res.send('Successful deletion.');
+      if (deleted > 0) {
+        res.send(`Deleted ${deleted} rows.`);
+      } else if (deleted === 0) {
+        res.send('No rows deleted.');
+      } else {
+        res.send('Server Error!');
+      }
     } catch (err) {
       console.error(err);
       res.send('Server Error!');
@@ -301,15 +307,21 @@ router.route('/calls/:call_id')
   .delete(async (req, res) => {
     try {
       console.log(req.params)
-      await db.calls.destroy({
+      const deleted = await db.calls.destroy({
         where: {
           call_id: req.params.call_id
         }
       });
-      res.send('Successful deletion.');
+      if (deleted > 0) {
+        res.send(`Deleted ${deleted} rows.`);
+      } else if (deleted === 0) {
+        res.send('No rows deleted.');
+      } else {
+        res.send('Server Error!');
+      }
     } catch (err) {
       console.error(err);
-      res.error('Server Error!');
+      res.send('Server Error!');
     }
   });
 
@@ -410,19 +422,25 @@ router.route('/dispatch/:dispatch_id')
   .delete(async (req, res) => {
     try {
       // console.log(req.params)
-      await db.dispatch.destroy({
+      const deleted = await db.dispatch.destroy({
         where: {
           dispatch_id: req.params.dispatch_id
         }
       });
-      res.send('Successful deletion.');
+      if (deleted > 0) {
+        res.send(`Deleted ${deleted} rows.`);
+      } else if (deleted === 0) {
+        res.send('No rows deleted.');
+      } else {
+        res.send('Server Error!');
+      }
     } catch (err) {
       console.error(err);
       res.error('Server Error!');
     }
   });
 
-// unitS
+// units
 router.route('/units')
   .get(async (req, res) => {
     try {
@@ -492,12 +510,18 @@ router.route('/units/:unit_id')
   .delete(async (req, res) => {
     try {
       console.log(req.params)
-      await db.units.destroy({
+      const deleted = await db.units.destroy({
         where: {
           unit_id: req.params.unit_id
         }
       });
-      res.send('Successful deletion.');
+      if (deleted > 0) {
+        res.send(`Deleted ${deleted} rows.`);
+      } else if (deleted === 0) {
+        res.send('No rows deleted.');
+      } else {
+        res.send('Server Error!');
+      }
     } catch (err) {
       console.error(err);
       res.error('Server Error!');
@@ -505,8 +529,7 @@ router.route('/units/:unit_id')
   });
 
 
-router.route('/search')
-.get(async (req, res) => {
+router.get('/search', async (req, res) => {
   try {
     // console.log(req)
     let incidentData = [];
@@ -582,7 +605,12 @@ router.route('/search')
       });
       console.log("Units:", b);
     }
-
+    let resultCount = 10;
+    try {
+      resultCount = JSON.parse(req.query.limit);
+    } catch (err) {
+      resultCount = 10;
+    }
     console.log(`${req.query.endDate} 23:59:59`);
     const startDate = Date.parse(`${req.query.startDate}T00:00:00-00:00`);
     const endDate = Date.parse(`${req.query.endDate}T23:59:59-00:00`);
@@ -600,12 +628,12 @@ router.route('/search')
               },
               { 
                 description: {
-                  [Op.startsWith]: req.query.queryText
+                  [Op.like]: req.query.queryText
                 } 
               },
               {
                 postal_code: {
-                  [Op.startsWith]: req.query.queryText
+                  [Op.like]: req.query.queryText
                 } 
               },
             ]
@@ -617,7 +645,7 @@ router.route('/search')
           }
         ]
       },
-      limit: 10,
+      limit: resultCount,
       include: [
         {
           model: db.calls,
@@ -657,15 +685,6 @@ router.route('/search')
     console.error(err);
     res.send('Server Error!');
   }
-})
-.post(async (req, res) => {
-  res.send('Action not available.');
-})
-.put(async (req, res) => {
-  res.send('Action not available.');
-})
-.delete(async (req, res) => {
-  res.send('Action unavailable.');
 });
 
 // Custom query

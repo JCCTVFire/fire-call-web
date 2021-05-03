@@ -217,21 +217,21 @@ router.get('/incidents/:incident_id/locations', async (req, res) => {
   }
 });
 
-router.get('/incidents/:incident_id/incident', async (req, res) => {
-  try { 
-    const getIncidents = await db.incidents.findAll({
-      where: {
-        incident_id: req.params.incident_id
-      }
-    });    
-    const reply = getReply(getIncidents);
-    res.json(reply);
-  }
-  catch (err) {
-    console.error(err);
-    res.send(error);
-  }
-});
+// router.get('/incidents/:incident_id/incident', async (req, res) => {
+//   try { 
+//     const getIncidents = await db.incidents.findAll({
+//       where: {
+//         incident_id: req.params.incident_id
+//       }
+//     });    
+//     const reply = getReply(getIncidents);
+//     res.json(reply);
+//   }
+//   catch (err) {
+//     console.error(err);
+//     res.send(error);
+//   }
+// });
 
  
 

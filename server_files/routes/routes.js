@@ -616,7 +616,16 @@ router.route('/search')
           }
         ]
       },
-      limit: 10
+      limit: 10,
+      include: [
+        {
+          model: db.calls,
+          
+        },
+        {
+          model: db.units
+        }
+      ]
     });
     if (matchIncidents.length > 0) {
       let c = 0;

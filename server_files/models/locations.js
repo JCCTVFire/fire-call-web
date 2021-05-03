@@ -20,12 +20,12 @@ export default (database, DataTypes) => {
       {
         freezeTableName: true, 
         timestamps: false,
+        underscored: true
       }
     );
   
     Locations.associate = function (db) {
-      Locations.hasOne(db.incidents, {foreignKey: 'incident_id'});
-      db.incidents.belongsTo(Locations, {foreignKey: 'incident_id'});
+      Locations.belongsTo(db.incidents, {foreignKey: 'incident_id', sourceKey: 'incidents_incident_id', as: 'incident'});
     }; 
     return Locations;
   }

@@ -7,11 +7,11 @@
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css">
         <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A==" crossorigin=""/>
         <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js" integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA==" crossorigin=""></script>
-        
+
         <title>Arlington County Fire Calls</title>
     </head>
 
-    <body>
+    <body>  
 
         <nav class="navbar is-black" role="navigation" aria-label="main navigation">
             <div class="navbar-brand">
@@ -28,14 +28,6 @@
           
                 <a class="navbar-item" href="./about/index.html">
                     About
-                </a>
-
-                <a class="navbar-item" href="./add_call/index.html">
-                    Add Call
-                </a>
-
-                <a class="navbar-item" href="./manage_calls/index.html">
-                    Manage Calls
                 </a>
           
               </div>
@@ -64,6 +56,99 @@
 
             <div class="column">
               <div id="mapid"></div>
+            </div>
+
+            <button class="accordion">Add Call</button>
+            <div class="panel">
+              <div class="field">
+                <label class="label mt-3">ID:</label>
+              </div>
+    
+              <div class="field">
+                <label class="label">Call Type</label>
+                <div class="control">
+                  <input class="input" style="width: 450px;" type="text">
+                </div>
+              </div>
+    
+              <div class="field">
+                <label class="label">Call Class</label>
+                <div class="control">
+                  <div class="select">
+                    <select>
+                      <option>Fire</option>
+                      <option>HazMat</option>
+                      <option>Medical</option>
+                      <option>Rescue</option>
+                      <option>Other</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+               <div class="field">
+                <label class="label">Call Time</label>
+                <div class="control">
+                  <input class="input" style="width: 450px;" type="text">
+                </div>
+              </div>
+    
+              <div class="field">
+                <div class="control">
+                  <button class="button is-link mt-2 mb-3">Save</button>
+                </div>
+              </div>
+            </div>
+
+            <button class="accordion">Manage Call</button>
+            <div class="panel">
+              <div class="field mb-3">
+                <div class="control">
+                  <input class="input is-small mt-3" style="width: 450px;" type="search" placeholder="Search Call ID">
+                </div>
+              </div>
+
+              <div class="field">
+                <label class="label">ID:</label>
+              </div>
+
+              <div class="field">
+                <label class="label">Call Type</label>
+                <div class="control">
+                  <input class="input" style="width: 450px;" type="text">
+                </div>
+              </div>
+    
+              <div class="field">
+                <label class="label">Call Class</label>
+                <div class="control">
+                  <div class="select">
+                    <select>
+                      <option>Fire</option>
+                      <option>HazMat</option>
+                      <option>Medical</option>
+                      <option>Rescue</option>
+                      <option>Other</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+               <div class="field">
+                <label class="label">Call Time</label>
+                <div class="control">
+                  <input class="input" style="width: 450px;" type="text">
+                </div>
+              </div>
+
+              <div class="field is-grouped">
+                <div class="control">
+                  <button class="button is-link mt-2 mb-3">Save</button>
+                </div>
+                <div class="control">
+                    <button class="button is-danger mt-2 mb-3">Delete</button>
+                </div>
+              </div>    
             </div>
 
             <script src="script.js"></script>            

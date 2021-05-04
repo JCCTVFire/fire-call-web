@@ -4,7 +4,7 @@ import db from '../database/initDB.js';
 import { getSearchResults } from '../controllers/search.js';
 import { createNewIncident, deleteIncident, getAllIncidents, getCallFromIncident, getDispatchFromIncident, getIncident, getLocationFromIncident, getUnitFromIncident, updateIncident } from '../controllers/incidents.js';
 import { createNewCall, deleteCall, getAllCalls, getCall, updateCall } from '../controllers/calls.js';
-import { createNewLocation, deleteLocation, getAllLocations, updateLocation } from '../controllers/locations.js';
+import { createNewLocation, deleteLocation, getAllLocations, updateLocation, getLocation } from '../controllers/locations.js';
 
 const Op = sequelize.Op;
 const router = express.Router();
@@ -112,7 +112,7 @@ router.route('/calls/:call_id')
   });
 
 // LOCATIONS
-router.route('locations')
+router.route('/locations')
   .get(async (req, res) => {
     await getAllLocations(req, res);
   })

@@ -66,7 +66,6 @@ async function updateLocation(req, res, next) {
 
 async function deleteLocation(req, res, next) {
   try {
-    console.log(req.params)
     const deleted = await db.locations.destroy({
       where: {
         locations_id: req.params.locations_id

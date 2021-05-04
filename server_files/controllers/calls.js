@@ -87,10 +87,6 @@ async function deleteCall(req, res, next) {
   }
 }
 
-
-
-
-
 export {
   getAllCalls,
   createNewCall,

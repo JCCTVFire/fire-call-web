@@ -5,6 +5,7 @@ import { getSearchResults } from '../controllers/search.js';
 import { createNewIncident, deleteIncident, getAllIncidents, getCallFromIncident, getDispatchFromIncident, getIncident, getLocationFromIncident, getUnitFromIncident, updateIncident } from '../controllers/incidents.js';
 import { createNewCall, deleteCall, getAllCalls, getCall, updateCall } from '../controllers/calls.js';
 import { createNewLocation, deleteLocation, getAllLocations, updateLocation, getLocation } from '../controllers/locations.js';
+import { getAllUnits, createNewUnit, getUnit, updateUnit, deleteUnit } from '../controllers/units.js';
 
 const Op = sequelize.Op;
 const router = express.Router();
@@ -236,27 +237,10 @@ router.route('/dispatch/:dispatch_id')
 // units
 router.route('/units')
   .get(async (req, res) => {
-    try {
-      const units = await db.units.findAll();
-      const reply = getReply(units);
-      res.json(reply);
-    } catch (err) {
-      console.error(err);
-      res.json({error: 'Server error'});
-    }
+    await getAllUnits(req, res);
   })
   .post(async (req, res) => {
-    try {
-      const newUnit = await db.units.create({
-        unit_id: req.body.unit_id,
-        unit_number: req.body.unit_number,
-        unit_class_name: req.body.unit_class_name
-      })
-      res.json({message: 'New unit created!'});
-    } catch (err) {
-      console.error(err);
-      res.json({error: 'Server error'});
-    }
+    await createNewUnit(req, res);
   })
   .put(async (req, res) => {
     res.json({message: 'Action not available.'});
@@ -267,58 +251,16 @@ router.route('/units')
 
 router.route('/units/:unit_id')
   .get(async (req, res) => {
-    try {
-      const unit = await db.units.findAll({
-        where: {
-          unit_id: req.params.unit_id
-        }
-      });
-      const reply = getReply(unit);
-      res.json(reply)
-    } catch (err) {
-      console.error(err);
-      res.json({error: 'Server error'});
-    }
+    await getUnit(req, res);
   })
   .post(async (req, res) => {
     res.json({message: 'Action not available.'});
   })
   .put(async (req, res) => {
-    try {
-      await db.units.update({
-        unit_number: req.body.unit_number,
-        unit_class_name: req.body.unit_class_name
-      },
-      {
-        where: {
-          unit_id: req.params.unit_id
-        }
-      });
-      res.json({message: 'Successful update.'});
-    } catch (err) {
-      console.error(err);
-      res.json({error: 'Server error'});
-    }
+    await updateUnit(req, res);
   })
   .delete(async (req, res) => {
-    try {
-      console.log(req.params)
-      const deleted = await db.units.destroy({
-        where: {
-          unit_id: req.params.unit_id
-        }
-      });
-      if (deleted > 0) {
-        res.json({error: 'Server error'});
-      } else if (deleted === 0) {
-        res.json({message: 'No rows deleted.'});
-      } else {
-        res.json({error: 'Server error'});
-      }
-    } catch (err) {
-      console.error(err);
-      res.json({error: 'Server error'});
-    }
+    await deleteUnit(req, res);
   });
 
 

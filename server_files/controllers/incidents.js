@@ -1,5 +1,6 @@
 import {getReply} from './getReply.js';
 import db from '../database/initDB.js';
+
 async function getAllIncidents(req, res, next) {
   try {
     const all_incidents = await db.incidents.findAll();
@@ -7,7 +8,7 @@ async function getAllIncidents(req, res, next) {
     res.json(reply);
   } catch (err) {
     console.error(err);
-    res.send('Server Error!');
+    res.json({message: 'Server error'});
   }
 }
 
@@ -16,7 +17,7 @@ async function createNewIncident(req, res, next) {
     const exists = await db.incidents.findAll({ where: { incident_id: req.body.incident_id}});
     
     if (exists.length > 0) {
-      res.json({message: `Error: Entry with incident_id ${req.body.incident_id} already exists!`});
+      res.json({message: `Entry with incident_id ${req.body.incident_id} already exists!`});
     } else {
       const newIncident = await db.incidents.create({
         incident_id:  req.body.incident_id,
@@ -29,11 +30,11 @@ async function createNewIncident(req, res, next) {
         unit_id: req.body.unit_id,
         locations_id: req.body.locations_id
       });
-      res.send("Successfully created new incident!");
+      res.send({message: 'Inserted new entry in \"incidents\".'});
     }
   } catch (err) {
     console.error(err);
-    res.send('Server Error!');
+    res.json({message: 'Server error'});
   }
 }
 
@@ -48,7 +49,7 @@ async function getIncident(req, res, next) {
     res.json(reply);
   } catch (err) {
     console.error(err);
-    res.send('Server Error!');
+    res.json({message: 'Server error'});
   }
 }
 
@@ -69,10 +70,10 @@ async function updateIncident(req, res, next){
         incident_id: req.params.incident_id
       }
     });
-    res.send('Successful update.');
+    res.json({message: 'Successfully updated an incident.'});
   } catch (err) {
     console.error(err);
-    res.send('Server Error!');
+    res.json({message: 'Server error'});
   }
 }
 async function deleteIncident(req, res, next){
@@ -84,15 +85,15 @@ async function deleteIncident(req, res, next){
       }
     });
     if (deleted > 0) {
-      res.send(`Deleted ${deleted} rows.`);
+      res.send({message: `Deleted ${deleted} rows in calls.`});
     } else if (deleted === 0) {
-      res.send('No rows deleted.');
+      res.send({message: 'No rows deleted.'});
     } else {
-      res.send('Server Error!');
+      res.json({message: 'Server error'});
     }
   } catch (err) {
     console.error(err);
-    res.send('Server Error!');
+    res.json({message: 'Server error'});
   }
 }
 
@@ -115,7 +116,7 @@ async function getCallFromIncident(req, res, next) {
   }
    catch (err) {
      console.error(err);
-     res.send(error);
+     res.json({message: 'Server error'});;
    }
 }
 async function getUnitFromIncident(req, res, next) {
@@ -137,7 +138,7 @@ async function getUnitFromIncident(req, res, next) {
     res.json(reply);
   } catch (err) {
     console.error(err);
-    res.send(err);
+    res.json({message: 'Server error'});;
   }
 }
 async function getDispatchFromIncident(req, res, next) {
@@ -157,7 +158,7 @@ async function getDispatchFromIncident(req, res, next) {
   }
   catch (err) {
     console.error(err);
-    res.send(error);
+    res.json({message: 'Server error'});;
   }
 }
 async function getLocationFromIncident(req, res, next) {
@@ -178,7 +179,7 @@ async function getLocationFromIncident(req, res, next) {
   }
   catch (err) {
     console.error(err);
-    res.send(error);
+    res.json({message: 'Server error'});;
   }
 }
 

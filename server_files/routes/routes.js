@@ -4,6 +4,7 @@ import db from '../database/initDB.js';
 import { getSearchResults } from '../controllers/search.js';
 import { createNewIncident, deleteIncident, getAllIncidents, getCallFromIncident, getDispatchFromIncident, getIncident, getLocationFromIncident, getUnitFromIncident, updateIncident } from '../controllers/incidents.js';
 import { createNewCall, deleteCall, getAllCalls, getCall, updateCall } from '../controllers/calls.js';
+import { createNewLocation, deleteLocation, getAllLocations, updateLocation } from '../controllers/locations.js';
 
 const Op = sequelize.Op;
 const router = express.Router();
@@ -14,7 +15,7 @@ function getReply(results) {
     return results.length > 0 ? {data: results, count: results.length} : {message: 'No results found.'};
   } catch (err) {
     console.log(err);
-    return {message: 'Server error!'};
+    return {message: 'Server error'};
   }
 }
 // New route template
@@ -113,32 +114,10 @@ router.route('/calls/:call_id')
 // LOCATIONS
 router.route('locations')
   .get(async (req, res) => {
-    try {
-      const locations = await db.locations.findAll();
-      const reply = getReply(locations);
-      res.json(reply);
-    } catch (err) {
-      console.error(err);
-      res.json({error: 'Server error'});
-    }
+    await getAllLocations(req, res);
   })
   .post(async (req, res) => {
-    try {
-      const existing = await db.locations.findAll({ where: {locations_id: req.body.locations_id}});
-      if (existing > 0) {
-        res.json({error: `Entry with locations_id ${req.body.locations_id} already exists!`})
-      } else {
-        const newLocation = await db.locations.create({
-          locations_id: req.body.locations_id,
-          lat: req.body.lat,
-          long: req.body.long
-        });
-        res.json({message: 'Inserted new entry in \"locations\".'});
-      }
-    } catch (err) {
-      console.error(err);
-      res.json({error: 'Server error'})
-    }
+    await createNewLocation(req, res);
   })
   .put(async (req, res) => {
     res.json({message: 'Action not available.'});
@@ -149,16 +128,16 @@ router.route('locations')
 
 router.route('/locations/:locations_id')
   .get(async (req, res) => {
-    res.json({message: 'Action not available'});
+    await getLocation(req, res);
   })
   .post(async (req, res) => {
     res.json({message: 'Action not available.'});
   })
   .put(async (req, res) => {
-    res.json({message: 'Action not available.'});
+    await updateLocation(req, res);
   })
   .delete(async (req, res) => {
-    res.json({message: 'Action unavailable.'});
+    await deleteLocation(req, res);
   });
 
 router.route('/dispatch')

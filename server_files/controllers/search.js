@@ -4,7 +4,7 @@ import {getReply} from './getReply.js';
 
 const Op = sequelize.Op
 
-async function getSearchResults(res, req, next) {
+async function getSearchResults(req, res, next) {
   try {
     // console.log(req)
     let incidentData = [];

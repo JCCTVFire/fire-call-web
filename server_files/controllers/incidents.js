@@ -76,6 +76,7 @@ async function updateIncident(req, res, next){
     res.json({message: 'Server error'});
   }
 }
+
 async function deleteIncident(req, res, next){
   try {
     console.log(req.params)
@@ -119,6 +120,7 @@ async function getCallFromIncident(req, res, next) {
      res.json({message: 'Server error'});;
    }
 }
+
 async function getUnitFromIncident(req, res, next) {
   try {
     const getUnit = await db.incidents.findAll({
@@ -141,6 +143,7 @@ async function getUnitFromIncident(req, res, next) {
     res.json({message: 'Server error'});;
   }
 }
+
 async function getDispatchFromIncident(req, res, next) {
   try { 
     const getIncidents = await db.incidents.findAll({
@@ -161,6 +164,7 @@ async function getDispatchFromIncident(req, res, next) {
     res.json({message: 'Server error'});;
   }
 }
+
 async function getLocationFromIncident(req, res, next) {
   try { 
     const getIncidents = await db.incidents.findAll({

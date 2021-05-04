@@ -17,8 +17,13 @@ export default (database, DataTypes) => {
     {
       freezeTableName: true, 
       timestamps: false,
+      underscored: true
     }
   );
+
+  Units.associate = function (db) {
+    Units.hasOne(db.incidents, {foreignKey: 'unit_id', sourceKey: 'unit_id', as: 'unit'});
+  }
 
   return Units;
 }

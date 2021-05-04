@@ -10,7 +10,7 @@ const router = express.Router();
 
 function getReply(results) {
   try {
-    return results.length > 0 ? {data: results} : {message: 'No results found.'};
+    return results.length > 0 ? {data: results, count: results.length} : {message: 'No results found.'};
   } catch (err) {
     console.log(err);
     return {message: 'Server error!'};
@@ -103,12 +103,18 @@ router.route('/incidents/:incident_id')
   .delete(async (req, res) => {
     try {
       console.log(req.params)
-      await db.incidents.destroy({
+      const deleted = await db.incidents.destroy({
         where: {
           incident_id: req.params.incident_id
         }
       });
-      res.send('Successful deletion.');
+      if (deleted > 0) {
+        res.send(`Deleted ${deleted} rows.`);
+      } else if (deleted === 0) {
+        res.send('No rows deleted.');
+      } else {
+        res.send('Server Error!');
+      }
     } catch (err) {
       console.error(err);
       res.send('Server Error!');
@@ -194,7 +200,7 @@ router.get('/incidents/:incident_id/locations', async (req, res) => {
     });    
     const getLocations = await db.locations.findAll({
       where: {
-        incidents_incident_id: getIncidents[0].dataValues.incident_id
+        locations_id: getIncidents[0].dataValues.locations_id
       }
     });
     const reply = getReply(getLocations);
@@ -239,6 +245,7 @@ router.route('/calls')
   .post(async (req, res) => {
     try {
       const newCall = await db.calls.create({
+        call_id: req.body.call_id,
         call_type: req.body.call_type,
         call_class: req.body.call_class,
         call_time: req.body.call_time
@@ -295,15 +302,21 @@ router.route('/calls/:call_id')
   .delete(async (req, res) => {
     try {
       console.log(req.params)
-      await db.calls.destroy({
+      const deleted = await db.calls.destroy({
         where: {
           call_id: req.params.call_id
         }
       });
-      res.send('Successful deletion.');
+      if (deleted > 0) {
+        res.send(`Deleted ${deleted} rows.`);
+      } else if (deleted === 0) {
+        res.send('No rows deleted.');
+      } else {
+        res.send('Server Error!');
+      }
     } catch (err) {
       console.error(err);
-      res.error('Server Error!');
+      res.send('Server Error!');
     }
   });
 
@@ -404,19 +417,25 @@ router.route('/dispatch/:dispatch_id')
   .delete(async (req, res) => {
     try {
       // console.log(req.params)
-      await db.dispatch.destroy({
+      const deleted = await db.dispatch.destroy({
         where: {
           dispatch_id: req.params.dispatch_id
         }
       });
-      res.send('Successful deletion.');
+      if (deleted > 0) {
+        res.send(`Deleted ${deleted} rows.`);
+      } else if (deleted === 0) {
+        res.send('No rows deleted.');
+      } else {
+        res.send('Server Error!');
+      }
     } catch (err) {
       console.error(err);
       res.error('Server Error!');
     }
   });
 
-// unitS
+// units
 router.route('/units')
   .get(async (req, res) => {
     try {
@@ -433,7 +452,7 @@ router.route('/units')
       const newUnit = await db.units.create({
         unit_id: req.body.unit_id,
         unit_number: req.body.unit_number,
-        unit_class: req.body.unit_class
+        unit_class_name: req.body.unit_class_name
       })
       res.send('New unit created!');
     } catch (err) {
@@ -470,7 +489,7 @@ router.route('/units/:unit_id')
     try {
       await db.units.update({
         unit_number: req.body.unit_number,
-        unit_class: req.body.unit_class
+        unit_class_name: req.body.unit_class_name
       },
       {
         where: {
@@ -486,12 +505,18 @@ router.route('/units/:unit_id')
   .delete(async (req, res) => {
     try {
       console.log(req.params)
-      await db.units.destroy({
+      const deleted = await db.units.destroy({
         where: {
           unit_id: req.params.unit_id
         }
       });
-      res.send('Successful deletion.');
+      if (deleted > 0) {
+        res.send(`Deleted ${deleted} rows.`);
+      } else if (deleted === 0) {
+        res.send('No rows deleted.');
+      } else {
+        res.send('Server Error!');
+      }
     } catch (err) {
       console.error(err);
       res.error('Server Error!');

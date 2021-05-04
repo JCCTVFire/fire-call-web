@@ -8,7 +8,7 @@ async function getAllCalls(req, res, next) {
     res.json(reply);
   } catch (err) {
     console.error(err);
-    res.json({error: 'Server Error!'});
+    res.json({error: 'Server error'});
   }
 }
 
@@ -16,6 +16,8 @@ async function createNewCall(req, res, next) {
   try {
     const existing = await db.calls.findAll({ where: { call_id: req.body.call_id } });
     if (existing > 0) {
+      res.json({message: `Entry with call_id ${req.body.call_id} already exists`})
+    } else {
       const newCall = await db.calls.create({
         call_id: req.body.call_id,
         call_type: req.body.call_type,
@@ -26,7 +28,7 @@ async function createNewCall(req, res, next) {
     }
   } catch (err) {
     console.error(err);
-    res.json({error: 'Server Error!'});
+    res.json({error: 'Server error'});
   }
 }
 
@@ -41,7 +43,7 @@ async function getCall(req, res, next) {
     res.json(reply)
   } catch (err) {
     console.error(err);
-    res.json({error: 'Server Error!'});
+    res.json({error: 'Server error'});
   }
 }
 
@@ -60,7 +62,7 @@ async function updateCall(req, res, next) {
     res.json({message: 'Successful update.'});
   } catch (err) {
     console.error(err);
-    res.json({error: 'Server Error!'});
+    res.json({error: 'Server error'});
   }
 }
 
@@ -81,7 +83,7 @@ async function deleteCall(req, res, next) {
     }
   } catch (err) {
     console.error(err);
-    res.json({error: 'Server Error!'});
+    res.json({error: 'Server error'});
   }
 }
 

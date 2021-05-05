@@ -3,8 +3,8 @@ import db from '../database/initDB.js';
 
 async function getAllIncidents(req, res, next) {
   try {
-    const all_incidents = await db.incidents.findAll();
-    const reply = getReply(all_incidents);
+    const incidents = await db.incidents.findAll();
+    const reply = getReply(incidents);
     res.json(reply);
   } catch (err) {
     console.error(err);
@@ -14,9 +14,9 @@ async function getAllIncidents(req, res, next) {
 
 async function createNewIncident(req, res, next) {
   try {
-    const exists = await db.incidents.findAll({ where: { incident_id: req.body.incident_id}});
+    const existing = await db.incidents.findAll({ where: { incident_id: req.body.incident_id}});
     
-    if (exists.length > 0) {
+    if (existing.length > 0) {
       res.json({message: `Entry with incident_id ${req.body.incident_id} already exists!`});
     } else {
       const newIncident = await db.incidents.create({

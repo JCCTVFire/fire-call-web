@@ -3,8 +3,8 @@ import db from '../database/initDB.js';
 
 async function getAllCalls(req, res, next) {
   try {
-    const calls = await db.calls.findAll();
-    const reply = getReply(calls);
+    const allCalls = await db.calls.findAll();
+    const reply = getReply(allCalls);
     res.json(reply);
   } catch (err) {
     console.error(err);
@@ -15,6 +15,7 @@ async function getAllCalls(req, res, next) {
 async function createNewCall(req, res, next) {
   try {
     const existing = await db.calls.findAll({ where: { call_id: req.body.call_id } });
+    
     if (existing > 0) {
       res.json({message: `Entry with call_id ${req.body.call_id} already exists`})
     } else {

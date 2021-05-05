@@ -3,8 +3,8 @@ import db from '../database/initDB.js';
 
 async function getAllUnits(req, res, next) {
   try {
-    const units = await db.units.findAll();
-    const reply = getReply(units);
+    const allUnits = await db.units.findAll();
+    const reply = getReply(allUnits);
     res.json(reply);
   } catch (err) {
     console.error(err);
@@ -15,6 +15,7 @@ async function getAllUnits(req, res, next) {
 async function createNewUnit(req, res, next) {
   try {
     const existing = await db.units.findAll({ where: { unit_id: req.body.unit_id } });
+    
     if (existing > 0) {
       res.json({message: `Entry with unit_id ${req.body.unit_id} already exists`})
     } else {

@@ -3,8 +3,8 @@ import db from '../database/initDB.js';
 
 async function getAllLocations(req, res, next) {
   try {
-    const locations = await db.locations.findAll();
-    const reply = getReply(locations);
+    const allLocations = await db.locations.findAll();
+    const reply = getReply(allLocations);
     res.json(reply);
   } catch (err) {
     console.error(err);
@@ -15,6 +15,7 @@ async function getAllLocations(req, res, next) {
 async function createNewLocation(req, res, next) {
   try {
     const existing = await db.locations.findAll({ where: { locations_id: req.body.locations_id } });
+    
     if (existing > 0) {
       res.json({message: `Entry with locations_id ${req.body.locations_id} already exists`})
     } else {

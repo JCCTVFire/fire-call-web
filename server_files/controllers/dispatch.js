@@ -3,8 +3,8 @@ import db from '../database/initDB.js';
 
 async function getAllDispatch(req, res, next) {
   try {
-    const all_dispatch = await db.dispatch.findAll();
-    const reply = getReply(all_dispatch);
+    const allDispatch = await db.dispatch.findAll();
+    const reply = getReply(allDispatch);
     res.json(reply);
   } catch (err) {
     console.error(err);
@@ -14,9 +14,9 @@ async function getAllDispatch(req, res, next) {
 
 async function createNewDispatch(req, res, next) {
   try {
-    const exists = await db.dispatch.findAll({ where: { dispatch_id: req.body.dispatch_id}});
+    const existing = await db.dispatch.findAll({ where: { dispatch_id: req.body.dispatch_id}});
     
-    if (exists.length > 0) {
+    if (existing.length > 0) {
       res.json({message: `Entry with dispatch_id ${req.body.dispatch_id} already exists!`});
     } else {
       const newDispatch = await db.dispatch.create({

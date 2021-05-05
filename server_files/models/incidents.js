@@ -25,22 +25,27 @@ export default (database, DataTypes) => {
         // allowNull: false
       },
       dispatch_id: {
-        type: DataTypes.INTEGER
+        type: DataTypes.INTEGER,
+        // allowNull: false
+      },
+      unit_id: {
+        type: DataTypes.INTEGER,
+        // allowNull: false
+      },
+      locations_id: {
+        type: DataTypes.INTEGER,
       }
     },
     {
-      freezeTableName: true, timestamps: false
+      freezeTableName: true, timestamps: false, underscored: true
     }
   );
 
   Incidents.associate = function (db) {
-    Incidents.hasOne(db.calls, {foreignKey: 'call_id'});
-
-    db.calls.belongsTo(Incidents, {foreignKey: 'call_id'});
-
-    Incidents.hasOne(db.dispatch, {foreignKey: 'dispatch_id'});
-
-    db.dispatch.belongsTo(Incidents, {foreignKey: 'dispatch_id'});
+    Incidents.belongsTo(db.locations, {foreignKey: 'locations_id', sourceKey: 'locations_id', as: 'location'});
+    Incidents.belongsTo(db.calls, {foreignKey: 'call_id', sourceKey: 'call_id', as: 'call'});
+    Incidents.belongsTo(db.dispatch, {foreignKey: 'dispatch_id', sourceKey: 'dispatch_id', as: 'dispatch'});
+    Incidents.belongsTo(db.units, {foreignKey: 'unit_id', sourceKey: 'unit_id', as: 'unit'});
   }
   return Incidents;
 }

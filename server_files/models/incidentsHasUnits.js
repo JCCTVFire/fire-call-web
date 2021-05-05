@@ -8,10 +8,12 @@ export default (database, DataTypes) => {
         primaryKey: true
       },
       incidents_incident_id: {
-        type: DataTypes.INTEGER
+        type: DataTypes.INTEGER,
+        allowNull: false
       },
       units_unit_id: {
-        type: DataTypes.INTEGER
+        type: DataTypes.INTEGER,
+        allowNull: false
       },
     },
     {
@@ -20,11 +22,8 @@ export default (database, DataTypes) => {
     }
   );
   IncidentsHasUnits.associate = function (db) {
-    IncidentsHasUnits.belongsTo(db.units, {foreignKey: 'units_unit_id'});
-    db.units.hasMany(IncidentsHasUnits, {foreignKey: 'units_unit_id'});
-
-    IncidentsHasUnits.belongsTo(db.incidents, {foreignKey: 'incidents_incident_id'});
-    db.incidents.hasMany(IncidentsHasUnits, {foreignKey: 'incidents_incident_id'});
+    db.units.belongsToMany(db.incidents, {through: IncidentsHasUnits, foreignKey: 'units_unit_id'});
+    db.incidents.belongsToMany(db.units, {through: IncidentsHasUnits, foreignKey: 'incidents_incident_id'});
   }
 
   return IncidentsHasUnits;

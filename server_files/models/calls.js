@@ -20,11 +20,13 @@ export default (database, DataTypes) => {
     {
       freezeTableName: true, 
       timestamps: false,
+      underscored: true
     }
   );
 
-  // Calls.associate = function (db) {
-  //   Calls.belongsTo(db.incidents);
-  // }; 
+  Calls.associate = function (db) {
+    Calls.hasOne(db.incidents, { foreignKey: 'call_id', sourceKey: 'call_id', as: 'call'});
+  }
+
   return Calls;
 }

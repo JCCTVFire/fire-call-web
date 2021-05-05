@@ -1,24 +1,17 @@
 import express from 'express';
 import sequelize from 'sequelize';
 import db from '../database/initDB.js';
+import { getReply } from '../controllers/getReply.js';
 import { getSearchResults } from '../controllers/search.js';
 import { createNewIncident, deleteIncident, getAllIncidents, getCallFromIncident, getDispatchFromIncident, getIncident, getLocationFromIncident, getUnitFromIncident, updateIncident } from '../controllers/incidents.js';
 import { createNewCall, deleteCall, getAllCalls, getCall, updateCall } from '../controllers/calls.js';
 import { createNewLocation, deleteLocation, getAllLocations, updateLocation, getLocation } from '../controllers/locations.js';
 import { getAllUnits, createNewUnit, getUnit, updateUnit, deleteUnit } from '../controllers/units.js';
+import { getAllDispatch, createNewDispatch, getDispatch, updateDispatch, deleteDispatch } from '../controllers/dispatch.js';
 
 const Op = sequelize.Op;
 const router = express.Router();
 
-
-function getReply(results) {
-  try {
-    return results.length > 0 ? {data: results, count: results.length} : {message: 'No results found.'};
-  } catch (err) {
-    console.log(err);
-    return {message: 'Server error'};
-  }
-}
 // New route template
 router.route('/newRoute')
   .get(async (req, res) => {
@@ -65,20 +58,22 @@ router.route('/incidents/:incident_id')
     await deleteIncident(req, res);
   });
 
-// Gets the unit from an incident
+// Gets unit data from an incident
 router.get('/incidents/:incident_id/units', async (req, res) => {
   await getUnitFromIncident(req, res);
 });
 
-//Get calls from an incident
+// Get call data from an incident
 router.get('/incidents/:incident_id/calls', async (req, res) => {
   await getCallFromIncident(req, res);
 });
 
+// Get dispatch data from an incident
 router.get('/incidents/:incident_id/dispatch', async (req, res) => {
   await getDispatchFromIncident(req, res);
 });
 
+// Get location data from an incident
 router.get('/incidents/:incident_id/locations', async (req, res) => {
   await getLocationFromIncident(req, res);
 });
@@ -141,32 +136,13 @@ router.route('/locations/:locations_id')
     await deleteLocation(req, res);
   });
 
+// DISPATCH
 router.route('/dispatch')
   .get(async (req, res) => {
-    try {
-      const dispatch = await db.dispatch.findAll();
-      const reply = getReply(dispatch);
-      res.json(reply);
-    } catch (err) {
-      console.error(err);
-      res.json({error: 'Server error'});
-    }
+    await getAllDispatch(req, res);
   })
   .post(async (req, res) => {
-    try {
-      const newDispatch = await db.dispatch.create({
-        dispatch_id: req.body.dispatch_id,
-        dispatch_time: req.body.dispatch_time,
-        arrival_time: req.body.arrival_time,
-        response_time: req.body.response_time,
-        arrival_unit: req.body.arrival_unit,
-        cleared_time: req.body.cleared_time,
-      });
-      res.json(newDispatch);
-    } catch (err) {
-      console.error(err);
-      res.json({error: 'Server error'});
-    }
+    await createNewDispatch(req, res);
   })
   .put(async (req, res) => {
     res.json({message: 'Action not available.'});
@@ -177,64 +153,19 @@ router.route('/dispatch')
 
 router.route('/dispatch/:dispatch_id')
   .get(async (req, res) => {
-    try {
-      const dispatch = await db.dispatch.findAll({
-        where: {
-          dispatch_id: req.params.dispatch_id
-        }
-      });
-      const reply = getReply(dispatch);
-      res.json(reply);
-    } catch (err) {
-      console.error(err);
-      res.json({error: 'Server error'});
-    }
+    await getDispatch(req, res);
   })
   .post(async (req, res) => {
     res.json({message: 'Action not available.'});
   })
   .put(async (req, res) => {
-    try {
-      await db.dispatch.update({
-        dispatch_time: req.body.dispatch_time,
-        arrival_time: req.body.arrival_time,
-        response_time: req.body.response_time,
-        arrival_unit: req.body.arrival_unit,
-        cleared_time: req.body.cleared_time,
-      },
-      {
-        where: {
-          dispatch_id: req.params.dispatch_id
-        }
-      });
-      res.json({message: 'Successful update.'});
-    } catch (err) {
-      console.error(err);
-      res.json({error: 'Server error'});
-    }
+    await updateDispatch(req, res);
   })
   .delete(async (req, res) => {
-    try {
-      // console.log(req.params)
-      const deleted = await db.dispatch.destroy({
-        where: {
-          dispatch_id: req.params.dispatch_id
-        }
-      });
-      if (deleted > 0) {
-        res.json({message: `Deleted ${deleted} rows in dispatch.`});
-      } else if (deleted === 0) {
-        res.json({message: 'No rows deleted.'});
-      } else {
-        res.json({error: 'Server error'});
-      }
-    } catch (err) {
-      console.error(err);
-      res.json({error: 'Server error'});
-    }
+    await deleteDispatch(req, res);
   });
 
-// units
+// UNITS
 router.route('/units')
   .get(async (req, res) => {
     await getAllUnits(req, res);
@@ -263,43 +194,23 @@ router.route('/units/:unit_id')
     await deleteUnit(req, res);
   });
 
-
-router.route('/search')
-.get(async (req, res) => {
+router.get('/search', async (req, res) => {
   await getSearchResults(res, req);
-})
-.post(async (req, res) => {
-  res.json({message: 'Action not available.'});
-})
-.put(async (req, res) => {
-  res.json({message: 'Action not available.'});
-})
-.delete(async (req, res) => {
-  res.json({message: 'Action unavailable.'});
 });
 
 // Custom query
-router.route('/custom')
-  .get(async (req, res) => {
-    try {
-      const custom = await db.sequelizeDB.query(req.body.query, {
-        type: sequelize.QueryTypes.SELECT
-      });
-      req.json(custom);
-    } catch (err) {
-      console.log(err);
-      res.json({error: 'Server error'});
-    }
-  })
-  .post(async (req, res) => {
-    res.json({message: 'Action not available.'});
-  })
-  .put(async (req, res) => {
-    res.json({message: 'Action not available.'});
-  })
-  .delete(async (req, res) => {
-    res.json({message: 'Action unavailable.'});
-  });
+router.get('/custom', async (req, res) => {
+  try {
+    const customResult = await db.sequelizeDB.query(req.body.query, {
+      type: sequelize.QueryTypes.SELECT
+    });
+    const reply = getReply(customResult);
+    res.json(reply);
+  } catch (err) {
+    console.log(err);
+    res.json({error: 'Server error'});
+  }
+});
 
 export default router;
 
@@ -307,66 +218,66 @@ export default router;
 ///// UNUSED /////
 //////////////////
 // JURISDICTION
-router.route('/jurisdiction')
-  .get(async (req, res) => {
-    try {
-      const jurisdiction = await db.jurisdiction.findAll();
-      const reply  = getReply(jurisdiction);
-    } catch (err) {
-      console.error(err);
-      res.json({error: 'Server error'});
-    }
-  })
-  .post(async (req, res) => {
-    res.json({message: 'Action not available.'});
-  })
-  .put(async (req, res) => {
-    res.json({message: 'Action not available.'});
-  })
-  .delete(async (req, res) => {
-    res.json({message: 'Action not available.'});
-  });
+// router.route('/jurisdiction')
+//   .get(async (req, res) => {
+//     try {
+//       const jurisdiction = await db.jurisdiction.findAll();
+//       const reply  = getReply(jurisdiction);
+//     } catch (err) {
+//       console.error(err);
+//       res.json({error: 'Server error'});
+//     }
+//   })
+//   .post(async (req, res) => {
+//     res.json({message: 'Action not available.'});
+//   })
+//   .put(async (req, res) => {
+//     res.json({message: 'Action not available.'});
+//   })
+//   .delete(async (req, res) => {
+//     res.json({message: 'Action not available.'});
+//   });
 
-  // EMPLOYEES
-router.route('/employees')
-.get(async (req, res) => {
-  try {
-    const employees = await db.employees.findAll();
-    const reply = getReply(employees);
-    res.json(reply);
-  } catch (err) {
-    console.error(err);
-    res.json({error: 'Server error'});
-  }
-})
-.post(async (req, res) => {
-  res.json({message: 'Action not available.'});
-})
-.put(async (req, res) => {
-  res.json({message: 'Action not available.'});
-})
-.delete(async (req, res) => {
-  res.json({message: 'Action unavailable.'});
-});
+//   // EMPLOYEES
+// router.route('/employees')
+// .get(async (req, res) => {
+//   try {
+//     const employees = await db.employees.findAll();
+//     const reply = getReply(employees);
+//     res.json(reply);
+//   } catch (err) {
+//     console.error(err);
+//     res.json({error: 'Server error'});
+//   }
+// })
+// .post(async (req, res) => {
+//   res.json({message: 'Action not available.'});
+// })
+// .put(async (req, res) => {
+//   res.json({message: 'Action not available.'});
+// })
+// .delete(async (req, res) => {
+//   res.json({message: 'Action unavailable.'});
+// });
 
-// STATIONS
-router.route('/stations')
-  .get(async (req, res) => {
-    try {
-      const stations = await db.stations.findAll();
-      const reply = getReply(stations);
-      res.json(reply);
-    } catch (err) {
-      console.error(err);
-      res.json({error: 'Server error'});
-    }
-  })
-  .post(async (req, res) => {
-    res.json({message: 'Action not available.'});
-  })
-  .put(async (req, res) => {
-    res.json({message: 'Action not available.'});
-  })
-  .delete(async (req, res) => {
-    res.json({message: 'Action unavailable.'});
-  });
+// // STATIONS
+// router.route('/stations')
+//   .get(async (req, res) => {
+//     try {
+//       const stations = await db.stations.findAll();
+//       const reply = getReply(stations);
+//       res.json(reply);
+//     } catch (err) {
+//       console.error(err);
+//       res.json({error: 'Server error'});
+//     }
+//   })
+//   .post(async (req, res) => {
+//     res.json({message: 'Action not available.'});
+//   })
+//   .put(async (req, res) => {
+//     res.json({message: 'Action not available.'});
+//   })
+//   .delete(async (req, res) => {
+//     res.json({message: 'Action unavailable.'});
+//   });

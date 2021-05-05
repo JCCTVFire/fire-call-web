@@ -1,6 +1,3 @@
 node_modules
 package-lock.json
 .env
-/server_files/database/*
-!/server_files/database/config.js
-!/server_files/database/initDB.js

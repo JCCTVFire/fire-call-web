@@ -30,7 +30,7 @@ async function createNewIncident(req, res, next) {
         unit_id: req.body.unit_id,
         locations_id: req.body.locations_id
       });
-      res.send({message: 'Inserted new entry in \"incidents\".'});
+      res.send({message: 'Inserted new entry in "incidents".'});
     }
   } catch (err) {
     console.error(err);

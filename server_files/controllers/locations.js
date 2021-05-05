@@ -23,7 +23,7 @@ async function createNewLocation(req, res, next) {
         lat: req.body.lat,
         long: req.body.long
       });
-      res.json({message: 'Inserted new entry in \"locations\".'})
+      res.json({message: 'Inserted new entry in "locations".'})
     }
   } catch (err) {
     console.error(err);

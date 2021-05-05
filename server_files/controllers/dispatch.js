@@ -25,7 +25,7 @@ async function createNewDispatch(req, res, next) {
         arrival_time: req.body.arrival_time,
         response_time: req.body.response_time,
         arrival_unit: req.body.arrival_unit,
-        cleared_time: cleared_time
+        cleared_time: req.body.cleared_time
       });
       res.send({message: 'Inserted new entry in "dispatch".'});
     }
@@ -57,7 +57,7 @@ async function updateDispatch(req, res, next){
         arrival_time: req.body.arrival_time,
         response_time: req.body.response_time,
         arrival_unit: req.body.arrival_unit,
-        cleared_time: cleared_time
+        cleared_time: req.body.cleared_time
     },
     {
       where: {

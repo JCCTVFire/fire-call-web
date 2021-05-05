@@ -24,7 +24,7 @@ async function createNewCall(req, res, next) {
         call_class: req.body.call_class,
         call_time: req.body.call_time
       });
-      res.json({message: 'Inserted new entry in \"calls\".'})
+      res.json({message: 'Inserted new entry in "calls".'})
     }
   } catch (err) {
     console.error(err);

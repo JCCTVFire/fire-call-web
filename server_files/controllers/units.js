@@ -23,7 +23,7 @@ async function createNewUnit(req, res, next) {
         unit_number: req.body.unit_number,
         unit_class_name: req.body.unit_class_name
       });
-      res.json({message: 'Inserted new entry in \"units\".'})
+      res.json({message: 'Inserted new entry in "units".'})
     }
   } catch (err) {
     console.error(err);

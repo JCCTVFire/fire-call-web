@@ -16,7 +16,7 @@ async function createNewLocation(req, res, next) {
   try {
     const existing = await db.locations.findAll({ where: { locations_id: req.body.locations_id } });
     
-    if (existing > 0) {
+    if (existing.length > 0) {
       res.json({message: `Entry with locations_id ${req.body.locations_id} already exists`})
     } else {
       const newLocation = await db.locations.create({

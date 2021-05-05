@@ -3,8 +3,8 @@ import db from '../database/initDB.js';
 
 async function getAllIncidents(req, res, next) {
   try {
-    const incidents = await db.incidents.findAll();
-    const reply = getReply(incidents);
+    const allIncidents = await db.incidents.findAll();
+    const reply = getReply(allIncidents);
     res.json(reply);
   } catch (err) {
     console.error(err);

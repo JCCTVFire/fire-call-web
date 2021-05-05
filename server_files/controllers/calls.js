@@ -16,7 +16,7 @@ async function createNewCall(req, res, next) {
   try {
     const existing = await db.calls.findAll({ where: { call_id: req.body.call_id } });
     
-    if (existing > 0) {
+    if (existing.length > 0) {
       res.json({message: `Entry with call_id ${req.body.call_id} already exists`})
     } else {
       const newCall = await db.calls.create({

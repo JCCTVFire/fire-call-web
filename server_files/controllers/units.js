@@ -16,7 +16,7 @@ async function createNewUnit(req, res, next) {
   try {
     const existing = await db.units.findAll({ where: { unit_id: req.body.unit_id } });
     
-    if (existing > 0) {
+    if (existing.length > 0) {
       res.json({message: `Entry with unit_id ${req.body.unit_id} already exists`})
     } else {
       const newUnits = await db.units.create({

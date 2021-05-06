@@ -183,7 +183,7 @@ router.route('/units/:unit_id')
 
 // Search endpoint
 router.get('/search', async (req, res) => {
-  await getSearchResults(res, req);
+  await getSearchResults(req, res);
 });
 
 // Custom query

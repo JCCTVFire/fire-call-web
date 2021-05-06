@@ -7,36 +7,37 @@ const Op = sequelize.Op
 async function parseDate(queryDate, minOrMax) {
   try {
     const result = isNaN(queryDate) | queryDate === '' ? await db.incidents.findAll({ attributes: [[sequelize.fn(minOrMax, sequelize.col('date')), 'date']] }) : Date.parse(`${queryDate}T00:00:00-00:00Z`);
-    // console.log(result[0].dataValues.date);
+    
     return result[0].dataValues.date;
   } catch (err) {
     if (minOrMax !== 'min' | minOrMax !== 'max') {
-      console.log('parseDate only accepts "min" or "max" as arguments');
+      console.error('parseDate: minOrMax only accepts "min" and "max" as arguments.')
     } else {
-      console.log(err);
+      console.error(err);
+      res.json({error: 'Server error'});
     }
   }
 }
 
-async function getMatchingCalls (qText) {
-  const qTextTitleCase = qText[0].toUpperCase().concat(qText.slice(1).toLowerCase());
+async function getMatchingCalls (qTextVariants) {
   const calls = await db.calls.findAll({
     where: {
       [Op.or]: [
         {
           call_type: {
-            [Op.substring]: qText.toUpperCase()
+            [Op.substring]: qTextVariants.upperCase
           } 
         },
         {
           call_class: {
-            [Op.like]: qTextTitleCase
+            [Op.like]: qTextVariants.firstLetterCapitalized
           }
         }
       ]
     },
     limit: 10
   });
+  console.log(calls.length)
   return calls;
 }
 
@@ -46,17 +47,33 @@ async function getSearchResults(req, res, next) {
     let incidentData = [];
     let incidentIDs = [];
     const qText = req.query.queryText;
+    const qTextUpper = qText !== '' ? qText.toUpperCase() : '';
+    const qTextLower = qText !== '' ?qText.toLowerCase() : '';
 
     const qTextWords = qText.split(' ');
     const qTextWordsTitleCase = qTextWords.map((word) => {
-      return word[0].toUpperCase().concat(word.slice(1).toLowerCase());
+      try {
+        return word[0].toUpperCase().concat(word.slice(1).toLowerCase());
+      } catch (err) {
+        return '';
+      }
     });
     const qTextTitleCase = qTextWordsTitleCase.join(' ');
 
-    const matchCalls = await getMatchingCalls(qText);
-    if (matchCalls !== 'NULL') {
+    const qTextFirstLetterCapitalized = qText !== '' ? qText[0].toUpperCase().concat(qText.slice(1).toLowerCase()) : '';
+    
+    const qTextVariants = {
+      raw: qText,
+      titleCase: qTextTitleCase,
+      upperCase: qTextUpper,
+      lowerCase: qTextLower,
+      firstLetterCapitalized: qTextFirstLetterCapitalized
+    }
+
+    const matchCalls = await getMatchingCalls(qTextVariants);
+    if (!(isNaN(matchCalls))) {
       const callIDs = matchCalls.map((call) => {
-        // console.log(call.dataValues.call_id);
+        
         return call.dataValues.call_id;
       });
       const callsToIncidents = await db.incidents.findAll({
@@ -67,44 +84,44 @@ async function getSearchResults(req, res, next) {
         },
       });
       let a = 0;
-      callsToIncidents.map((unit) => {
-        incidentIDs.push(unit.dataValues.incident_id);
+      callsToIncidents.map((call) => {
+        incidentIDs.push(call.dataValues.incident_id);
         a += 1;
       });
-      console.log("Calls:", a);
+      
     }
     const matchUnits = await db.units.findAll({
+      limit: 10,
       where: {
         [Op.or]: [
           {
             unit_number: {
-              [Op.substring]: qText.toUpperCase()
+              [Op.substring]: qTextVariants.upperCase
             }
           },
           {
             unit_class_name: {
-              [Op.substring]: qTextTitleCase
+              [Op.substring]: qTextVariants.titleCase
             }
           }
         ]
-      },
-      limit: 10
+      }
     });
     
     let unitsToIncidents = [];
-    console.log(typeof matchUnits, matchUnits);
+    
     if (matchUnits.length > 0) {
       const unitIDs = matchUnits.map((unit) => {
         return unit.dataValues.unit_id
       });
 
-      unitsToIncidents = await db.incidents.findAll({ where: { unit_id: { [Op.in]: unitIDs } } });
+      unitsToIncidents = await db.incidents.findAll({ where: { unit_id: { [Op.in]: unitIDs } }, limit: 10 });
       let b = 0;
       unitsToIncidents.forEach((unit) => {
         incidentIDs.push(unit.dataValues.incident_id);
         b += 1;
       });
-      console.log("Units:", b);
+      
     }
     let resultCount = 10;
     try {
@@ -179,7 +196,7 @@ async function getSearchResults(req, res, next) {
     res.json(reply);
   } catch (err) {
     console.error(err);
-    res.send('Server Error!');
+    res.json({error: 'Server error'});
   }
 }
 

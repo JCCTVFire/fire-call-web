@@ -82,60 +82,21 @@
               <div id="mapid"></div>
             </div>
 
-            <div class="column">
-              <button class="accordion">Add Call</button>
-              <div class="panel">
-                <div class="field">
-                  <label class="label mt-3">ID:</label>
-                </div>
-      
-                <div class="field">
-                  <label class="label">Call Type</label>
-                  <div class="control">
-                    <input class="input" style="width: 450px;" type="text">
-                  </div>
-                </div>
-      
-                <div class="field">
-                  <label class="label">Call Class</label>
-                  <div class="control">
-                    <div class="select">
-                      <select>
-                        <option>Fire</option>
-                        <option>HazMat</option>
-                        <option>Medical</option>
-                        <option>Rescue</option>
-                        <option>Other</option>
-                      </select>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="field">
-                  <label class="label">Call Time</label>
-                  <div class="control">
-                    <input class="input" style="width: 450px;" type="text">
-                  </div>
-                </div>
-      
-                <div class="field">
-                  <div class="control">
-                    <button class="button is-link mt-2 mb-3">Save</button>
-                  </div>
-                </div>
+          <div class="column">
+            <article class="panel">
+              <p class="panel-heading">
+                Manage Call
+              </p>
+              <div class="tabs ml-1">
+                <ul>
+                  <li class="is-active"><a>Call</a></li>
+                  <li><a>Incident</a></li>
+                  <li><a>Dispatch</a></li>
+                  <li><a>Units</a></li>
+                </ul>
               </div>
-            </div>
-
-
-            <div class="column">
-              <button class="accordion">Manage Call</button>
-              <div class="panel">
-                <div class="field mb-3">
-                  <div class="control">
-                    <input class="input is-small mt-3" style="width: 450px;" type="search" placeholder="Search Call ID">
-                  </div>
-                </div>
-
+              
+              <div class="column ml-2">
                 <div class="field">
                   <label class="label">ID:</label>
                 </div>
@@ -174,11 +135,62 @@
                     <button class="button is-link mt-2 mb-3">Save</button>
                   </div>
                   <div class="control">
-                      <button class="button is-danger mt-2 mb-3">Delete</button>
+                    <button class="button is-danger mt-2 mb-3">Delete</button>
                   </div>
                 </div>    
               </div>
+            </article>
+          </div>
+
+          <div class="column">
+            <article class="panel">
+              <p class="panel-heading">
+                Add Call
+              </p>
+              <div class="column ml-2">
+                <div class="field">
+                  <label class="label mt-5">ID:</label>
+                </div>
+      
+                <div class="field">
+                  <label class="label">Call Type</label>
+                  <div class="control">
+                    <input class="input" style="width: 450px;" type="text">
+                  </div>
+                </div>
+      
+                <div class="field">
+                  <label class="label">Call Class</label>
+                  <div class="control">
+                    <div class="select">
+                      <select>
+                        <option>Fire</option>
+                        <option>HazMat</option>
+                        <option>Medical</option>
+                        <option>Rescue</option>
+                        <option>Other</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="field">
+                  <label class="label">Call Time</label>
+                  <div class="control">
+                    <input class="input" style="width: 450px;" type="text">
+                  </div>
+                </div>
+      
+                <div class="field">
+                  <div class="control">
+                    <button class="button is-link mt-2 mb-3">Save</button>
+                  </div>
+                </div>
+              </div>
+                
+              </article>
             </div>
+          </div>
 
             <script src="script.js"></script>            
         </div>

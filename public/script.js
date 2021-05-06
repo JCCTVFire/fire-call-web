@@ -1,18 +1,3 @@
-var acc = document.getElementsByClassName("accordion");
-var i;
-
-for (i = 0; i < acc.length; i++) {
-  acc[i].addEventListener("click", function() {
-    this.classList.toggle("active");
-    var panel = this.nextElementSibling;
-    if (panel.style.maxHeight) {
-      panel.style.maxHeight = null;
-    } else {
-      panel.style.maxHeight = panel.scrollHeight + "px";
-    }  
-  });
-}
-
 function mapInit() {
     // follow the Leaflet Getting Started tutorial here
   document.getElementById('mapid').style.height = `${400}px`;
@@ -36,7 +21,6 @@ async function dataHandler(mapObjectFromFunction) {
   const endDate = document.getElementById('end');
   const limit = document.getElementById('limit');
    
-
   form.addEventListener('submit', async (event) => {
     event.preventDefault();
     const request = await fetch('/api/search?queryText=' + search.value + '&startDate=' + 

@@ -30,9 +30,19 @@ async function dataHandler(mapObjectFromFunction) {
   });
 }
   
+async function markMap(mapObjectFromFunction) {
+  const request = await fetch('/api/locations');
+  const locationsToJSON = await request.json();
+  const locations = locationsToJSON.data;
+  for(j=0;j<100;j++) {
+    L.marker([locations[j].lat, locations[j].long]).addTo(mapObjectFromFunction);
+  }
+}
+
 async function windowActions() {
   const map = mapInit();
   await dataHandler(map);  
+  await markMap(map);
 }
 
 window.onload = windowActions;

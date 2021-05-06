@@ -1,7 +1,7 @@
 function mapInit() {
     // follow the Leaflet Getting Started tutorial here
   document.getElementById('mapid').style.height = `${400}px`;
-  const map = L.map('mapid').setView([38.9896946148518, -76.93886260848691], 13);
+  const map = L.map('mapid').setView([38.88101, -77.10428], 13);
   
   L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
     attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',

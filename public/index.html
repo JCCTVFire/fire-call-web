@@ -18,34 +18,59 @@
                 <a class="navbar-item" href="./index.html">
                     <strong>JCCTV</strong>
                 </a>
-            </div>
-          
-            <div id="navbarBasicExample" class="navbar-menu">
-              <div class="navbar-start">
+
                 <a class="navbar-item" href="./index.html">
-                    Home
+                  Home
                 </a>
-          
+        
                 <a class="navbar-item" href="./about/index.html">
-                    About
+                  About
                 </a>
-          
-              </div>
             </div>
           </nav>
         
         <div class="container is-max-desktop">
-            <section class="section">
-                <h1 class="title">Home</h1>
-            </section>
-
-            <form name="userSearch" id="search" class="field">
-                <div id="control" name="control" class="control">
-                    <label for="searchbox"></label>
-                  <input class="input" name="searchbox" id="searchbox" type="text" placeholder="Find Fire Stations">
-                  <button type="submit" id="submit" name="submit" title="Submit">Submit</button>
+          <div class="column">
+            <form name="userSearch" id="search" class="control">
+              <div class="field has-addons mt-5">
+                <div class="control">
+                  <input class="input" size="109" name="searchbox" id="searchbox" type="text" placeholder="Find fire stations">
                 </div>
+                <div class="control">
+                  <a class="button is-info" type="submit" id="submit" name="submit" titel="Submit">
+                    Search
+                  </a>
+                </div>
+              </div>
             </form>
+          </div>
+
+          <div class="columns is-mobile">
+            <div class="column is-2" style="margin-left: 13px;">
+              <div class="field">
+                <label class="label is-small">Start date</label>
+                <div class="control">
+                  <input class="input is-small" id="start" type="text" placeholder="YYYY-MM-DD">
+                </div>
+              </div>
+            </div>
+            <div class="column is-2">
+              <div class="field">
+                <label class="label is-small">End date</label>
+                <div class="control">
+                  <input class="input is-small" id="end" type="text" placeholder="YYYY-MM-DD">
+                </div>
+              </div>
+            </div>
+            <div class="column is-2">
+              <div class="field" style="margin-left: 50px;">
+                <label class="label is-small">Limit</label>
+                <div class="control">
+                  <input class="input is-small" id="limit" type="text" placeholder="default=10">
+                </div>
+              </div>
+            </div>
+          </div>
           
             <div id="suggestions-list" name="suggestions-list" class="suggestions-list"> 
               <ul id="suggestions" name="suggestions" class="suggestions">
@@ -58,97 +83,102 @@
               <div id="mapid"></div>
             </div>
 
-            <button class="accordion">Add Call</button>
-            <div class="panel">
-              <div class="field">
-                <label class="label mt-3">ID:</label>
-              </div>
-    
-              <div class="field">
-                <label class="label">Call Type</label>
-                <div class="control">
-                  <input class="input" style="width: 450px;" type="text">
+            <div class="column">
+              <button class="accordion">Add Call</button>
+              <div class="panel">
+                <div class="field">
+                  <label class="label mt-3">ID:</label>
                 </div>
-              </div>
-    
-              <div class="field">
-                <label class="label">Call Class</label>
-                <div class="control">
-                  <div class="select">
-                    <select>
-                      <option>Fire</option>
-                      <option>HazMat</option>
-                      <option>Medical</option>
-                      <option>Rescue</option>
-                      <option>Other</option>
-                    </select>
+      
+                <div class="field">
+                  <label class="label">Call Type</label>
+                  <div class="control">
+                    <input class="input" style="width: 450px;" type="text">
                   </div>
                 </div>
-              </div>
-
-               <div class="field">
-                <label class="label">Call Time</label>
-                <div class="control">
-                  <input class="input" style="width: 450px;" type="text">
+      
+                <div class="field">
+                  <label class="label">Call Class</label>
+                  <div class="control">
+                    <div class="select">
+                      <select>
+                        <option>Fire</option>
+                        <option>HazMat</option>
+                        <option>Medical</option>
+                        <option>Rescue</option>
+                        <option>Other</option>
+                      </select>
+                    </div>
+                  </div>
                 </div>
-              </div>
-    
-              <div class="field">
-                <div class="control">
-                  <button class="button is-link mt-2 mb-3">Save</button>
+
+                <div class="field">
+                  <label class="label">Call Time</label>
+                  <div class="control">
+                    <input class="input" style="width: 450px;" type="text">
+                  </div>
+                </div>
+      
+                <div class="field">
+                  <div class="control">
+                    <button class="button is-link mt-2 mb-3">Save</button>
+                  </div>
                 </div>
               </div>
             </div>
 
-            <button class="accordion">Manage Call</button>
-            <div class="panel">
-              <div class="field mb-3">
-                <div class="control">
-                  <input class="input is-small mt-3" style="width: 450px;" type="search" placeholder="Search Call ID">
-                </div>
-              </div>
 
-              <div class="field">
-                <label class="label">ID:</label>
-              </div>
-
-              <div class="field">
-                <label class="label">Call Type</label>
-                <div class="control">
-                  <input class="input" style="width: 450px;" type="text">
-                </div>
-              </div>
-    
-              <div class="field">
-                <label class="label">Call Class</label>
-                <div class="control">
-                  <div class="select">
-                    <select>
-                      <option>Fire</option>
-                      <option>HazMat</option>
-                      <option>Medical</option>
-                      <option>Rescue</option>
-                      <option>Other</option>
-                    </select>
+            <div class="column">
+              <button class="accordion">Manage Call</button>
+              <div class="panel">
+                <div class="field mb-3">
+                  <div class="control">
+                    <input class="input is-small mt-3" style="width: 450px;" type="search" placeholder="Search Call ID">
                   </div>
                 </div>
-              </div>
 
-               <div class="field">
-                <label class="label">Call Time</label>
-                <div class="control">
-                  <input class="input" style="width: 450px;" type="text">
+                <div class="field">
+                  <label class="label">ID:</label>
                 </div>
-              </div>
 
-              <div class="field is-grouped">
-                <div class="control">
-                  <button class="button is-link mt-2 mb-3">Save</button>
+                <div class="field">
+                  <label class="label">Call Type</label>
+                  <div class="control">
+                    <input class="input" style="width: 450px;" type="text">
+                  </div>
                 </div>
-                <div class="control">
-                    <button class="button is-danger mt-2 mb-3">Delete</button>
+      
+                <div class="field">
+                  <label class="label">Call Class</label>
+                  <div class="control">
+                    <div class="select">
+                      <select>
+                        <option>Fire</option>
+                        <option>HazMat</option>
+                        <option>Medical</option>
+                        <option>Rescue</option>
+                        <option>Other</option>
+                      </select>
+                    </div>
+                  </div>
                 </div>
-              </div>    
+
+                <div class="field">
+                  <label class="label">Call Time</label>
+                  <div class="control">
+                    <input class="input" style="width: 450px;" type="text">
+                  </div>
+                </div>
+
+                <div class="field is-grouped">
+                  <div class="control">
+                    <button class="button is-link mt-2 mb-3">Save</button>
+                  </div>
+                  <div class="control">
+                      <button class="button is-danger mt-2 mb-3">Delete</button>
+                  </div>
+                </div>    
+              </div>
             </div>
 
             <script src="script.js"></script>            

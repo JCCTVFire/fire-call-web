@@ -79,7 +79,7 @@ async function updateIncident(req, res, next){
 
 async function deleteIncident(req, res, next){
   try {
-    console.log(req.params)
+    
     const deleted = await db.incidents.destroy({
       where: {
         incident_id: req.params.incident_id
@@ -128,7 +128,7 @@ async function getUnitFromIncident(req, res, next) {
         incident_id: req.params.incident_id
       }
     });    
-    console.log(getUnit);
+    
     
     const allUnits = await db.units.findAll({
       where: {

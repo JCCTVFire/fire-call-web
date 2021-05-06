@@ -195,7 +195,7 @@ router.get('/custom', async (req, res) => {
     const reply = getReply(customResult);
     res.json(reply);
   } catch (err) {
-    console.log(err);
+    console.error(err);
     res.json({error: 'Server error'});
   }
 });

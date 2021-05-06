@@ -37,7 +37,6 @@ async function getMatchingCalls (qTextVariants) {
     },
     limit: 10
   });
-  console.log(calls.length)
   return calls;
 }
 
@@ -73,7 +72,6 @@ async function getSearchResults(req, res, next) {
     const matchCalls = await getMatchingCalls(qTextVariants);
     if (!(isNaN(matchCalls))) {
       const callIDs = matchCalls.map((call) => {
-        
         return call.dataValues.call_id;
       });
       const callsToIncidents = await db.incidents.findAll({

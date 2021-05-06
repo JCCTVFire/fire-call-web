@@ -69,7 +69,7 @@ async function updateCall(req, res, next) {
 
 async function deleteCall(req, res, next) {
   try {
-    console.log(req.params)
+    
     const deleted = await db.calls.destroy({
       where: {
         call_id: req.params.call_id

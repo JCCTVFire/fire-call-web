@@ -9,7 +9,7 @@ for (i = 0; i < acc.length; i++) {
       panel.style.maxHeight = null;
     } else {
       panel.style.maxHeight = panel.scrollHeight + "px";
-    } 
+    }  
   });
 }
 
@@ -32,14 +32,20 @@ function mapInit() {
   async function dataHandler(mapObjectFromFunction) {
     // use your assignment 1 data handling code here
     // and target mapObjectFromFunction to attach markers
-    const request = await fetch('/api');
+    const search = document.querySelector('.input');
+    const form = document.getElementById('search');
+    const startDate = document.getElementById('start');
+    const endDate = document.getElementById('end');
+    const limit = document.getElementById('limit');
+    const suggestions = document.querySelector('.suggestions');
+
+    const request = await fetch('/api/search?queryText=' + search.value + '&startDate=' + 
+                                startDate.value + '&endDate=' + endDate.value + '&limit=' + limit.value);
     const restaurants = await request.json();
+    console.log('data', restaurants);
   
     let markers = [];
   
-    const search = document.querySelector('.input');
-    const form = document.getElementById('search');
-    const suggestions = document.querySelector('.suggestions');
   
     function findMatches(restList) {
       const tempArr = restList.filter((place) => place.zip.includes(search.value));

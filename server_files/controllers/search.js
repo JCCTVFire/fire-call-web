@@ -4,28 +4,56 @@ import {getReply} from './getReply.js';
 
 const Op = sequelize.Op
 
+async function parseDate(queryDate, minOrMax) {
+  try {
+    const result = isNaN(queryDate) | queryDate === '' ? await db.incidents.findAll({ attributes: [[sequelize.fn(minOrMax, sequelize.col('date')), 'date']] }) : Date.parse(`${queryDate}T00:00:00-00:00Z`);
+    // console.log(result[0].dataValues.date);
+    return result[0].dataValues.date;
+  } catch (err) {
+    if (minOrMax !== 'min' | minOrMax !== 'max') {
+      console.log('parseDate only accepts "min" or "max" as arguments');
+    } else {
+      console.log(err);
+    }
+  }
+}
+
+async function getMatchingCalls (qText) {
+  const qTextTitleCase = qText[0].toUpperCase().concat(qText.slice(1).toLowerCase());
+  const calls = await db.calls.findAll({
+    where: {
+      [Op.or]: [
+        {
+          call_type: {
+            [Op.substring]: qText.toUpperCase()
+          } 
+        },
+        {
+          call_class: {
+            [Op.like]: qTextTitleCase
+          }
+        }
+      ]
+    },
+    limit: 10
+  });
+  return calls;
+}
+
 async function getSearchResults(req, res, next) {
   try {
     // console.log(req)
     let incidentData = [];
     let incidentIDs = [];
-    const matchCalls = await db.calls.findAll({
-      where: {
-        [Op.or]: [
-          {
-            call_type: {
-              [Op.startsWith]: req.query.queryText
-            } 
-          },
-          {
-            call_class: {
-              [Op.startsWith]: req.query.queryText
-            }
-          }
-        ]
-      },
-      limit: 10
+    const qText = req.query.queryText;
+
+    const qTextWords = qText.split(' ');
+    const qTextWordsTitleCase = qTextWords.map((word) => {
+      return word[0].toUpperCase().concat(word.slice(1).toLowerCase());
     });
+    const qTextTitleCase = qTextWordsTitleCase.join(' ');
+
+    const matchCalls = await getMatchingCalls(qText);
     if (matchCalls !== 'NULL') {
       const callIDs = matchCalls.map((call) => {
         // console.log(call.dataValues.call_id);
@@ -43,21 +71,19 @@ async function getSearchResults(req, res, next) {
         incidentIDs.push(unit.dataValues.incident_id);
         a += 1;
       });
-      console.log("Calls:", a)
-      // console.log(typeof callsToIncidents, callsToIncidents);
+      console.log("Calls:", a);
     }
-
     const matchUnits = await db.units.findAll({
       where: {
         [Op.or]: [
           {
             unit_number: {
-              [Op.like]: req.query.queryText
+              [Op.substring]: qText.toUpperCase()
             }
           },
           {
             unit_class_name: {
-              [Op.like]: req.query.queryText
+              [Op.substring]: qTextTitleCase
             }
           }
         ]
@@ -86,9 +112,9 @@ async function getSearchResults(req, res, next) {
     } catch (err) {
       resultCount = 10;
     }
-    console.log(`${req.query.endDate} 23:59:59`);
-    const startDate = Date.parse(`${req.query.startDate}T00:00:00-00:00`);
-    const endDate = Date.parse(`${req.query.endDate}T23:59:59-00:00`);
+
+    const startDate = await parseDate(req.query.startDate, 'min');
+    const endDate = await parseDate(req.query.endDate, 'max');
 
     const matchIncidents = await db.incidents.findAll({
       attributes: ['incident_id', 'date', 'description', 'postal_code', 'district_code'],
@@ -101,14 +127,14 @@ async function getSearchResults(req, res, next) {
                   [Op.in]: incidentIDs
                 }
               },
-              { 
+              {
                 description: {
-                  [Op.like]: req.query.queryText
+                  [Op.substring]: qText
                 } 
               },
               {
                 postal_code: {
-                  [Op.like]: req.query.queryText
+                  [Op.startsWith]: qText
                 } 
               },
             ]
@@ -148,12 +174,7 @@ async function getSearchResults(req, res, next) {
         c += 1;
       });
     }
-    // console.log(matchIncidents);
-    
-    // console.log(incidentData);
-    // console.log(incidentData)
-    // console.log(incidentData);
-    // console.log(replyData);
+
     const reply = getReply(incidentData);
     res.json(reply);
   } catch (err) {

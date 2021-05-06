@@ -31,45 +31,44 @@
         
         <div class="container is-max-desktop">
           <div class="column">
-            <form name="userSearch" id="search" class="control">
+            <form class=userform>
               <div class="field has-addons mt-5">
                 <div class="control">
-                  <input class="input" size="109" name="searchbox" id="searchbox" type="text" placeholder="Find fire stations">
+                  <input class="input" size="109" id="search_value" type="text" placeholder="Find fire stations">
                 </div>
                 <div class="control">
-                  <a class="button is-info" type="submit" id="submit" name="submit" titel="Submit">
+                  <button class="button is-info" type="submit">
                     Search
-                  </a>
+                  </button>
+                </div>
+              </div>
+              <div class="columns is-mobile">
+                <div class="column is-2">
+                  <div class="field">
+                    <label class="label is-small">Start date</label>
+                    <div class="control">
+                      <input class="input is-small" id="start" type="text" placeholder="YYYY-MM-DD">
+                    </div>
+                  </div>
+                </div>
+                <div class="column is-2">
+                  <div class="field">
+                    <label class="label is-small">End date</label>
+                    <div class="control">
+                      <input class="input is-small" id="end" type="text" placeholder="YYYY-MM-DD">
+                    </div>
+                  </div>
+                </div>
+                <div class="column is-2">
+                  <div class="field" style="margin-left: 50px;">
+                    <label class="label is-small">Limit</label>
+                    <div class="control">
+                      <input class="input is-small" id="limit" type="text" placeholder="default=10">
+                    </div>
+                  </div>
                 </div>
               </div>
             </form>
-          </div>
-
-          <div class="columns is-mobile">
-            <div class="column is-2" style="margin-left: 13px;">
-              <div class="field">
-                <label class="label is-small">Start date</label>
-                <div class="control">
-                  <input class="input is-small" id="start" type="text" placeholder="YYYY-MM-DD">
-                </div>
-              </div>
-            </div>
-            <div class="column is-2">
-              <div class="field">
-                <label class="label is-small">End date</label>
-                <div class="control">
-                  <input class="input is-small" id="end" type="text" placeholder="YYYY-MM-DD">
-                </div>
-              </div>
-            </div>
-            <div class="column is-2">
-              <div class="field" style="margin-left: 50px;">
-                <label class="label is-small">Limit</label>
-                <div class="control">
-                  <input class="input is-small" id="limit" type="text" placeholder="default=10">
-                </div>
-              </div>
-            </div>
           </div>
           
             <div id="suggestions-list" name="suggestions-list" class="suggestions-list"> 

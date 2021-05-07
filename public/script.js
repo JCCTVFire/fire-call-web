@@ -107,19 +107,38 @@ async function populateForm(button) {
   manageTime.value = call[0].call_time;
 }
 
+
+
+
 async function sendUpdate(tableName, formData, id) {
-  const reqBody = {};
+  let reqBody = {};
   formData.forEach((column) => {
     reqBody[column.name] = column.value;
   });
-
   const request = await fetch('/api/'+tableName+id, {body: reqBody, mode: 'PUT'})
   const response = request.json();
+  
+  response = {message: 'Successfully updated a new tab.'}
+  const messageBox = document.createElement('div');
+  messageBox.classList.add('tag');
+  response
+  try {
+    const message = response['message'];
+    messageBox.classList.add('is-success');
+    messageBox.innerHTML = `${message}<button id="success-tag" class="delete is-small"></button>`
+  } catch (err) {
+    const error = response['error'];
+  }
+  const tabContent = document.getElementById('Call');
+  tabContent.append(messageBox);
+  const deleteButton = document.getElementById("success-tag");
+  deleteButton.onclick = (evt) => messageBox.remove();
 }
 
 async function windowActions() {
   const map = await mapInit();
   await dataHandler(map);
+  sendUpdate('yadayada','yadayada', 'Integer');
 }
 
 window.onload = windowActions;

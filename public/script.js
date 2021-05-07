@@ -59,7 +59,7 @@ async function markMap(mapObjectFromFunction) {
     const marker = L.marker([locations[j].lat, locations[j].long]).addTo(mapObjectFromFunction);
     const latlng = L.latLng(locations[j].lat, locations[j].long);
     const editBtn = L.DomUtil.create('a', 'edit');
-    editBtn.innerHTML = '<a href="#manageForm">Edit</a>';     
+    editBtn.innerHTML = '<a href="#manageForm" onclick="populateForm(this)">Edit</a>';     
     const popup = L.popup()
                   .setLatLng(latlng)
                   .setContent('<b>Call ID: </b>' + calls[j].call_id + '<br>' + '<b>Call Type: </b>' + calls[j].call_type + 
@@ -67,11 +67,20 @@ async function markMap(mapObjectFromFunction) {
                   + '<br>' + editBtn.innerHTML)
                   .openOn(mapObjectFromFunction);
 
-    console.log('Edit value', editBtn);
-    L.DomEvent.on(editBtn, 'click', function() { alert('works'); });
+    //console.log('Edit value', editBtn);
+    //L.DomEvent.on(editBtn, 'click', function() { alert('works'); });
     marker.bindPopup(popup).openPopup();
   }
-  
+}
+
+async function populateForm(button) {
+  const elem = button.parentElement;
+  const idForEdit = elem.innerHTML.substring(elem.innerHTML.indexOf('<br>')-8, elem.innerHTML.indexOf('<br>')-1);
+  console.log(idForEdit);
+  const request = await fetch('/api/search?queryText=' + idForEdit);
+  const requestToJSON = await request.json();
+  const callToEdit = requestToJSON.data;
+  console.log(requestToJSON);
 }
 
 async function windowActions() {

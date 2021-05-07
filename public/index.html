@@ -34,7 +34,7 @@
             <form class=userform>
               <div class="field has-addons mt-5">
                 <div class="control">
-                  <input class="input" size="109" id="search_value" type="text" placeholder="Find fire stations">
+                  <input class="input" size="109" id="search_value" type="text" placeholder="Find incidents">
                 </div>
                 <div class="control">
                   <button class="button is-info" type="submit">
@@ -84,7 +84,7 @@
 
           <div class="column">
             <article class="panel">
-              <p class="panel-heading">
+              <p class="panel-heading" id="manageForm">
                 Manage Call
               </p>
               <div class="tabs ml-1">
@@ -111,15 +111,7 @@
                 <div class="field">
                   <label class="label">Call Class</label>
                   <div class="control">
-                    <div class="select">
-                      <select>
-                        <option>Fire</option>
-                        <option>HazMat</option>
-                        <option>Medical</option>
-                        <option>Rescue</option>
-                        <option>Other</option>
-                      </select>
-                    </div>
+                    <input class="input" style="width: 450px;" type="text">
                   </div>
                 </div>
 
@@ -144,7 +136,7 @@
 
           <div class="column">
             <article class="panel">
-              <p class="panel-heading">
+              <p class="panel-heading" id="addForm">
                 Add Call
               </p>
               <div class="column ml-2">

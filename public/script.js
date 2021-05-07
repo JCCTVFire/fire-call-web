@@ -26,8 +26,6 @@ async function dataHandler(mapObjectFromFunction) {
     const request_search = await fetch('/api/search?queryText=' + search.value + '&startDate=' + 
                               startDate.value + '&endDate=' + endDate.value + '&limit=' + limit.value);
     
-    const searchToJSON = await request_search.json();
-    const search_data = searchToJSON.data;
   });
 }
   
@@ -42,15 +40,26 @@ async function markMap(mapObjectFromFunction) {
 
   for(j = 0; j < 100; j++) {
     const marker = L.marker([locations[j].lat, locations[j].long]).addTo(mapObjectFromFunction);
-    marker.bindPopup('<b>Call ID: </b>' + calls[j].call_id + '<br>' + '<b>Call Type: </b>' + calls[j].call_type + 
-                    '<br>' + '<b>Call Class: </b>' + calls[j].call_class + '<br>' + '<b>Call Time: </b>' + calls[j].call_time).openPopup();
+    const latlng = L.latLng(locations[j].lat, locations[j].long);
+    const editBtn = L.DomUtil.create('a', 'edit');
+    editBtn.innerHTML = '<a href="#manageForm">Edit</a>';     
+    const popup = L.popup()
+                  .setLatLng(latlng)
+                  .setContent('<b>Call ID: </b>' + calls[j].call_id + '<br>' + '<b>Call Type: </b>' + calls[j].call_type + 
+                  '<br>' + '<b>Call Class: </b>' + calls[j].call_class + '<br>' + '<b>Call Time: </b>' + calls[j].call_time
+                  + '<br>' + editBtn.innerHTML)
+                  .openOn(mapObjectFromFunction);
+
+    console.log('Edit value', editBtn);
+    L.DomEvent.on(editBtn, 'click', function() { alert('works'); });
+    marker.bindPopup(popup).openPopup();
   }
 }
 
 async function windowActions() {
   const map = mapInit();
   await dataHandler(map);  
-  await markMap(map);
+  await markMap(map); 
 }
 
 window.onload = windowActions;

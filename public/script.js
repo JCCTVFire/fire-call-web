@@ -1,3 +1,22 @@
+function openTab(evt, tabTitle) {
+  var i, tabcontent, tablinks;
+  const callTab = document.getElementById('callTab');
+  
+  if (tabTitle != 'Call') {
+     callTab.className = callTab.className.replace("is-active", "");
+  }
+  tabcontent = document.getElementsByName("tabcontent");
+  for (i = 0; i < tabcontent.length; i++) {
+      tabcontent[i].style.display = "none";
+  }
+  tablinks = document.getElementsByName("tablinks");
+  //for (i = 0; i < tablinks.length; i++) {
+       //tablinks[i].className = tablinks[i].className.replace(" is-active", "");
+  //}
+  document.getElementById(tabTitle).style.display = "block";
+  evt.currentTarget.parentElement.className += " is-active";
+}
+
 async function markMap(mapObjectFromFunction, incident) {
   // console.log(location, call)
   const marker = L.marker([incident.location.lat, incident.location.long]).addTo(mapObjectFromFunction);

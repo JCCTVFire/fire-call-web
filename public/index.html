@@ -84,53 +84,81 @@
 
           <div class="column">
             <article class="panel">
-              <p class="panel-heading" id="manageForm">
+              <p class="panel-heading">
                 Manage Call
               </p>
               <div class="tabs ml-1">
                 <ul>
-                  <li class="is-active"><a>Call</a></li>
-                  <li><a>Incident</a></li>
-                  <li><a>Dispatch</a></li>
-                  <li><a>Units</a></li>
+                  <li name="tablinks" class="is-active" id="callTab"><a onclick="openTab(event, 'Call')">Call</a></li>
+                  <li name="tablinks"><a onclick="openTab(event, 'Incident')">Incident</a></li>
+                  <li name="tablinks"><a onclick="openTab(event, 'Dispatch')">Dispatch</a></li>
+                  <li name="tablinks"><a onclick="openTab(event, 'Units')">Units</a></li>
                 </ul>
               </div>
-              
-              <div class="column ml-2">
-                <div class="field">
-                  <label class="label" id="manageID">ID:</label>
+              <div class="column ml-2 tabs-content">
+                <div name="tabcontent" id="Call">
+                  <div class="field">
+                    <label class="label" id="manageID">ID:</label>
+                  </div>
+  
+                  <div class="field">
+                    <label class="label">Call Type</label>
+                    <div class="control">
+                      <input class="input" id="manageType" style="width: 450px;" type="text">
+                    </div>
+                  </div>
+        
+                  <div class="field">
+                    <label class="label">Call Class</label>
+                    <div class="control">
+                      <input class="input" id="manageClass" style="width: 450px;" type="text">
+                    </div>
+                  </div>
+  
+                  <div class="field">
+                    <label class="label">Call Time</label>
+                    <div class="control">
+                      <input class="input" id="manageTime" style="width: 450px;" type="text">
+                    </div>
+                  </div>
+  
+                  <div class="field is-grouped">
+                    <div class="control">
+                      <button class="button is-link mt-2 mb-3">Save</button>
+                    </div>
+                    <div class="control">
+                      <button class="button is-danger mt-2 mb-3">Delete</button>
+                    </div>
+                  </div>    
                 </div>
+                <div name="tabcontent" id="Incident">
+                  <div class="field">
+                    <label class="label" id="incidentID">ID:</label>
+                  </div>
+  
+                  <div class="field">
+                    <label class="label">Date:</label>
+                  </div>
+  
+                  <div class="field">
+                    <label class="label">Description:</label>
+                  </div>   
 
-                <div class="field">
-                  <label class="label">Call Type</label>
-                  <div class="control">
-                    <input class="input" id="manageType" style="width: 450px;" type="text">
-                  </div>
-                </div>
-      
-                <div class="field">
-                  <label class="label">Call Class</label>
-                  <div class="control">
-                    <input class="input" id="manageClass" style="width: 450px;" type="text">
-                  </div>
-                </div>
+                  <div class="field">
+                    <label class="label">Postal Code:</label>
+                  </div>  
 
-                <div class="field">
-                  <label class="label">Call Time</label>
-                  <div class="control">
-                    <input class="input" id="manageTime" style="width: 450px;" type="text">
-                  </div>
+                  <div class="field">
+                    <label class="label">District Code:</label>
+                  </div>  
                 </div>
+                <div name="tabcontent">
 
-                <div class="field is-grouped">
-                  <div class="control">
-                    <button class="button is-link mt-2 mb-3">Save</button>
-                  </div>
-                  <div class="control">
-                    <button class="button is-danger mt-2 mb-3">Delete</button>
-                  </div>
-                </div>    
-              </div>
+                </div>
+                <div name="tabcontent">
+
+                </div>
+              </div>  
             </article>
           </div>
 

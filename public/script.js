@@ -146,6 +146,16 @@ async function populateForm(button) {
   unitClassName.innerHTML = 'Class Name: ' + units[0].unit_class_name;
 }
 
+async function sendUpdate(tableName, formData, id) {
+  const reqBody = {};
+  formData.forEach((column) => {
+    reqBody[column.name] = column.value;
+  });
+
+  const request = await fetch('/api/'+tableName+id, {body: reqBody, mode: 'PUT'})
+  const response = request.json();
+}
+
 async function windowActions() {
   const map = await mapInit();
   await dataHandler(map);

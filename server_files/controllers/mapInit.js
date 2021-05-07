@@ -20,7 +20,7 @@ async function getInitMapPoints(req, res, next) {
         }
       ]
     });
-    console.log(initPoints);
+    // console.log(initPoints);
     const reply = getReply(initPoints);
     res.json(reply);
   } catch (err) {

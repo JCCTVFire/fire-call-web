@@ -19,26 +19,85 @@ async function parseDate(queryDate, minOrMax) {
   }
 }
 
-async function getMatchingCalls (qTextVariants) {
+async function getMatchingCalls(qTextVariants) {
   const calls = await db.calls.findAll({
     where: {
       [Op.or]: [
+        {
+          call_type: {
+            [Op.substring]: qTextVariants.raw
+          } 
+        },
         {
           call_type: {
             [Op.substring]: qTextVariants.upperCase
           } 
         },
         {
+          call_type: {
+            [Op.substring]: qTextVariants.titleCase
+          } 
+        },
+        {
+          call_type: {
+            [Op.substring]: qTextVariants.lowerCase
+          } 
+        },
+        {
           call_class: {
-            [Op.like]: qTextVariants.firstLetterCapitalized
-          }
-        }
+            [Op.substring]: qTextVariants.raw
+          } 
+        },
+        {
+          call_class: {
+            [Op.substring]: qTextVariants.upperCase
+          } 
+        },
+        {
+          call_class: {
+            [Op.substring]: qTextVariants.titleCase
+          } 
+        },
+        {
+          call_class: {
+            [Op.substring]: qTextVariants.lowerCase
+          } 
+        },
       ]
-    },
-    limit: 10
+    }
   });
+
+  // let callTypeScores = [];
+  // let callClassScores = [];
+  // console.log(qTextVariants.lowerCase);
+  
+
+  // // console.log(calls);
+  // calls.forEach((call) => {
+  //   const resultCallClass = call.dataValues.call_class.split('');
+  //   const resultCallType = call.dataValues.call_type.split('');
+  //   const resultID = call.dataValues.call_id;
+    
+  //   const matchFirstClassLetter = resultCallClass[0].toLowerCase() === qTextVariants.lowerCase[0] ? 1 : 0;
+  //   const classScoreNumerator = resultCallClass.reduce(matchLetter, 0);
+  //   const classScore = classScoreNumerator / qTextVariants.lowerCase.length;
+  //   callClassScores.push({callID: resultID, score: classScore});
+    
+  //   const matchFirstTypeLetter = resultCallType[0].toLowerCase() === qTextVariants.lowerCase[0] ? 1 : 0;
+  //   const typeScoreNumerator = resultCallType.reduce(matchLetter, 0);
+  //   const typeScore = typeScoreNumerator / qTextVariants.lowerCase.length;
+  //   callTypeScores.push({callID: resultID, score: typeScore});
+  // });
+
+  // callClassScores.sort((x, y) => (x.score < y.score) ? 1 : -1);
+  // callTypeScores.sort((x, y) => (x.score < y.score) ? 1 : -1);
+  // console.log(callTypeScores[0], callClassScores[0]);
+
   return calls;
 }
+
+
+
 
 async function getSearchResults(req, res, next) {
   try {
@@ -69,8 +128,26 @@ async function getSearchResults(req, res, next) {
       firstLetterCapitalized: qTextFirstLetterCapitalized
     }
 
+    // function matchLetter(acc, letter, pos, array) {
+    //   // console.log(letter.toLowerCase(), qTextVariants.lowerCase[pos]);
+    //   if (letter.toLowerCase() === qTextVariants.lowerCase[pos]) {
+    //     console.log('Match!');
+    //     return acc + 1;
+    //   } else {
+    //     return acc;
+    //   }
+    // }
+    
+    // async function getScores(result, att) {
+    //   const resultArr = result.split('');
+    //   const scoreNumerator = resultArr.reduce(matchLetter, 0);
+    //   const resultScore = scoreNumerator / qText.length;
+    //   return {attribute: att, score: resultScore };
+    // }
+
+
     const matchCalls = await getMatchingCalls(qTextVariants);
-    if (!(isNaN(matchCalls))) {
+    if (matchCalls.length > 0) {
       const callIDs = matchCalls.map((call) => {
         return call.dataValues.call_id;
       });
@@ -94,14 +171,58 @@ async function getSearchResults(req, res, next) {
         [Op.or]: [
           {
             unit_number: {
+              [Op.or]: [
+                {
+                  [Op.like]: qTextVariants.raw
+                },
+                {
+                  [Op.substring]: qTextVariants.raw
+                }
+              ]
+            } 
+          },
+          {
+            unit_number: {
               [Op.substring]: qTextVariants.upperCase
-            }
+            } 
+          },
+          {
+            unit_number: {
+              [Op.substring]: qTextVariants.titleCase
+            } 
+          },
+          {
+            unit_number: {
+              [Op.substring]: qTextVariants.lowerCase
+            } 
+          },
+          {
+            unit_class_name: {
+              [Op.or]: [
+                {
+                  [Op.like]: qTextVariants.raw
+                },
+                {
+                  [Op.substring]: qTextVariants.raw
+                }
+              ]
+            } 
+          },
+          {
+            unit_class_name: {
+              [Op.substring]: qTextVariants.upperCase
+            } 
           },
           {
             unit_class_name: {
               [Op.substring]: qTextVariants.titleCase
-            }
-          }
+            } 
+          },
+          {
+            unit_class_name: {
+              [Op.substring]: qTextVariants.lowerCase
+            } 
+          },
         ]
       }
     });
@@ -144,12 +265,55 @@ async function getSearchResults(req, res, next) {
               },
               {
                 description: {
-                  [Op.substring]: qText
+                  [Op.or]: [
+                    {
+                      [Op.like]: qTextVariants.raw
+                    },
+                    {
+                      [Op.substring]: qTextVariants.raw
+                    }
+                  ]
+                } 
+              },
+              {
+                description: {
+                  [Op.or]: [
+                    {
+                      [Op.like]: qTextVariants.upperCase
+                    },
+                    {
+                      [Op.substring]: qTextVariants.upperCase
+                    }
+                  ]
+                } 
+              },
+              {
+                description: {
+                  [Op.or]: [
+                    {
+                      [Op.like]: qTextVariants.titleCase
+                    },
+                    {
+                      [Op.substring]: qTextVariants.titleCase
+                    }
+                  ]
+                } 
+              },
+              {
+                description: {
+                  [Op.or]: [
+                    {
+                      [Op.like]: qTextVariants.lowerCase
+                    },
+                    {
+                      [Op.substring]: qTextVariants.lowerCase
+                    }
+                  ]
                 } 
               },
               {
                 postal_code: {
-                  [Op.startsWith]: qText
+                  [Op.substring]: qText
                 } 
               },
             ]
@@ -189,7 +353,7 @@ async function getSearchResults(req, res, next) {
         c += 1;
       });
     }
-
+ 
     const reply = getReply(incidentData);
     res.json(reply);
   } catch (err) {

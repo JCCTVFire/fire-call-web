@@ -11,6 +11,7 @@ function mapInit() {
     zoomOffset: -1,
     accessToken: 'pk.eyJ1IjoicG9vbDAxMSIsImEiOiJja20zdmVjZHAwYzl2MnBsY2R3MWdoemEyIn0.cdvnKCusaIY45GptcuQcPQ'
   }).addTo(map);
+  
   return map;
 }
   
@@ -26,6 +27,22 @@ async function dataHandler(mapObjectFromFunction) {
     const request_search = await fetch('/api/search?queryText=' + search.value + '&startDate=' + 
                               startDate.value + '&endDate=' + endDate.value + '&limit=' + limit.value);
     
+    const searchToJSON = await request_search.json();
+    const search_data = searchToJSON.data;
+    // Remove current markers here
+    mapObjectFromFunction.eachLayer(function (layer) {
+    if(layer.options.tileSize != 512) {
+        mapObjectFromFunction.removeLayer(layer);
+    }
+    });
+    
+    for(i=0;i<search_data.length;i++) {
+      const marker = L.marker([search_data[i].location.lat,search_data[i].location.long]).addTo(mapObjectFromFunction);
+      const editBtn = L.DomUtil.create('a', 'edit');
+      editBtn.innerHTML = '<a href="#manageForm">Edit</a>';
+      marker.bindPopup('<b>Call ID: </b>' + search_data[i].call.call_id + '<br>' + '<b>Call Type: </b>' + search_data[i].call.call_type + 
+      '<br>' + '<b>Call Class: </b>' + search_data[i].call.call_class + '<br>' + '<b>Call Time: </b>' + search_data[i].call.call_time + '<br>'+ editBtn.innerHTML).openPopup();
+    }
   });
 }
   
@@ -54,6 +71,7 @@ async function markMap(mapObjectFromFunction) {
     L.DomEvent.on(editBtn, 'click', function() { alert('works'); });
     marker.bindPopup(popup).openPopup();
   }
+  
 }
 
 async function windowActions() {

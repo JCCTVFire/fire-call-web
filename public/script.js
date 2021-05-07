@@ -11,8 +11,6 @@ async function markMap(mapObjectFromFunction, incident) {
                 + '<br>' + editBtn.innerHTML + '<p hidden class="inc-id">' + incident.incident_id + '</p>')
                 .openOn(mapObjectFromFunction);
 
-  //console.log('Edit value', editBtn);
-  //L.DomEvent.on(editBtn, 'click', function() { alert('works'); });
   marker.bindPopup(popup).openPopup();
 }
 
@@ -76,7 +74,18 @@ async function populateForm(button) {
   const request = await fetch('/api/incidents/' + idForEdit);
   const requestToJSON = await request.json();
   const callToEdit = requestToJSON.data;
-  console.log(requestToJSON);
+  const requestCall = await fetch('/api/calls/' + callToEdit[0].call_id);
+  const requestCallToJSON = await requestCall.json();
+  const call = requestCallToJSON.data;
+  const manageID = document.getElementById('manageID');
+  const manageType = document.getElementById('manageType');
+  const manageClass = document.getElementById('manageClass');
+  const manageTime = document.getElementById('manageTime');
+
+  manageID.innerHTML = 'ID: ' + call[0].call_id;
+  manageType.value = call[0].call_type;
+  manageClass.value = call[0].call_class;
+  manageTime.value = call[0].call_time;
 }
 
 async function windowActions() {

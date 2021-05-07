@@ -23,19 +23,27 @@ async function dataHandler(mapObjectFromFunction) {
    
   form.addEventListener('submit', async (event) => {
     event.preventDefault();
-    const request = await fetch('/api/search?queryText=' + search.value + '&startDate=' + 
+    const request_search = await fetch('/api/search?queryText=' + search.value + '&startDate=' + 
                               startDate.value + '&endDate=' + endDate.value + '&limit=' + limit.value);
     
-    console.log('data', request)
+    const searchToJSON = await request_search.json();
+    const search_data = searchToJSON.data;
   });
 }
   
 async function markMap(mapObjectFromFunction) {
-  const request = await fetch('/api/locations');
-  const locationsToJSON = await request.json();
+  const request_loc = await fetch('/api/locations');
+  const locationsToJSON = await request_loc.json();
   const locations = locationsToJSON.data;
-  for(j=0;j<100;j++) {
-    L.marker([locations[j].lat, locations[j].long]).addTo(mapObjectFromFunction);
+
+  const request_calls = await fetch('/api/calls');
+  const callsToJSON = await request_calls.json();
+  const calls = callsToJSON.data;
+
+  for(j = 0; j < 100; j++) {
+    const marker = L.marker([locations[j].lat, locations[j].long]).addTo(mapObjectFromFunction);
+    marker.bindPopup('<b>Call ID: </b>' + calls[j].call_id + '<br>' + '<b>Call Type: </b>' + calls[j].call_type + 
+                    '<br>' + '<b>Call Class: </b>' + calls[j].call_class + '<br>' + '<b>Call Time: </b>' + calls[j].call_time).openPopup();
   }
 }
 

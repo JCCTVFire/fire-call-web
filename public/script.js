@@ -29,6 +29,12 @@ async function dataHandler(mapObjectFromFunction) {
     
     const searchToJSON = await request_search.json();
     const search_data = searchToJSON.data;
+    // Remove current markers here
+    for(i=0;i<search_data.length;i++) {
+      const marker = L.marker([search_data[i].location.lat,search_data[i].location.long]).addTo(mapObjectFromFunction);
+      marker.bindPopup('<b>Call ID: </b>' + search_data[i].call.call_id + '<br>' + '<b>Call Type: </b>' + search_data[i].call.call_type + 
+      '<br>' + '<b>Call Class: </b>' + search_data[i].call.call_class + '<br>' + '<b>Call Time: </b>' + search_data[i].call.call_time).openPopup();
+    }
   });
 }
   
@@ -46,6 +52,7 @@ async function markMap(mapObjectFromFunction) {
     marker.bindPopup('<b>Call ID: </b>' + calls[j].call_id + '<br>' + '<b>Call Type: </b>' + calls[j].call_type + 
                     '<br>' + '<b>Call Class: </b>' + calls[j].call_class + '<br>' + '<b>Call Time: </b>' + calls[j].call_time).openPopup();
   }
+  
 }
 
 async function windowActions() {

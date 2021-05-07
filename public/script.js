@@ -18,7 +18,6 @@ function openTab(evt, tabTitle) {
 }
 
 async function markMap(mapObjectFromFunction, incident) {
-  // console.log(location, call)
   const marker = L.marker([incident.location.lat, incident.location.long]).addTo(mapObjectFromFunction);
   const latlng = L.latLng(incident.location.lat, incident.location.long);
   const editBtn = L.DomUtil.create('a', 'edit');
@@ -89,22 +88,62 @@ async function dataHandler(mapObjectFromFunction) {
 async function populateForm(button) {
   const elem = button.parentElement;
   const idForEdit = elem.getElementsByClassName('inc-id')[0].innerHTML;
-  console.log(idForEdit);
   const request = await fetch('/api/incidents/' + idForEdit);
   const requestToJSON = await request.json();
-  const callToEdit = requestToJSON.data;
-  const requestCall = await fetch('/api/calls/' + callToEdit[0].call_id);
+
+  const inc = requestToJSON.data;
+  const incID = document.getElementById('incidentID');
+  const incDate = document.getElementById('incidentDate');
+  const incDesc = document.getElementById('incidentDesc');
+  const incPostal = document.getElementById('incidentPostal');
+  const incDist = document.getElementById('incidentDist');
+
+  incID.innerHTML = 'ID: ' + inc[0].incident_id;
+  incDate.innerHTML = 'Date: ' + inc[0].date;
+  incDesc.innerHTML = 'Description: ' + inc[0].description;
+  incPostal.innerHTML = 'Postal Code: ' + inc[0].postal_code;
+  incDist.innerHTML = 'District Code: ' + inc[0].district_code;
+
+  const requestCall = await fetch('/api/calls/' + inc[0].call_id);
   const requestCallToJSON = await requestCall.json();
   const call = requestCallToJSON.data;
-  const manageID = document.getElementById('manageID');
-  const manageType = document.getElementById('manageType');
-  const manageClass = document.getElementById('manageClass');
-  const manageTime = document.getElementById('manageTime');
+  const callID = document.getElementById('callID');
+  const callType = document.getElementById('callType');
+  const callClass = document.getElementById('callClass');
+  const callTime = document.getElementById('callTime');
+ 
+  callID.innerHTML = 'ID: ' + call[0].call_id;
+  callType.value = call[0].call_type;
+  callClass.value = call[0].call_class;
+  callTime.value = call[0].call_time;
 
-  manageID.innerHTML = 'ID: ' + call[0].call_id;
-  manageType.value = call[0].call_type;
-  manageClass.value = call[0].call_class;
-  manageTime.value = call[0].call_time;
+  const requestDis = await fetch('/api/dispatch/' + inc[0].dispatch_id);
+  const requestDisToJSON = await requestDis.json();
+  const dispatch = requestDisToJSON.data;
+  const disID = document.getElementById('dispatchID');
+  const disTime = document.getElementById('dispatchTime');
+  const arrTime = document.getElementById('arrivalTime');
+  const resTime = document.getElementById('responseTime');
+  const arrUnit = document.getElementById('arrivalUnit');
+  const clearedTime = document.getElementById('clearedTime');
+ 
+  disID.innerHTML = 'ID: ' + dispatch[0].dispatch_id;
+  disTime.innerHTML = 'Dispatch Time: ' + dispatch[0].dispatch_time;
+  arrTime.innerHTML = 'Arrival Time: ' + dispatch[0].arrival_time;
+  resTime.innerHTML = 'Response Time: ' + dispatch[0].response_time;
+  arrUnit.innerHTML = 'Arrival Unit: ' + dispatch[0].arrival_unit;
+  clearedTime.innerHTML = 'Cleared Time ' + dispatch[0].cleared_time;
+
+  const requestUnits = await fetch('/api/units/' + inc[0].unit_id);
+  const requestUnitsToJSON = await requestUnits.json();
+  const units = requestUnitsToJSON.data;
+  const unitID = document.getElementById('unitID');
+  const unitNumber = document.getElementById('unitNumber');
+  const unitClassName = document.getElementById('unitClassName');
+
+  unitID.innerHTML = 'ID: ' + units[0].unit_id;
+  unitNumber.innerHTML = 'Number: ' + units[0].unit_number;
+  unitClassName.innerHTML = 'Class Name: ' + units[0].unit_class_name;
 }
 
 

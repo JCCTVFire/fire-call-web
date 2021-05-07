@@ -11,6 +11,7 @@ function mapInit() {
     zoomOffset: -1,
     accessToken: 'pk.eyJ1IjoicG9vbDAxMSIsImEiOiJja20zdmVjZHAwYzl2MnBsY2R3MWdoemEyIn0.cdvnKCusaIY45GptcuQcPQ'
   }).addTo(map);
+  
   return map;
 }
   

@@ -8,7 +8,7 @@ async function markMap(mapObjectFromFunction, incident) {
                 .setLatLng(latlng)
                 .setContent('<b>Call ID: </b>' + incident.call.call_id + '<br>' + '<b>Call Type: </b>' + incident.call.call_type + 
                 '<br>' + '<b>Call Class: </b>' + incident.call.call_class + '<br>' + '<b>Call Time: </b>' + incident.call.call_time
-                + '<br>' + editBtn.innerHTML)
+                + '<br>' + editBtn.innerHTML + '<p hidden class="inc-id">' + incident.incident_id + '</p>')
                 .openOn(mapObjectFromFunction);
 
   //console.log('Edit value', editBtn);
@@ -71,9 +71,9 @@ async function dataHandler(mapObjectFromFunction) {
 
 async function populateForm(button) {
   const elem = button.parentElement;
-  const idForEdit = elem.innerHTML.substring(elem.innerHTML.indexOf('<br>')-8, elem.innerHTML.indexOf('<br>')-1);
+  const idForEdit = elem.getElementsByClassName('inc-id')[0].innerHTML;
   console.log(idForEdit);
-  const request = await fetch('/api/search?queryText=' + idForEdit);
+  const request = await fetch('/api/incidents/' + idForEdit);
   const requestToJSON = await request.json();
   const callToEdit = requestToJSON.data;
   console.log(requestToJSON);

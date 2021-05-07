@@ -52,9 +52,9 @@ async function dataHandler(mapObjectFromFunction) {
                               startDate.value + '&endDate=' + endDate.value + '&limit=' + limit.value);
     
     const searchToJSON = await requestSearch.json();
-    
-    try { const searchData = searchToJSON.data;
-    // Remove current markers here
+    const searchData = searchToJSON.data;
+    try { 
+      // Remove current markers here
       mapObjectFromFunction.eachLayer(function (layer) {
         if (layer.options.tileSize != 512) {
             mapObjectFromFunction.removeLayer(layer);

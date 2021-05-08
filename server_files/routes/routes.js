@@ -7,6 +7,7 @@ import { getReply } from '../controllers/getReply.js';
 
 // All controllers used in the router imported here.
 import { getSearchResults } from '../controllers/search.js';
+import { getInitMapPoints } from '../controllers/mapInit.js';
 import { createNewIncident, deleteIncident, getAllIncidents, getCallFromIncident, getDispatchFromIncident, getIncident, getLocationFromIncident, getUnitFromIncident, updateIncident } from '../controllers/incidents.js';
 import { createNewCall, deleteCall, getAllCalls, getCall, updateCall } from '../controllers/calls.js';
 import { createNewLocation, deleteLocation, getAllLocations, updateLocation, getLocation } from '../controllers/locations.js';
@@ -183,7 +184,12 @@ router.route('/units/:unit_id')
 
 // Search endpoint
 router.get('/search', async (req, res) => {
-  await getSearchResults(res, req);
+  await getSearchResults(req, res);
+});
+
+// Map initialize endpoints
+router.get('/mapInit', async (req, res) => {
+  await getInitMapPoints(req, res);
 });
 
 // Custom query
@@ -195,7 +201,7 @@ router.get('/custom', async (req, res) => {
     const reply = getReply(customResult);
     res.json(reply);
   } catch (err) {
-    console.log(err);
+    console.error(err);
     res.json({error: 'Server error'});
   }
 });

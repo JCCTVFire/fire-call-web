@@ -5,7 +5,8 @@ export default (database, DataTypes) => {
       incident_id: {
         type: DataTypes.INTEGER,
         allowNull: false,
-        primaryKey: true   
+        primaryKey: true,
+        autoIncrement: true
       },
       date: {
         type: DataTypes.DATE,

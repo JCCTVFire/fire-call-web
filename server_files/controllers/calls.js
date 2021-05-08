@@ -50,16 +50,29 @@ async function getCall(req, res, next) {
 
 async function updateCall(req, res, next) {
   try {
-    await db.calls.update({
-      call_type: req.body.call_type,
-      call_class: req.body.call_class,
-      call_time: req.body.call_time
-    },
-    {
+
+    const callArr = await db.calls.findAll({
       where: {
         call_id: req.params.call_id
       }
     });
+    console.log(req.body)
+    const call = callArr[0];
+    call.call_type = req.body.call_type;
+    call.call_class = req.body.call_class;
+    call.call_time = req.body.call_time;
+    console.log(call);
+    await call.save();
+    // await db.calls.update({
+    //   call_type: req.body.call_type,
+    //   call_class: req.body.call_class,
+    //   call_time: req.body.call_time
+    // },
+    // {
+    //   where: {
+    //     call_id: req.params.call_id
+    //   }
+    // });
     res.json({message: 'Successful update.'});
   } catch (err) {
     console.error(err);
@@ -69,7 +82,7 @@ async function updateCall(req, res, next) {
 
 async function deleteCall(req, res, next) {
   try {
-    console.log(req.params)
+    
     const deleted = await db.calls.destroy({
       where: {
         call_id: req.params.call_id

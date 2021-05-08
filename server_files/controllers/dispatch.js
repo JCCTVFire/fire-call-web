@@ -73,7 +73,7 @@ async function updateDispatch(req, res, next){
 
 async function deleteDispatch(req, res, next){
   try {
-    console.log(req.params)
+    
     const deleted = await db.dispatch.destroy({
       where: {
         dispatch_id: req.params.dispatch_id

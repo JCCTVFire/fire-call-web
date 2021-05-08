@@ -77,152 +77,150 @@
 
           <div class="column">
             <article class="panel">
-              <p class="panel-heading" id="manageForm">
-                Manage Call
-              </p>
-              <div class="tabs ml-1">
-                <ul>
-                  <li name="tablinks" class="is-active" id="callTab"><a onclick="openTab(event, 'Call')">Call</a></li>
-                  <li name="tablinks"><a onclick="openTab(event, 'Incident')">Incident</a></li>
-                  <li name="tablinks"><a onclick="openTab(event, 'Dispatch')">Dispatch</a></li>
-                  <li name="tablinks"><a onclick="openTab(event, 'Units')">Units</a></li>
-                </ul>
-              </div>
-              <div class="column ml-2 tabs-content">
-                <div name="tabcontent" id="Call">
-                  <div class="field">
-                    <label class="label" id="callID">ID:</label>
-                  </div>
-                  <div class="field">
-                    <label class="label">Type</label>
-                    <div class="control">
-                      <input class="input" id="callType" style="width: 450px;" type="text">
-                    </div>
-                  </div>
-                  <div class="field">
-                    <label class="label">Class</label>
-                    <div class="control">
-                      <input class="input" id="callClass" style="width: 450px;" type="text">
-                    </div>
-                  </div>
-                  <div class="field">
-                    <label class="label">Time</label>
-                    <div class="control">
-                      <input class="input" id="callTime" style="width: 450px;" type="text">
-                    </div>
-                  </div>
-                  <div class="field is-grouped">
-                    <div class="control">
-                      <button class="button is-link mt-2 mb-3">Save</button>
-                    </div>
-                    <div class="control">
-                      <button class="button is-danger mt-2 mb-3">Delete</button>
-                    </div>
-                  </div>    
+              <form id="manageForm">
+                <p class="panel-heading">
+                  Manage Call
+                </p>
+                <div class="tabs ml-1">
+                  <ul>
+                    <li name="tablinks" class="is-active" id="callTab"><a onclick="openTab(event, 'Call')">Call</a></li>
+                    <li name="tablinks"><a onclick="openTab(event, 'Incident')">Incident</a></li>
+                    <li name="tablinks"><a onclick="openTab(event, 'Dispatch')">Dispatch</a></li>
+                    <li name="tablinks"><a onclick="openTab(event, 'Units')">Units</a></li>
+                  </ul>
                 </div>
-                <div name="tabcontent" id="Incident" style="display: none;">
-                  <div class="field">
-                    <label class="label" id="incidentID">ID:</label>
+                <div class="column ml-2 tabs-content">
+                  <div name="tabcontent" id="Call">
+                    <div class="field">
+                      <label class="label" id="callID">ID:</label>
+                    </div>
+                    <div class="field">
+                      <label class="label" name="type">Type</label>
+                      <div class="control">
+                        <input class="input" id="callType" style="width: 450px;" type="text">
+                      </div>
+                    </div>
+                    <div class="field">
+                      <label class="label" name="class">Class</label>
+                      <div class="control">
+                        <input class="input" id="callClass" style="width: 450px;" type="text">
+                      </div>
+                    </div>
+                    <div class="field">
+                      <label class="label" name="time">Time</label>
+                      <div class="control">
+                        <input class="input" id="callTime" style="width: 450px;" type="text">
+                      </div>
+                    </div>
+                    <div class="field is-grouped">
+                      <div class="control">
+                        <button class="button is-link mt-2 mb-5">Save</button>
+                      </div>
+                      <div class="control">
+                        <button class="button is-danger mt-2 mb-5">Delete</button>
+                      </div>
+                    </div>    
                   </div>
-                  <div class="field">
-                    <label class="label" id="incidentDate">Date:</label>
+                  <div name="tabcontent" id="Incident" style="display: none;">
+                    <div class="field">
+                      <label class="label" id="incidentID">ID:</label>
+                    </div>
+                    <div class="field">
+                      <label class="label" id="incidentDate">Date:</label>
+                    </div>
+                    <div class="field">
+                      <label class="label" id="incidentDesc">Description:</label>
+                    </div>   
+                    <div class="field">
+                      <label class="label" id="incidentPostal">Postal Code:</label>
+                    </div>  
+                    <div class="field">
+                      <label class="label mb-5" id="incidentDist">District Code:</label>
+                    </div>  
                   </div>
-                  <div class="field">
-                    <label class="label" id="incidentDesc">Description:</label>
-                  </div>   
-                  <div class="field">
-                    <label class="label" id="incidentPostal">Postal Code:</label>
-                  </div>  
-                  <div class="field">
-                    <label class="label mb-3" id="incidentDist">District Code:</label>
-                  </div>  
+                  <div name="tabcontent" id="Dispatch" style="display: none;">
+                    <div class="field">
+                      <label class="label" id="dispatchID">ID:</label>
+                    </div>
+                    <div class="field">
+                      <label class="label" id="dispatchTime">Dispatch Time:</label>
+                    </div>
+                    <div class="field">
+                      <label class="label" id="arrivalTime">Arrival Time:</label>
+                    </div>
+                    <div class="field">
+                      <label class="label" id="responseTime">Response Time:</label>
+                    </div>
+                    <div class="field">
+                      <label class="label" id="arrivalUnit">Arrival Unit:</label>
+                    </div>
+                    <div class="field">
+                      <label class="label mb-5" id="clearedTime">Cleared Time:</label>
+                    </div>
+                  </div>
+                  <div name="tabcontent" id="Units" style="display: none;">
+                    <div class="field">
+                      <label class="label" id="unitID">ID:</label>
+                    </div>
+                    <div class="field">
+                      <label class="label" id="unitNumber">Number:</label>
+                    </div>
+                    <div class="field">
+                      <label class="label mb-5" id="unitClassName">Class Name:</label>
+                    </div>
+                  </div>
                 </div>
-                <div name="tabcontent" id="Dispatch" style="display: none;">
-                  <div class="field">
-                    <label class="label" id="dispatchID">ID:</label>
-                  </div>
-                  <div class="field">
-                    <label class="label" id="dispatchTime">Dispatch Time:</label>
-                  </div>
-                  <div class="field">
-                    <label class="label" id="arrivalTime">Arrival Time:</label>
-                  </div>
-                  <div class="field">
-                    <label class="label" id="responseTime">Response Time:</label>
-                  </div>
-                  <div class="field">
-                    <label class="label" id="arrivalUnit">Arrival Unit:</label>
-                  </div>
-                  <div class="field">
-                    <label class="label mb-3" id="clearedTime">Cleared Time:</label>
-                  </div>
-                </div>
-                <div name="tabcontent" id="Units" style="display: none;">
-                  <div class="field">
-                    <label class="label" id="unitID">ID:</label>
-                  </div>
-                  <div class="field">
-                    <label class="label" id="unitNumber">Number:</label>
-                  </div>
-                  <div class="field">
-                    <label class="label mb-3" id="unitClassName">Class Name:</label>
-                  </div>
-                </div>
-              </div>  
+              </form>  
             </article>
           </div>
 
           <div class="column">
             <article class="panel">
-              <p class="panel-heading" id="addForm">
-                Add Call
-              </p>
-              <div class="column ml-2">
-                <div class="field">
-                  <label class="label mt-5">ID:</label>
-                </div>
-      
-                <div class="field">
-                  <label class="label">Call Type</label>
-                  <div class="control">
-                    <input class="input" style="width: 450px;" type="text">
+              <form id="addForm">
+                <p class="panel-heading">
+                  Add Call
+                </p>
+                <div class="column ml-2 mt-5">
+                  <div class="field">
+                    <label class="label">Type</label>
+                    <div class="control">
+                      <input class="input" id="formType" style="width: 450px;" type="text">
+                    </div>
                   </div>
-                </div>
-      
-                <div class="field">
-                  <label class="label">Call Class</label>
-                  <div class="control">
-                    <div class="select">
-                      <select>
-                        <option>Fire</option>
-                        <option>HazMat</option>
-                        <option>Medical</option>
-                        <option>Rescue</option>
-                        <option>Other</option>
-                      </select>
+        
+                  <div class="field">
+                    <label class="label">Class</label>
+                    <div class="control">
+                      <div class="select" id="formClass">
+                        <select>
+                          <option>Fire</option>
+                          <option>HazMat</option>
+                          <option>Medical</option>
+                          <option>Rescue</option>
+                          <option>Other</option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="field">
+                    <label class="label">Time</label>
+                    <div class="control">
+                      <input class="input" id="formTime" style="width: 450px;" type="text">
+                    </div>
+                  </div>
+        
+                  <div class="field">
+                    <div class="control">
+                      <button class="button is-link mt-2 mb-5">Save</button>
                     </div>
                   </div>
                 </div>
-
-                <div class="field">
-                  <label class="label">Call Time</label>
-                  <div class="control">
-                    <input class="input" style="width: 450px;" type="text">
-                  </div>
-                </div>
-      
-                <div class="field">
-                  <div class="control">
-                    <button class="button is-link mt-2 mb-3">Save</button>
-                  </div>
-                </div>
-              </div>
-                
-              </article>
-            </div>
+              </form>
+            </article>
           </div>
-
-            <script src="script.js"></script>            
+        </div>
+          <script src="script.js"></script>            
         </div>
     </body>
 </html>

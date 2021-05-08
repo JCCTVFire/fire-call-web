@@ -111,12 +111,35 @@ async function populateForm(button) {
   const callType = document.getElementById('callType');
   const callClass = document.getElementById('callClass');
   const callTime = document.getElementById('callTime');
+  const manageForm = document.getElementById('manageForm');
  
   callID.innerHTML = 'ID: ' + call[0].call_id;
   callType.value = call[0].call_type;
   callClass.value = call[0].call_class;
   callTime.value = call[0].call_time;
 
+  //manageForm.addEventListener('submit', function () {
+  //  sendUpdate('calls', [call_type: callType.value, callClass.value, callTime.value], call[0].call_id);
+  //});
+
+  const addForm = document.getElementById('addForm');
+  const addFormType = document.getElementById('formType');
+  const addFormClass = document.getElementById('formClass');
+  const addFormTime = document.getElementById('formTime');
+
+  let data = {
+    call_type: addFormType.value, 
+    call_class: addFormClass.value,
+    call_time: addFormTime.value
+  }
+
+  addForm.addEventListener('click', function() {
+    postData('/api/calls', data)
+     .then(data => {
+        console.log(data); 
+      });
+  })
+  
   const requestDis = await fetch('/api/dispatch/' + inc[0].dispatch_id);
   const requestDisToJSON = await requestDis.json();
   const dispatch = requestDisToJSON.data;
@@ -146,8 +169,21 @@ async function populateForm(button) {
   unitClassName.innerHTML = 'Class Name: ' + units[0].unit_class_name;
 }
 
-
-
+async function postData(url = '', data = {}) {
+  const response = await fetch(url, {
+    method: 'POST',
+    mode: 'cors', 
+    cache: 'no-cache', 
+    credentials: 'same-origin', 
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    redirect: 'follow', 
+    referrerPolicy: 'no-referrer', 
+    body: JSON.stringify(data) 
+  });
+  return response.json(); 
+}
 
 async function sendUpdate(tableName, formData, id) {
   let reqBody = {};
@@ -177,7 +213,6 @@ async function sendUpdate(tableName, formData, id) {
 async function windowActions() {
   const map = await mapInit();
   await dataHandler(map);
-  sendUpdate('yadayada','yadayada', 'Integer');
 }
 
 window.onload = windowActions;

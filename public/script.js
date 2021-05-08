@@ -1,20 +1,16 @@
-function openTab(evt, tabTitle) {
-  var i, tabcontent, tablinks;
-  const callTab = document.getElementById('callTab');
+async function openTab(evt, tabTitle) {
+  const oldTab = document.querySelector('li.is-active');
+  const oldData = document.getElementById('displayBox').querySelector('div.tabcontent');
+
+  const newFormData = document.getElementById(tabTitle);
   
-  if (tabTitle != 'Call') {
-     callTab.className = callTab.className.replace("is-active", "");
-  }
-  tabcontent = document.getElementsByName("tabcontent");
-  for (i = 0; i < tabcontent.length; i++) {
-      tabcontent[i].style.display = "none";
-  }
-  tablinks = document.getElementsByName("tablinks");
-  for (i = 0; i < tablinks.length; i++) {
-       tablinks[i].className = tablinks[i].className.replace(" is-active", "");
-  }
-  document.getElementById(tabTitle).style.display = "block";
-  evt.currentTarget.parentElement.className += " is-active";
+  const displayBox = document.getElementById('displayBox');
+  const hideBox = document.getElementById('hider');
+  
+  oldTab.classList.remove('is-active');
+  evt.currentTarget.parentElement.classList.add('is-active');
+  hideBox.append(oldData);
+  displayBox.append(newFormData);
 }
 
 async function markMap(mapObjectFromFunction, incident) {
@@ -144,6 +140,11 @@ async function populateForm(button) {
   unitID.innerHTML = 'ID: ' + units[0].unit_id;
   unitNumber.innerHTML = 'Number: ' + units[0].unit_number;
   unitClassName.innerHTML = 'Class Name: ' + units[0].unit_class_name;
+
+
+  const activeTableName = document.querySelector('li.is-active a').textContent;
+  const activeForm = document.getElementById(activeTableName);
+  console.log(activeForm);
 }
 
 
@@ -177,7 +178,6 @@ async function sendUpdate(tableName, formData, id) {
 async function windowActions() {
   const map = await mapInit();
   await dataHandler(map);
-  sendUpdate('yadayada','yadayada', 'Integer');
 }
 
 window.onload = windowActions;

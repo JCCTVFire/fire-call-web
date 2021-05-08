@@ -51,33 +51,74 @@ async function mapInit() {
   return map;
 }
   
+async function postData(url = '', data = {}) {
+  // let reqBody = data.call.call_time === '' ? {call: [{call_type: data.call.call_type, call_class: data.call.call_class, call_time: Date().search('\d{2}:\d{2}:\d{2}')}]} : data;
+  // console.log(reqBody);
+  const request = await fetch(url, {
+    method: 'POST',
+    // mode: 'cors', 
+    // cache: 'no-cache', 
+    // credentials: 'same-origin', 
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    // redirect: 'follow', 
+    // referrerPolicy: 'no-referrer', 
+    body: data 
+  });
 
-async function sendUpdate(tableName, formData, id) {
-  console.log(JSON.stringify(formData));
-  const request = await fetch('/api/'+tableName+'/'+id, { headers: {'Content-Type': 'application/json'}, body: formData, method: 'PUT'})
   const response = await request.json();
-  const deleteButtons = document.querySelectorAll('div.notification');
+  const deleteButtons = document.querySelectorAll('#add-delete-notification');
   
   if (deleteButtons.length > 0) {
     deleteButtons.forEach((button) => button.remove());
   }
   // response = {message: 'Successfully updated a new tab.'}
   const messageBox = document.createElement('div');
+  messageBox.setAttribute('id', 'add-delete-notification')
   messageBox.classList.add('notification');
-  
   if (response.message) {
     const message = response['message'];
     messageBox.classList.add('is-success');
-    messageBox.innerHTML = `${message}<a id="success-tag" class="delete is-small"></a>`
+    messageBox.innerHTML = `${message}<a id="add-status-tag" class="delete is-small"></a>`
   } else {
     const error = response['error'];
     messageBox.classList.add('is-danger');
     console.log(response);
-    messageBox.innerHTML = `${error}<a id="success-tag" class="delete is-small"></a>`
+    messageBox.innerHTML = `${error}<a id="add-status-tag" class="delete is-small"></a>`
+  }
+  const tabContent = document.getElementById('add-call-display');
+  tabContent.append(messageBox);
+  const deleteButton = document.getElementById("add-status-tag");
+  deleteButton.onclick = (evt) => messageBox.remove();
+}
+
+async function sendUpdate(tableName, formData, id) {
+  console.log(JSON.stringify(formData));
+  const request = await fetch('/api/'+tableName+'/'+id, { headers: {'Content-Type': 'application/json'}, body: formData, method: 'PUT'})
+  const response = await request.json();
+  const notifications = document.querySelectorAll('#manage-delete-notification');
+  
+  if (notifications.length > 0) {
+    notifications.forEach((notif) => notif.remove());
+  }
+  // response = {message: 'Successfully updated a new tab.'}
+  const messageBox = document.createElement('div');
+  messageBox.classList.add('notification');
+  messageBox.setAttribute('id', 'manage-delete-notification');
+  if (response.message) {
+    const message = response['message'];
+    messageBox.classList.add('is-success');
+    messageBox.innerHTML = `${message}<a id="manage-status-tag" class="delete is-small"></a>`
+  } else {
+    const error = response['error'];
+    messageBox.classList.add('is-danger');
+    console.log(response);
+    messageBox.innerHTML = `${error}<a id="manage-status-tag" class="delete is-small"></a>`
   }
   const tabContent = document.getElementById('Call');
   tabContent.append(messageBox);
-  const deleteButton = document.getElementById("success-tag");
+  const deleteButton = document.getElementById("manage-status-tag");
   deleteButton.onclick = (evt) => messageBox.remove();
 }
 
@@ -90,6 +131,40 @@ async function dataHandler(mapObjectFromFunction) {
   const endDate = document.getElementById('end');
   const limit = document.getElementById('limit');
    
+
+  const addForm = document.getElementById('addForm');
+  const addFormType = document.getElementById('formType');
+  const addFormClass = document.getElementById('formClass');
+  const addFormTime = document.getElementById('formTime');
+
+  let dataRaw = {
+    date: Date(),
+    call:[{
+      call_type: addFormType.value, 
+      call_class: addFormClass.value,
+      call_time: addFormTime.value
+    }],
+    dispatch: [{}],
+    location: [{
+
+    }],
+    unit: [{}]
+  }
+
+  addForm.addEventListener('submit', async function (evt) {
+    evt.preventDefault();
+    
+    // let reqBody = (dataRaw.call.call_time === '') ? {call: [{call_type: dataRaw.call.call_type, call_class: dataRaw.call.call_class, call_time: Date().search('\d{2}:\d{2}:\d{2}')}]} : dataRaw;
+    if (dataRaw.call.call_time === '') {
+      let today = Date();
+      dataRaw.call.call_time = today.search('\d{2}:\d{2}:\d{2}')
+    }
+    const data = JSON.stringify(dataRaw);
+    await postData('/api/incidents', data);
+  });
+
+
+
   form.addEventListener('submit', async (event) => {
     event.preventDefault();
     const requestSearch = await fetch('/api/search?queryText=' + search.value + '&startDate=' + 
@@ -151,25 +226,12 @@ async function populateForm(button) {
     console.log(callType);
     await sendUpdate('calls', JSON.stringify({call_type: callType.value, call_class: callClass.value, call_time: callTime.value}), call[0].call_id);
   });
+  const deleteEntryButton = document.getElementById('delete-entry-button');  
+  deleteEntryButton.addEventListener('click', async (evt) => {
+    evt.preventDefault();
+    await deleteIncident();
+  });
 
-  const addForm = document.getElementById('addForm');
-  const addFormType = document.getElementById('formType');
-  const addFormClass = document.getElementById('formClass');
-  const addFormTime = document.getElementById('formTime');
-
-  let data = {
-    call_type: addFormType.value, 
-    call_class: addFormClass.value,
-    call_time: addFormTime.value
-  }
-
-  addForm.addEventListener('click', function() {
-    postData('/api/calls', data)
-     .then(data => {
-        console.log(data); 
-      });
-  })
-  
   const requestDis = await fetch('/api/dispatch/' + inc[0].dispatch_id);
   const requestDisToJSON = await requestDis.json();
   const dispatch = requestDisToJSON.data;
@@ -204,26 +266,37 @@ async function populateForm(button) {
   console.log(activeForm);
 }
 
-async function postData(url = '', data = {}) {
-  const response = await fetch(url, {
-    method: 'POST',
-    mode: 'cors', 
-    cache: 'no-cache', 
-    credentials: 'same-origin', 
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    redirect: 'follow', 
-    referrerPolicy: 'no-referrer', 
-    body: JSON.stringify(data) 
-  });
-  return response.json(); 
-}
 
 
 async function deleteIncident() {
-  const incID = document.getElementById('incidentID').innerHTML.substring(4,11);
-  const request = await fetch('/api/**path to table**' + incID, {mode: 'DEL'});
+  const idText = document.getElementById('incidentID').textContent;
+  console.log(idText)
+  const incID = idText.substring(4,idText.length-1);
+  const request = await fetch('/api/incident/' + incID, {method: 'DELETE'});
+  const response = await request.json();
+  const notifications = document.querySelectorAll('#manage-delete-notification');
+  
+  if (notifications.length > 0) {
+    notifications.forEach((notif) => notif.remove());
+  }
+  // response = {message: 'Successfully updated a new tab.'}
+  const messageBox = document.createElement('div');
+  messageBox.classList.add('notification');
+  messageBox.setAttribute('id', 'manage-delete-notification');
+  if (response.message) {
+    const message = response['message'];
+    messageBox.classList.add('is-success');
+    messageBox.innerHTML = `${message}<a id="manage-status-tag" class="delete is-small"></a>`
+  } else {
+    const error = response['error'];
+    messageBox.classList.add('is-danger');
+    console.log(response);
+    messageBox.innerHTML = `${error}<a id="manage-status-tag" class="delete is-small"></a>`
+  }
+  const tabContent = document.getElementById('Call');
+  tabContent.append(messageBox);
+  const deleteButton = document.getElementById("manage-status-tag");
+  deleteButton.onclick = (evt) => messageBox.remove();
 }
 
 async function windowActions() {

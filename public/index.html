@@ -118,7 +118,7 @@
                           <button type="submit" class="button is-link mt-2 mb-5">Save</button>
                         </div>
                         <div class="control">
-                          <button class="button is-danger mt-2 mb-5">Delete</button>
+                          <button type="button" class="button is-danger mt-2 mb-5" id="delete-entry-button">Delete</button>
                         </div>
                       </div>
                     </div>
@@ -181,11 +181,11 @@
 
           <div class="column">
             <article class="panel">
-              <form id="addForm">
+              <form id="addForm" action="#">
                 <p class="panel-heading">
                   Add Call
                 </p>
-                <div class="column ml-2 mt-5">
+                <div class="column ml-2 mt-5" id="add-call-display">
                   <div class="field">
                     <label class="label">Type</label>
                     <div class="control">
@@ -217,7 +217,7 @@
         
                   <div class="field">
                     <div class="control">
-                      <button class="button is-link mt-2 mb-5">Save</button>
+                      <button type="submit" class="button is-link mt-2 mb-5">Create</button>
                     </div>
                   </div>
                 </div>

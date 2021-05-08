@@ -175,6 +175,11 @@ async function sendUpdate(tableName, formData, id) {
   deleteButton.onclick = (evt) => messageBox.remove();
 }
 
+async function deleteIncident() {
+  const incID = document.getElementById('incidentID').innerHTML.substring(4,11);
+  const request = await fetch('/api/**path to table**' + incID, {mode: 'DEL'});
+}
+
 async function windowActions() {
   const map = await mapInit();
   await dataHandler(map);

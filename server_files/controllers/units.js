@@ -14,18 +14,18 @@ async function getAllUnits(req, res, next) {
 
 async function createNewUnit(req, res, next) {
   try {
-    const existing = await db.units.findAll({ where: { unit_id: req.body.unit_id } });
+    // const existing = await db.units.findAll({ where: { unit_id: req.body.unit_id } });
     
-    if (existing.length > 0) {
-      res.json({message: `Entry with unit_id ${req.body.unit_id} already exists`})
-    } else {
+    // if (existing.length > 0) {
+    //   res.json({message: `Entry with unit_id ${req.body.unit_id} already exists`})
+    // } else {
       const newUnits = await db.units.create({
-        unit_id: req.body.unit_id,
+        // unit_id: req.body.unit_id,
         unit_number: req.body.unit_number,
         unit_class_name: req.body.unit_class_name
       });
       res.json({message: 'Inserted new entry in "units".'})
-    }
+    // }
   } catch (err) {
     console.error(err);
     res.json({error: 'Server error'});

@@ -100,10 +100,27 @@ async function deleteCall(req, res, next) {
   }
 }
 
+async function getIncidentFromCallID(req, res, next) {
+  try {
+    const incident = await db.incidents.findAll({
+      where: {
+        call_id: req.params.call_id
+      },
+      include: ['call', 'dispatch', 'location', 'unit']
+    });
+    const reply = getReply(incident);
+    res.json(reply)
+  } catch (err) {
+    console.error(err);
+    res.json({error: 'Server error'});
+  }
+}
+
 export {
   getAllCalls,
   createNewCall,
   getCall,
   updateCall,
-  deleteCall
+  deleteCall,
+  getIncidentFromCallID
 }

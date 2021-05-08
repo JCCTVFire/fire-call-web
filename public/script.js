@@ -17,7 +17,7 @@ async function markMap(mapObjectFromFunction, incident) {
   const marker = L.marker([incident.location.lat, incident.location.long]).addTo(mapObjectFromFunction);
   const latlng = L.latLng(incident.location.lat, incident.location.long);
   const editBtn = L.DomUtil.create('a', 'edit');
-  editBtn.innerHTML = '<a href="#manageForm" onclick="populateForm(this)">Edit</a>';     
+  editBtn.innerHTML = '<a href="#manageForm" onclick="editButtonHandler(this)">Edit</a>';     
   const popup = L.popup()
                 .setLatLng(latlng)
                 .setContent('<b>Call ID: </b>' + incident.call.call_id + '<br>' + '<b>Call Type: </b>' + incident.call.call_type + 
@@ -26,6 +26,16 @@ async function markMap(mapObjectFromFunction, incident) {
                 .openOn(mapObjectFromFunction);
 
   marker.bindPopup(popup).openPopup();
+}
+
+async function editButtonHandler(button) {
+  const elem = button.parentElement;
+  const idForEdit = elem.getElementsByClassName('inc-id')[0].innerHTML;
+  const response = await fetch('/api/calls/'+idForEdit+'incident');
+  const responseJSON = await response.json();
+  const data = responseJSON.data;
+  // console.log(data);
+  await populateForm(JSON.stringify(data));
 }
 
 async function mapInit() {
@@ -137,6 +147,18 @@ async function dataHandler(mapObjectFromFunction) {
   const addFormClass = document.getElementById('formClass');
   const addFormTime = document.getElementById('formTime');
 
+  const searchIDBox = document.getElementById('callID');
+  const searchIDButton = document.getElementById('findIDButton');
+  searchIDButton.addEventListener('click', async () => {
+    const idQuery = searchIDBox.value;
+    const response = await fetch('/api/calls/' + idQuery + '/incident');
+    const responseJSON = await response.json();
+    console.log(responseJSON);
+    const data = responseJSON.data;
+    console.log(data);
+    await populateForm(data);
+  })
+
   let dataRaw = {
     date: Date(),
     call:[{
@@ -188,13 +210,14 @@ async function dataHandler(mapObjectFromFunction) {
   });
 }
 
-async function populateForm(button) {
-  const elem = button.parentElement;
-  const idForEdit = elem.getElementsByClassName('inc-id')[0].innerHTML;
-  const request = await fetch('/api/incidents/' + idForEdit);
-  const requestToJSON = await request.json();
+async function populateForm(data) {
+  // console.log(data);
+  // const parseData = JSON.parse();
+  const idForEdit = data.incident_id;
+  // const request = await fetch('/api/incidents/' + idForEdit);
+  // const requestToJSON = await request.json();
 
-  const inc = requestToJSON.data;
+  const inc = data;
   const incID = document.getElementById('incidentID');
   const incDate = document.getElementById('incidentDate');
   const incDesc = document.getElementById('incidentDesc');
@@ -270,10 +293,12 @@ async function populateForm(button) {
 
 async function deleteIncident() {
   const idText = document.getElementById('incidentID').textContent;
-  console.log(idText)
-  const incID = idText.substring(4,idText.length-1);
-  const request = await fetch('/api/incident/' + incID, {method: 'DELETE'});
+  console.log(idText);
+  const incID = idText.substring(4,idText.length);
+  console.log(incID);
+  const request = await fetch('/api/incidents/' + incID, {method: 'DELETE'});
   const response = await request.json();
+
   const notifications = document.querySelectorAll('#manage-delete-notification');
   
   if (notifications.length > 0) {

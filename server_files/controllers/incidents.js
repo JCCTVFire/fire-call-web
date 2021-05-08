@@ -17,10 +17,11 @@ async function getAllIncidents(req, res, next) {
 async function createNewIncident(req, res, next) {
   try {
     console.log(req.body);
-    await db.incidents.create(req.body, {
+    const newIncident = await db.incidents.create(req.body, {
       include: ['call', 'dispatch', 'location', 'unit']
     });
-    res.send({message: 'Inserted new entry in "incidents".'});
+    const id = newIncident.call.call_id
+    res.send({message: `Inserted new entry in "incidents" with call_id ${id}.`});
   } catch (err) {
     console.error(err);
     res.json({error: 'Server error'});

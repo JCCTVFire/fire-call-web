@@ -79,7 +79,7 @@
             <article class="panel">
               <form id="manageForm" action="#">
                 <p class="panel-heading">
-                  Manage Call
+                  Edit Call
                 </p>
                 <div class="tabs ml-1">
                   <ul>
@@ -92,8 +92,14 @@
                 <div class="column ml-2 tabs-content">
                   <div id="displayBox">
                     <div name="tabcontent" id="Call">
-                      <div class="field">
-                        <label class="label" id="callID">ID:</label>
+                      <label class="label" for="call_id">ID</label>
+                      <div class="field is-grouped">  
+                        <div class="control">
+                          <input class="input" type="text" value="" name="call_id" id="callID">
+                        </div>
+                        <div class="control">
+                          <button type="button" id="findIDButton" class="button is-info">Find</button>
+                        </div>
                       </div>
                       <div class="field">
                         <label class="label" name="type">Type</label>

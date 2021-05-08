@@ -31,7 +31,7 @@
         
         <div class="container is-max-desktop">
           <div class="column">
-            <form class=userform>
+            <form class="userform">
               <div class="field has-addons mt-5">
                 <div class="control">
                   <input class="input" size="109" id="search_value" type="text" placeholder="Find incidents">
@@ -77,7 +77,7 @@
 
           <div class="column">
             <article class="panel">
-              <form id="manageForm">
+              <form id="manageForm" action="#">
                 <p class="panel-heading">
                   Manage Call
                 </p>
@@ -90,83 +90,88 @@
                   </ul>
                 </div>
                 <div class="column ml-2 tabs-content">
-                  <div name="tabcontent" id="Call">
-                    <div class="field">
-                      <label class="label" id="callID">ID:</label>
-                    </div>
-                    <div class="field">
-                      <label class="label" name="type">Type</label>
-                      <div class="control">
-                        <input class="input" id="callType" style="width: 450px;" type="text">
+                  <div id="displayBox">
+                    <div name="tabcontent" id="Call">
+                      <div class="field">
+                        <label class="label" id="callID">ID:</label>
                       </div>
-                    </div>
-                    <div class="field">
-                      <label class="label" name="class">Class</label>
-                      <div class="control">
-                        <input class="input" id="callClass" style="width: 450px;" type="text">
+                      <div class="field">
+                        <label class="label" name="type">Type</label>
+                        <div class="control">
+                          <input name="call_type" class="input" id="callType" style="width: 450px;" type="text">
+                        </div>
                       </div>
-                    </div>
-                    <div class="field">
-                      <label class="label" name="time">Time</label>
-                      <div class="control">
-                        <input class="input" id="callTime" style="width: 450px;" type="text">
+                      <div class="field">
+                        <label class="label" name="class">Class</label>
+                        <div class="control">
+                          <input name="call_class" class="input" id="callClass" style="width: 450px;" type="text">
+                        </div>
                       </div>
-                    </div>
-                    <div class="field is-grouped">
-                      <div class="control">
-                        <button class="button is-link mt-2 mb-5">Save</button>
+                      <div class="field">
+                        <label class="label" name="time">Time</label>
+                        <div class="control">
+                          <input name="call_type" class="input" id="callTime" style="width: 450px;" type="text">
+                        </div>
                       </div>
-                      <div class="control">
-                        <button class="button is-danger mt-2 mb-5">Delete</button>
+                      <div class="field is-grouped">
+                        <div class="control">
+                          <button type="submit" class="button is-link mt-2 mb-5">Save</button>
+                        </div>
+                        <div class="control">
+                          <button class="button is-danger mt-2 mb-5">Delete</button>
+                        </div>
                       </div>
-                    </div>    
-                  </div>
-                  <div name="tabcontent" id="Incident" style="display: none;">
-                    <div class="field">
-                      <label class="label" id="incidentID">ID:</label>
-                    </div>
-                    <div class="field">
-                      <label class="label" id="incidentDate">Date:</label>
-                    </div>
-                    <div class="field">
-                      <label class="label" id="incidentDesc">Description:</label>
-                    </div>   
-                    <div class="field">
-                      <label class="label" id="incidentPostal">Postal Code:</label>
-                    </div>  
-                    <div class="field">
-                      <label class="label mb-5" id="incidentDist">District Code:</label>
-                    </div>  
-                  </div>
-                  <div name="tabcontent" id="Dispatch" style="display: none;">
-                    <div class="field">
-                      <label class="label" id="dispatchID">ID:</label>
-                    </div>
-                    <div class="field">
-                      <label class="label" id="dispatchTime">Dispatch Time:</label>
-                    </div>
-                    <div class="field">
-                      <label class="label" id="arrivalTime">Arrival Time:</label>
-                    </div>
-                    <div class="field">
-                      <label class="label" id="responseTime">Response Time:</label>
-                    </div>
-                    <div class="field">
-                      <label class="label" id="arrivalUnit">Arrival Unit:</label>
-                    </div>
-                    <div class="field">
-                      <label class="label mb-5" id="clearedTime">Cleared Time:</label>
                     </div>
                   </div>
-                  <div name="tabcontent" id="Units" style="display: none;">
-                    <div class="field">
-                      <label class="label" id="unitID">ID:</label>
+                  
+                  <div id="hider" style="display: none;">
+                    <div name="tabcontent" id="Incident">
+                      <div class="field">
+                        <label class="label" id="incidentID">ID:</label>
+                      </div>
+                      <div class="field">
+                        <label class="label" id="incidentDate">Date:</label>
+                      </div>
+                      <div class="field">
+                        <label class="label" id="incidentDesc">Description:</label>
+                      </div>   
+                      <div class="field">
+                        <label class="label" id="incidentPostal">Postal Code:</label>
+                      </div>  
+                      <div class="field">
+                        <label class="label mb-5" id="incidentDist">District Code:</label>
+                      </div>  
                     </div>
-                    <div class="field">
-                      <label class="label" id="unitNumber">Number:</label>
+                    <div name="tabcontent" id="Dispatch">
+                      <div class="field">
+                        <label class="label" id="dispatchID">ID:</label>
+                      </div>
+                      <div class="field">
+                        <label class="label" id="dispatchTime">Dispatch Time:</label>
+                      </div>
+                      <div class="field">
+                        <label class="label" id="arrivalTime">Arrival Time:</label>
+                      </div>
+                      <div class="field">
+                        <label class="label" id="responseTime">Response Time:</label>
+                      </div>
+                      <div class="field">
+                        <label class="label" id="arrivalUnit">Arrival Unit:</label>
+                      </div>
+                      <div class="field">
+                        <label class="label mb-5" id="clearedTime">Cleared Time:</label>
+                      </div>
                     </div>
-                    <div class="field">
-                      <label class="label mb-5" id="unitClassName">Class Name:</label>
+                    <div name="tabcontent" id="Units">
+                      <div class="field">
+                        <label class="label" id="unitID">ID:</label>
+                      </div>
+                      <div class="field">
+                        <label class="label" id="unitNumber">Number:</label>
+                      </div>
+                      <div class="field">
+                        <label class="label mb-5" id="unitClassName">Class Name:</label>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -219,7 +224,6 @@
               </form>
             </article>
           </div>
-        </div>
           <script src="script.js"></script>            
         </div>
     </body>

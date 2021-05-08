@@ -5,7 +5,8 @@ export default (database, DataTypes) => {
       call_id: {
         type: DataTypes.INTEGER,
         allowNull: false,
-        primaryKey: true
+        primaryKey: true,
+        autoIncrement: true
       },
       call_type: {
         type: DataTypes.STRING

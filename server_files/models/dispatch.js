@@ -5,7 +5,8 @@ export default (database, DataTypes) => {
       dispatch_id: {
         type: DataTypes.INTEGER,
         allowNull: false,
-        primaryKey: true
+        primaryKey: true,
+        autoIncrement: true
       },
       dispatch_time: {
         type: DataTypes.TIME

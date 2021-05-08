@@ -1,6 +1,6 @@
 async function openTab(evt, tabTitle) {
   const oldTab = document.querySelector('li.is-active');
-  const oldData = document.getElementById('displayBox').querySelector('div.tabcontent');
+  const oldData = document.getElementById('displayBox').querySelector('div');
 
   const newFormData = document.getElementById(tabTitle);
   
@@ -51,6 +51,38 @@ async function mapInit() {
   return map;
 }
   
+
+async function sendUpdate(tableName, formData, id) {
+  console.log(JSON.stringify(formData));
+  const request = await fetch('/api/'+tableName+'/'+id, { headers: {'Content-Type': 'application/json'}, body: formData, method: 'PUT'})
+  const response = await request.json();
+  const deleteButtons = document.querySelectorAll('div.notification');
+  
+  if (deleteButtons.length > 0) {
+    deleteButtons.forEach((button) => button.remove());
+  }
+  // response = {message: 'Successfully updated a new tab.'}
+  const messageBox = document.createElement('div');
+  messageBox.classList.add('notification');
+  
+  if (response.message) {
+    const message = response['message'];
+    messageBox.classList.add('is-success');
+    messageBox.innerHTML = `${message}<a id="success-tag" class="delete is-small"></a>`
+  } else {
+    const error = response['error'];
+    messageBox.classList.add('is-danger');
+    console.log(response);
+    messageBox.innerHTML = `${error}<a id="success-tag" class="delete is-small"></a>`
+  }
+  const tabContent = document.getElementById('Call');
+  tabContent.append(messageBox);
+  const deleteButton = document.getElementById("success-tag");
+  deleteButton.onclick = (evt) => messageBox.remove();
+}
+
+
+
 async function dataHandler(mapObjectFromFunction) {
   const form = document.querySelector('.userform');
   const search = document.getElementById('search_value');
@@ -114,9 +146,11 @@ async function populateForm(button) {
   callClass.value = call[0].call_class;
   callTime.value = call[0].call_time;
 
-  //manageForm.addEventListener('submit', function () {
-  //  sendUpdate('calls', [call_type: callType.value, callClass.value, callTime.value], call[0].call_id);
-  //});
+  manageForm.addEventListener('submit', async function (evt) {
+    evt.preventDefault();
+    console.log(callType);
+    await sendUpdate('calls', JSON.stringify({call_type: callType.value, call_class: callClass.value, call_time: callTime.value}), call[0].call_id);
+  });
 
   const addForm = document.getElementById('addForm');
   const addFormType = document.getElementById('formType');
@@ -186,30 +220,6 @@ async function postData(url = '', data = {}) {
   return response.json(); 
 }
 
-async function sendUpdate(tableName, formData, id) {
-  let reqBody = {};
-  formData.forEach((column) => {
-    reqBody[column.name] = column.value;
-  });
-  const request = await fetch('/api/'+tableName+id, {body: reqBody, mode: 'PUT'})
-  const response = request.json();
-  
-  response = {message: 'Successfully updated a new tab.'}
-  const messageBox = document.createElement('div');
-  messageBox.classList.add('tag');
-  response
-  try {
-    const message = response['message'];
-    messageBox.classList.add('is-success');
-    messageBox.innerHTML = `${message}<button id="success-tag" class="delete is-small"></button>`
-  } catch (err) {
-    const error = response['error'];
-  }
-  const tabContent = document.getElementById('Call');
-  tabContent.append(messageBox);
-  const deleteButton = document.getElementById("success-tag");
-  deleteButton.onclick = (evt) => messageBox.remove();
-}
 
 async function deleteIncident() {
   const incID = document.getElementById('incidentID').innerHTML.substring(4,11);

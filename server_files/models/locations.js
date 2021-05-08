@@ -5,7 +5,8 @@ export default (database, DataTypes) => {
         locations_id: {
           type: DataTypes.INTEGER,
           allowNull: false,
-          primaryKey: true
+          primaryKey: true,
+          autoIncrement: true
         },
         lat: {
           type: DataTypes.DECIMAL

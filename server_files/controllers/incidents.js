@@ -3,7 +3,9 @@ import db from '../database/initDB.js';
 
 async function getAllIncidents(req, res, next) {
   try {
-    const allIncidents = await db.incidents.findAll();
+    const allIncidents = await db.incidents.findAll({
+      include: ['call', 'dispatch', 'location', 'unit']
+    });
     const reply = getReply(allIncidents);
     res.json(reply);
   } catch (err) {
@@ -14,24 +16,31 @@ async function getAllIncidents(req, res, next) {
 
 async function createNewIncident(req, res, next) {
   try {
-    const existing = await db.incidents.findAll({ where: { incident_id: req.body.incident_id}});
+    // const existing = await db.incidents.findAll({ where: { incident_id: req.body.incident_id}});
     
-    if (existing.length > 0) {
-      res.json({message: `Entry with incident_id ${req.body.incident_id} already exists!`});
-    } else {
-      const newIncident = await db.incidents.create({
-        incident_id:  req.body.incident_id,
-        date: req.body.date,
-        description: req.body.description,
-        postal_code: req.body.postal_code,
-        district_code: req.body.district_code,
-        call_id: req.body.call_id,
-        dispatch_id: req.body.dispatch_id,
-        unit_id: req.body.unit_id,
-        locations_id: req.body.locations_id
-      });
-      res.send({message: 'Inserted new entry in "incidents".'});
-    }
+    // if (existing.length > 0) {
+    //   res.json({message: `Entry with incident_id ${req.body.incident_id} already exists!`});
+    // } else {
+      console.log(req.body);
+    await db.incidents.create(req.body
+    //   date: req.body.date,
+    //   description: req.body.description,
+    //   postal_code: req.body.postal_code,
+    //   district_code: req.body.district_code,
+    //   // call_id: req.body.call_id,
+    //   // dispatch_id: req.body.dispatch_id,
+    //   // unit_id: req.body.unit_id,
+    //   // locations_id: req.body.locations_id,
+    //   call:[{
+    //     call_type: req.body.call_type,
+    //     req.body.call_
+    //   }]
+    // }, {
+    , {
+      include: ['call', 'dispatch', 'location', 'unit']
+    });
+    res.send({message: 'Inserted new entry in "incidents".'});
+    // }
   } catch (err) {
     console.error(err);
     res.json({message: 'Server error'});
@@ -43,7 +52,8 @@ async function getIncident(req, res, next) {
     const incident = await db.incidents.findAll({
       where: {
         incident_id: req.params.incident_id
-      }
+      },
+      include: ['call', 'dispatch', 'location', 'unit']
     });
     const reply = getReply(incident);
     res.json(reply);
@@ -55,21 +65,18 @@ async function getIncident(req, res, next) {
 
 async function updateIncident(req, res, next){
   try {
-    await db.incidents.update({
-      date: req.body.date,
-      description: req.body.description,
-      postal_code: req.body.postal_code,
-      district_code: req.body.district,
-      call_id: req.body.call_id,
-      dispatch_id: req.body.dispatch_id,
-      unit_id: req.body.unit_id,
-      locations_id: req.body.locations_id
-    },
-    {
-      where: {
-        incident_id: req.params.incident_id
-      }
-    });
+    const incidentArr = await db.incidents.findAll( { where: { incident_id: req.params.incident_id } } );
+    const incident = incidentArr[0];
+    incident.date = req.body.date;
+    incident.description = req.body.description;
+    incident.postal_code = req.body.postal_code;
+    incident.district_code = req.body. district_code;
+    incident.call_id = req.body.call_id;
+    incident.dispatch_id = req.body.dispatch_id;
+    incident.unit_id = req.body.unit_id;
+    incident.locations_id = req.body.locations_id;
+    
+    await incident.save();
     res.json({message: 'Successfully updated an incident.'});
   } catch (err) {
     console.error(err);
@@ -77,9 +84,9 @@ async function updateIncident(req, res, next){
   }
 }
 
-async function deleteIncident(req, res, next){
+async function deleteIncident(req, res, next) {
   try {
-    
+    console.log(req.params);
     const deleted = await db.incidents.destroy({
       where: {
         incident_id: req.params.incident_id
@@ -128,7 +135,7 @@ async function getUnitFromIncident(req, res, next) {
         incident_id: req.params.incident_id
       }
     });    
-    
+    console.log(getUnit);
     
     const allUnits = await db.units.findAll({
       where: {

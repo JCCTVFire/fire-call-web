@@ -154,9 +154,13 @@ async function dataHandler(mapObjectFromFunction) {
     const response = await fetch('/api/calls/' + idQuery + '/incident');
     const responseJSON = await response.json();
     console.log(responseJSON);
-    const data = responseJSON.data;
-    console.log(data);
-    await populateForm(data[0]);
+    try {
+      const data = responseJSON.data;
+      console.log(data);
+      await populateForm(data[0]);
+    } catch (err) {
+      console.error(responseJSON.message);
+    }
   })
 
   let dataRaw = {
@@ -294,6 +298,7 @@ async function populateForm(data) {
 
 
 async function deleteIncident() {
+  console.log('Here')
   const idText = document.getElementById('incidentID').textContent;
   console.log(idText);
   const incID = idText.substring(4,idText.length);

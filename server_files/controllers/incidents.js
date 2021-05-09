@@ -74,7 +74,7 @@ async function deleteIncident(req, res, next) {
       }
     });
     if (deleted > 0) {
-      res.send({message: `Deleted ${deleted} rows in calls.`});
+      res.send({message: `Deleted ${deleted} rows in incidents.`});
     } else if (deleted === 0) {
       res.send({message: 'No rows deleted.'});
     } else {

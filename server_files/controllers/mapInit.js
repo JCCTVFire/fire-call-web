@@ -9,16 +9,7 @@ async function getInitMapPoints(req, res, next) {
     const initPoints = await db.incidents.findAll({
       attributes: ['incident_id', 'date', 'description', 'postal_code', 'district_code'],
       limit: 20,
-      include: [
-        {
-          model: db.calls,
-          as: 'call'
-        },
-        {
-          model: db.locations,
-          as: 'location'
-        }
-      ]
+      include: ['call', 'location']
     });
     // console.log(initPoints);
     const reply = getReply(initPoints);

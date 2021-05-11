@@ -14,19 +14,18 @@ async function getAllCalls(req, res, next) {
 
 async function createNewCall(req, res, next) {
   try {
-    const existing = await db.calls.findAll({ where: { call_id: req.body.call_id } });
+    // const existing = await db.calls.findAll({ where: { call_id: req.body.call_id } });
     
-    if (existing.length > 0) {
-      res.json({message: `Entry with call_id ${req.body.call_id} already exists`})
-    } else {
+    // if (existing.length > 0) {
+    //   res.json({message: `Entry with call_id ${req.body.call_id} already exists`})
+    // } else {
       const newCall = await db.calls.create({
-        call_id: req.body.call_id,
         call_type: req.body.call_type,
         call_class: req.body.call_class,
         call_time: req.body.call_time
       });
       res.json({message: 'Inserted new entry in "calls".'})
-    }
+    // }
   } catch (err) {
     console.error(err);
     res.json({error: 'Server error'});
@@ -101,10 +100,27 @@ async function deleteCall(req, res, next) {
   }
 }
 
+async function getIncidentFromCallID(req, res, next) {
+  try {
+    const incident = await db.incidents.findAll({
+      where: {
+        call_id: req.params.call_id
+      },
+      include: ['call', 'dispatch', 'location', 'unit']
+    });
+    const reply = getReply(incident);
+    res.json(reply)
+  } catch (err) {
+    console.error(err);
+    res.json({error: 'Server error'});
+  }
+}
+
 export {
   getAllCalls,
   createNewCall,
   getCall,
   updateCall,
-  deleteCall
+  deleteCall,
+  getIncidentFromCallID
 }

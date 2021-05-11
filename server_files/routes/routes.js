@@ -9,7 +9,7 @@ import { getReply } from '../controllers/getReply.js';
 import { getSearchResults } from '../controllers/search.js';
 import { getInitMapPoints } from '../controllers/mapInit.js';
 import { createNewIncident, deleteIncident, getAllIncidents, getCallFromIncident, getDispatchFromIncident, getIncident, getLocationFromIncident, getUnitFromIncident, updateIncident } from '../controllers/incidents.js';
-import { createNewCall, deleteCall, getAllCalls, getCall, updateCall } from '../controllers/calls.js';
+import { createNewCall, deleteCall, getAllCalls, getCall, updateCall, getIncidentFromCallID } from '../controllers/calls.js';
 import { createNewLocation, deleteLocation, getAllLocations, updateLocation, getLocation } from '../controllers/locations.js';
 import { getAllUnits, createNewUnit, getUnit, updateUnit, deleteUnit } from '../controllers/units.js';
 import { getAllDispatch, createNewDispatch, getDispatch, updateDispatch, deleteDispatch } from '../controllers/dispatch.js';
@@ -94,6 +94,10 @@ router.route('/calls/:call_id')
   .delete(async (req, res) => {
     await deleteCall(req, res);
   });
+
+router.get('/calls/:call_id/incident', async (req, res) => {
+  await getIncidentFromCallID(req, res);
+})
 
 // LOCATIONS
 router.route('/locations')

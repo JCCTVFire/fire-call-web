@@ -18,8 +18,7 @@ export default (database, DataTypes) => {
         type: DataTypes.STRING
       },
       district_code: {
-        type: DataTypes.STRING,
-        allowNull: false
+        type: DataTypes.STRING  
       },
       call_id: {
         type: DataTypes.INTEGER,

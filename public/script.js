@@ -17,7 +17,7 @@ async function markMap(mapObjectFromFunction, incident) {
   const marker = L.marker([incident.location.lat, incident.location.long]).addTo(mapObjectFromFunction);
   const latlng = L.latLng(incident.location.lat, incident.location.long);
   const editBtn = L.DomUtil.create('a', 'edit');
-  editBtn.innerHTML = '<a href="#manageForm" onclick="populateForm(this)">Edit</a>';     
+  editBtn.innerHTML = '<a href="#manageForm" onclick="editButtonHandler(this)">Edit</a>';     
   const popup = L.popup()
                 .setLatLng(latlng)
                 .setContent('<b>Call ID: </b>' + incident.call.call_id + '<br>' + '<b>Call Type: </b>' + incident.call.call_type + 
@@ -26,6 +26,16 @@ async function markMap(mapObjectFromFunction, incident) {
                 .openOn(mapObjectFromFunction);
 
   marker.bindPopup(popup).openPopup();
+}
+
+async function editButtonHandler(button) {
+  const elem = button.parentElement;
+  const idForEdit = elem.getElementsByClassName('inc-id')[0].innerHTML;
+  const response = await fetch('/api/incidents/'+idForEdit);
+  const responseJSON = await response.json();
+  const data = responseJSON.data;
+  console.log(data);
+  await populateForm(data[0]);
 }
 
 async function mapInit() {
@@ -51,33 +61,74 @@ async function mapInit() {
   return map;
 }
   
+async function postData(url = '', data = {}) {
+  // let reqBody = data.call.call_time === '' ? {call: [{call_type: data.call.call_type, call_class: data.call.call_class, call_time: Date().search('\d{2}:\d{2}:\d{2}')}]} : data;
+  // console.log(reqBody);
+  const request = await fetch(url, {
+    method: 'POST',
+    // mode: 'cors', 
+    // cache: 'no-cache', 
+    // credentials: 'same-origin', 
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    // redirect: 'follow', 
+    // referrerPolicy: 'no-referrer', 
+    body: data 
+  });
 
-async function sendUpdate(tableName, formData, id) {
-  console.log(JSON.stringify(formData));
-  const request = await fetch('/api/'+tableName+'/'+id, { headers: {'Content-Type': 'application/json'}, body: formData, method: 'PUT'})
   const response = await request.json();
-  const deleteButtons = document.querySelectorAll('div.notification');
+  const deleteButtons = document.querySelectorAll('#add-delete-notification');
   
   if (deleteButtons.length > 0) {
     deleteButtons.forEach((button) => button.remove());
   }
   // response = {message: 'Successfully updated a new tab.'}
   const messageBox = document.createElement('div');
+  messageBox.setAttribute('id', 'add-delete-notification')
   messageBox.classList.add('notification');
-  
   if (response.message) {
     const message = response['message'];
     messageBox.classList.add('is-success');
-    messageBox.innerHTML = `${message}<a id="success-tag" class="delete is-small"></a>`
+    messageBox.innerHTML = `${message}<a id="add-status-tag" class="delete is-small"></a>`
   } else {
     const error = response['error'];
     messageBox.classList.add('is-danger');
     console.log(response);
-    messageBox.innerHTML = `${error}<a id="success-tag" class="delete is-small"></a>`
+    messageBox.innerHTML = `${error}<a id="add-status-tag" class="delete is-small"></a>`
+  }
+  const tabContent = document.getElementById('add-call-display');
+  tabContent.append(messageBox);
+  const deleteButton = document.getElementById("add-status-tag");
+  deleteButton.onclick = (evt) => messageBox.remove();
+}
+
+async function sendUpdate(tableName, formData, id) {
+  console.log(JSON.stringify(formData));
+  const request = await fetch('/api/'+tableName+'/'+id, { headers: {'Content-Type': 'application/json'}, body: formData, method: 'PUT'})
+  const response = await request.json();
+  const notifications = document.querySelectorAll('#manage-delete-notification');
+  
+  if (notifications.length > 0) {
+    notifications.forEach((notif) => notif.remove());
+  }
+  // response = {message: 'Successfully updated a new tab.'}
+  const messageBox = document.createElement('div');
+  messageBox.classList.add('notification');
+  messageBox.setAttribute('id', 'manage-delete-notification');
+  if (response.message) {
+    const message = response['message'];
+    messageBox.classList.add('is-success');
+    messageBox.innerHTML = `${message}<a id="manage-status-tag" class="delete is-small"></a>`
+  } else {
+    const error = response['error'];
+    messageBox.classList.add('is-danger');
+    console.log(response);
+    messageBox.innerHTML = `${error}<a id="manage-status-tag" class="delete is-small"></a>`
   }
   const tabContent = document.getElementById('Call');
   tabContent.append(messageBox);
-  const deleteButton = document.getElementById("success-tag");
+  const deleteButton = document.getElementById("manage-status-tag");
   deleteButton.onclick = (evt) => messageBox.remove();
 }
 
@@ -90,6 +141,57 @@ async function dataHandler(mapObjectFromFunction) {
   const endDate = document.getElementById('end');
   const limit = document.getElementById('limit');
    
+
+  const addForm = document.getElementById('addForm');
+  const addFormType = document.getElementById('formType');
+  const addFormClass = document.getElementById('formClass');
+  const addFormTime = document.getElementById('formTime');
+
+  const searchIDBox = document.getElementById('callID');
+  const searchIDButton = document.getElementById('findIDButton');
+  searchIDButton.addEventListener('click', async () => {
+    const idQuery = searchIDBox.value;
+    const response = await fetch('/api/calls/' + idQuery + '/incident');
+    const responseJSON = await response.json();
+    console.log(responseJSON);
+    try {
+      const data = responseJSON.data;
+      console.log(data);
+      await populateForm(data[0]);
+    } catch (err) {
+      console.error(responseJSON.message);
+    }
+  })
+
+  let dataRaw = {
+    date: Date(),
+    call:{
+      call_type: addFormType.value, 
+      call_class: addFormClass.value,
+      call_time: addFormTime.value
+    },
+    dispatch: {},
+    location: {
+      lat: 38.0,
+      long: -77.1
+    },
+    unit: {}
+  }
+
+  addForm.addEventListener('submit', async function (evt) {
+    evt.preventDefault();
+    
+    // let reqBody = (dataRaw.call.call_time === '') ? {call: [{call_type: dataRaw.call.call_type, call_class: dataRaw.call.call_class, call_time: Date().search('\d{2}:\d{2}:\d{2}')}]} : dataRaw;
+    if (dataRaw.call.call_time === '') {
+      let today = Date();
+      dataRaw.call.call_time = today.search('\d{2}:\d{2}:\d{2}')
+    }
+    const data = JSON.stringify(dataRaw);
+    await postData('/api/incidents', data);
+  });
+
+
+
   form.addEventListener('submit', async (event) => {
     event.preventDefault();
     const requestSearch = await fetch('/api/search?queryText=' + search.value + '&startDate=' + 
@@ -97,6 +199,7 @@ async function dataHandler(mapObjectFromFunction) {
     
     const searchToJSON = await requestSearch.json();
     const searchData = searchToJSON.data;
+    console.log(searchData);
     try { 
       // Remove current markers here
       mapObjectFromFunction.eachLayer(function (layer) {
@@ -104,7 +207,7 @@ async function dataHandler(mapObjectFromFunction) {
             mapObjectFromFunction.removeLayer(layer);
         }
       });
-      searchData.reduce(async (acc, incident) => {
+      searchData.forEach(async (incident) => {
         await markMap(mapObjectFromFunction, incident);
       });
     } catch (err) {
@@ -113,66 +216,54 @@ async function dataHandler(mapObjectFromFunction) {
   });
 }
 
-async function populateForm(button) {
-  const elem = button.parentElement;
-  const idForEdit = elem.getElementsByClassName('inc-id')[0].innerHTML;
-  const request = await fetch('/api/incidents/' + idForEdit);
-  const requestToJSON = await request.json();
-
-  const inc = requestToJSON.data;
+async function populateForm(data) {
+  // console.log(data);
+  // const parseData = JSON.parse();
+  // const idForEdit = data.incident_id;
+  // const request = await fetch('/api/incidents/' + idForEdit);
+  // const requestToJSON = await request.json();
+  const inc = data;
   const incID = document.getElementById('incidentID');
   const incDate = document.getElementById('incidentDate');
   const incDesc = document.getElementById('incidentDesc');
   const incPostal = document.getElementById('incidentPostal');
   const incDist = document.getElementById('incidentDist');
 
-  incID.innerHTML = 'ID: ' + inc[0].incident_id;
-  incDate.innerHTML = 'Date: ' + inc[0].date;
-  incDesc.innerHTML = 'Description: ' + inc[0].description;
-  incPostal.innerHTML = 'Postal Code: ' + inc[0].postal_code;
-  incDist.innerHTML = 'District Code: ' + inc[0].district_code;
+  incID.innerHTML = 'ID: ' + inc.incident_id;
+  incDate.innerHTML = 'Date: ' + inc.date;
+  incDesc.innerHTML = 'Description: ' + inc.description;
+  incPostal.innerHTML = 'Postal Code: ' + inc.postal_code;
+  incDist.innerHTML = 'District Code: ' + inc.district_code;
 
-  const requestCall = await fetch('/api/calls/' + inc[0].call_id);
-  const requestCallToJSON = await requestCall.json();
-  const call = requestCallToJSON.data;
+  // const requestCall = await fetch('/api/calls/' + inc.call_id);
+  // const requestCallToJSON = await requestCall.json();
+  const call = inc.call;
   const callID = document.getElementById('callID');
   const callType = document.getElementById('callType');
   const callClass = document.getElementById('callClass');
   const callTime = document.getElementById('callTime');
   const manageForm = document.getElementById('manageForm');
  
-  callID.innerHTML = 'ID: ' + call[0].call_id;
-  callType.value = call[0].call_type;
-  callClass.value = call[0].call_class;
-  callTime.value = call[0].call_time;
+  callID.value = call.call_id;
+  callType.value = call.call_type;
+  callClass.value = call.call_class;
+  callTime.value = call.call_time;
 
   manageForm.addEventListener('submit', async function (evt) {
     evt.preventDefault();
     console.log(callType);
-    await sendUpdate('calls', JSON.stringify({call_type: callType.value, call_class: callClass.value, call_time: callTime.value}), call[0].call_id);
+    await sendUpdate('calls', JSON.stringify({call_type: callType.value, call_class: callClass.value, call_time: callTime.value}), call.call_id);
   });
 
-  const addForm = document.getElementById('addForm');
-  const addFormType = document.getElementById('formType');
-  const addFormClass = document.getElementById('formClass');
-  const addFormTime = document.getElementById('formTime');
+  const deleteEntryButton = document.getElementById('delete-entry-button');  
+  deleteEntryButton.addEventListener('click', async (evt) => {
+    evt.preventDefault();
+    await deleteIncident();
+  });
 
-  let data = {
-    call_type: addFormType.value, 
-    call_class: addFormClass.value,
-    call_time: addFormTime.value
-  }
-
-  addForm.addEventListener('click', function() {
-    postData('/api/calls', data)
-     .then(data => {
-        console.log(data); 
-      });
-  })
-  
-  const requestDis = await fetch('/api/dispatch/' + inc[0].dispatch_id);
-  const requestDisToJSON = await requestDis.json();
-  const dispatch = requestDisToJSON.data;
+  // const requestDis = await fetch('/api/dispatch/' + inc[0].dispatch_id);
+  // const requestDisToJSON = await requestDis.json();
+  const dispatch = inc.dispatch;
   const disID = document.getElementById('dispatchID');
   const disTime = document.getElementById('dispatchTime');
   const arrTime = document.getElementById('arrivalTime');
@@ -180,23 +271,23 @@ async function populateForm(button) {
   const arrUnit = document.getElementById('arrivalUnit');
   const clearedTime = document.getElementById('clearedTime');
  
-  disID.innerHTML = 'ID: ' + dispatch[0].dispatch_id;
-  disTime.innerHTML = 'Dispatch Time: ' + dispatch[0].dispatch_time;
-  arrTime.innerHTML = 'Arrival Time: ' + dispatch[0].arrival_time;
-  resTime.innerHTML = 'Response Time: ' + dispatch[0].response_time;
-  arrUnit.innerHTML = 'Arrival Unit: ' + dispatch[0].arrival_unit;
-  clearedTime.innerHTML = 'Cleared Time ' + dispatch[0].cleared_time;
+  disID.innerHTML = 'ID: ' + dispatch.dispatch_id;
+  disTime.innerHTML = 'Dispatch Time: ' + dispatch.dispatch_time;
+  arrTime.innerHTML = 'Arrival Time: ' + dispatch.arrival_time;
+  resTime.innerHTML = 'Response Time: ' + dispatch.response_time;
+  arrUnit.innerHTML = 'Arrival Unit: ' + dispatch.arrival_unit;
+  clearedTime.innerHTML = 'Cleared Time ' + dispatch.cleared_time;
 
-  const requestUnits = await fetch('/api/units/' + inc[0].unit_id);
-  const requestUnitsToJSON = await requestUnits.json();
-  const units = requestUnitsToJSON.data;
+  // const requestUnits = await fetch('/api/units/' + inc[0].unit_id);
+  // const requestUnitsToJSON = await requestUnits.json();
+  const units = inc.unit;
   const unitID = document.getElementById('unitID');
   const unitNumber = document.getElementById('unitNumber');
   const unitClassName = document.getElementById('unitClassName');
 
-  unitID.innerHTML = 'ID: ' + units[0].unit_id;
-  unitNumber.innerHTML = 'Number: ' + units[0].unit_number;
-  unitClassName.innerHTML = 'Class Name: ' + units[0].unit_class_name;
+  unitID.innerHTML = 'ID: ' + units.unit_id;
+  unitNumber.innerHTML = 'Number: ' + units.unit_number;
+  unitClassName.innerHTML = 'Class Name: ' + units.unit_class_name;
 
 
   const activeTableName = document.querySelector('li.is-active a').textContent;
@@ -204,31 +295,58 @@ async function populateForm(button) {
   console.log(activeForm);
 }
 
-async function postData(url = '', data = {}) {
-  const response = await fetch(url, {
-    method: 'POST',
-    mode: 'cors', 
-    cache: 'no-cache', 
-    credentials: 'same-origin', 
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    redirect: 'follow', 
-    referrerPolicy: 'no-referrer', 
-    body: JSON.stringify(data) 
-  });
-  return response.json(); 
-}
 
 
 async function deleteIncident() {
-  const incID = document.getElementById('incidentID').innerHTML.substring(4,11);
-  const request = await fetch('/api/**path to table**' + incID, {mode: 'DEL'});
+  console.log('Here')
+  const idText = document.getElementById('incidentID').textContent;
+  console.log(idText);
+  const incID = idText.substring(4,idText.length);
+  console.log(`${incID}`);
+  const request = await fetch('/api/incidents/' + incID, {method: 'DELETE'});
+  const response = await request.json();
+
+  const notifications = document.querySelectorAll('#manage-delete-notification');
+  
+  if (notifications.length > 0) {
+    notifications.forEach((notif) => notif.remove());
+  }
+  // response = {message: 'Successfully updated a new tab.'}
+  const messageBox = document.createElement('div');
+  messageBox.classList.add('notification');
+  messageBox.setAttribute('id', 'manage-delete-notification');
+  if (response.message) {
+    const message = response['message'];
+    messageBox.classList.add('is-success');
+    messageBox.innerHTML = `${message}<a id="manage-status-tag" class="delete is-small"></a>`
+  } else {
+    const error = response['error'];
+    messageBox.classList.add('is-danger');
+    console.log(response);
+    messageBox.innerHTML = `${error}<a id="manage-status-tag" class="delete is-small"></a>`
+  }
+  const tabContent = document.getElementById('Call');
+  tabContent.append(messageBox);
+  const deleteButton = document.getElementById("manage-status-tag");
+  deleteButton.onclick = (evt) => messageBox.remove();
 }
 
 async function windowActions() {
   const map = await mapInit();
   await dataHandler(map);
+  
+  
+  // let nums = []
+  // for (i=1821845; i < 1821859; i+=1) {
+  //   nums.push(i);
+  // }
+
+  // nums.forEach(async (num) => {
+  //   const response = await fetch('/api/incidents/'+num, {method:'DELETE'});
+  //   const deletions = await response.json();
+  //   console.log(deletions.message);
+  // });
+  
 }
 
 window.onload = windowActions;

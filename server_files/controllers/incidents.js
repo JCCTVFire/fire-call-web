@@ -10,40 +10,21 @@ async function getAllIncidents(req, res, next) {
     res.json(reply);
   } catch (err) {
     console.error(err);
-    res.json({message: 'Server error'});
+    res.json({error: 'Server error'});
   }
 }
 
 async function createNewIncident(req, res, next) {
   try {
-    // const existing = await db.incidents.findAll({ where: { incident_id: req.body.incident_id}});
-    
-    // if (existing.length > 0) {
-    //   res.json({message: `Entry with incident_id ${req.body.incident_id} already exists!`});
-    // } else {
-      console.log(req.body);
-    await db.incidents.create(req.body
-    //   date: req.body.date,
-    //   description: req.body.description,
-    //   postal_code: req.body.postal_code,
-    //   district_code: req.body.district_code,
-    //   // call_id: req.body.call_id,
-    //   // dispatch_id: req.body.dispatch_id,
-    //   // unit_id: req.body.unit_id,
-    //   // locations_id: req.body.locations_id,
-    //   call:[{
-    //     call_type: req.body.call_type,
-    //     req.body.call_
-    //   }]
-    // }, {
-    , {
+    console.log(req.body);
+    const newIncident = await db.incidents.create(req.body, {
       include: ['call', 'dispatch', 'location', 'unit']
     });
-    res.send({message: 'Inserted new entry in "incidents".'});
-    // }
+    const id = newIncident.call.call_id
+    res.send({message: `Inserted new entry in "incidents" with call_id ${id}.`});
   } catch (err) {
     console.error(err);
-    res.json({message: 'Server error'});
+    res.json({error: 'Server error'});
   }
 }
 
@@ -59,7 +40,7 @@ async function getIncident(req, res, next) {
     res.json(reply);
   } catch (err) {
     console.error(err);
-    res.json({message: 'Server error'});
+    res.json({error: 'Server error'});
   }
 }
 
@@ -80,7 +61,7 @@ async function updateIncident(req, res, next){
     res.json({message: 'Successfully updated an incident.'});
   } catch (err) {
     console.error(err);
-    res.json({message: 'Server error'});
+    res.json({error: 'Server error'});
   }
 }
 
@@ -93,7 +74,7 @@ async function deleteIncident(req, res, next) {
       }
     });
     if (deleted > 0) {
-      res.send({message: `Deleted ${deleted} rows in calls.`});
+      res.send({message: `Deleted ${deleted} rows in incidents.`});
     } else if (deleted === 0) {
       res.send({message: 'No rows deleted.'});
     } else {
@@ -101,7 +82,7 @@ async function deleteIncident(req, res, next) {
     }
   } catch (err) {
     console.error(err);
-    res.json({message: 'Server error'});
+    res.json({error: 'Server error'});
   }
 }
 
@@ -124,7 +105,7 @@ async function getCallFromIncident(req, res, next) {
   }
    catch (err) {
      console.error(err);
-     res.json({message: 'Server error'});;
+     res.json({error: 'Server error'});;
    }
 }
 
@@ -147,7 +128,7 @@ async function getUnitFromIncident(req, res, next) {
     res.json(reply);
   } catch (err) {
     console.error(err);
-    res.json({message: 'Server error'});;
+    res.json({error: 'Server error'});;
   }
 }
 
@@ -168,7 +149,7 @@ async function getDispatchFromIncident(req, res, next) {
   }
   catch (err) {
     console.error(err);
-    res.json({message: 'Server error'});;
+    res.json({error: 'Server error'});;
   }
 }
 
@@ -190,7 +171,7 @@ async function getLocationFromIncident(req, res, next) {
   }
   catch (err) {
     console.error(err);
-    res.json({message: 'Server error'});;
+    res.json({error: 'Server error'});;
   }
 }
 

@@ -11,8 +11,9 @@ const env = process.env.NODE_ENV || 'development';
 const config = configOptions[env];
 
 let sequelizeDB;
-if (config.use_env_variable) {
-  sequelizeDB = new Sequelize(process.env[config.use_env_variable], config);
+if (config.use_env_variable === 'production') {
+  console.log('Here!');
+  sequelizeDB = new Sequelize(process.env.DB_NAME, process.env.DB_USERNAME, process.env.DB_PASS, config);
 } else {
   sequelizeDB = new Sequelize(
     config.database,

@@ -23,6 +23,7 @@ export default {
     // username: 'student',
     // password: 'INST377@UMD',
     // database: 'jcctv_fire',
+    use_env_variable: 'production',
     host: '3.236.243.212',
     dialect: 'mysql',
     define: {

@@ -24,7 +24,6 @@ export default {
     // password: 'INST377@UMD',
     database: 'jcctv_fire',
     host: '3.236.243.212',
-    use_env_variable: 'production',
     dialect: 'mysql',
     define: {
       underscored: true

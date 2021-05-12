@@ -8,6 +8,7 @@ const { DataTypes } = Sequelize;
 // Have you changed your database/config.js values?
 
 const env = process.env.NODE_ENV || 'development';
+console.log(process.env);
 const config = configOptions[env];
 // console.log(config.use_env_variable);
 let sequelizeDB;

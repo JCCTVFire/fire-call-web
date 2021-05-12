@@ -20,14 +20,16 @@ if (config.use_env_variable) {
     config.password,
     config
   );
-  try{
-    await sequelizeDB.authenticate();
-    console.log('Connection to db successfully established.')
-    // console.log(`Connected to ${SequelizeDB.}`)
-  } catch (err) {
-    console.log('Connection to db not established')
-  }
   
+  
+}
+
+try{
+  await sequelizeDB.authenticate();
+  console.log('Connection to db successfully established.')
+  // console.log(`Connected to ${SequelizeDB.}`)
+} catch (err) {
+  console.error('Connection to db not established')
 }
 
 const db = Object.keys(modelList).reduce((collection, modelName) => {

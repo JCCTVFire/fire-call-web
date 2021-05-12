@@ -10,8 +10,8 @@ const { DataTypes } = Sequelize;
 const env = process.env.NODE_ENV || 'development';
 
 const config = configOptions[env];
-console.log(config);
-console.log(config.use_env_variable);
+// console.log(config);
+// console.log(config.use_env_variable);
 // console.log(config.use_env_variable);
 let sequelizeDB;
 if (config.use_env_variable) {

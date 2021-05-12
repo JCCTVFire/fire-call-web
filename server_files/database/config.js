@@ -20,11 +20,10 @@ export default {
     }
   }, 
   production: { // Do not change
-    // username: 'student',
-    // password: 'INST377@UMD',
-    // database: 'jcctv_fire',
-    // host: '3.236.243.212',
-    use_env_variable: 'production',
+    username: 'student',
+    password: 'INST377@UMD',
+    database: 'jcctv_fire',
+    host: '3.236.243.212',
     dialect: 'mysql',
     define: {
       underscored: true

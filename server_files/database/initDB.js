@@ -9,9 +9,7 @@ const { DataTypes } = Sequelize;
 
 const env = process.env.NODE_ENV || 'development';
 const config = configOptions[env];
-// console.log(config);
-console.log(config.use_env_variable);
-// console.log(config.use_env_variable);
+
 let sequelizeDB;
 if (config.use_env_variable) {
   sequelizeDB = new Sequelize(process.env[config.use_env_variable], config);
@@ -22,16 +20,14 @@ if (config.use_env_variable) {
     config.password,
     config
   );
+  try{
+    await sequelizeDB.authenticate();
+    console.log('Connection to db successfully established.')
+    // console.log(`Connected to ${SequelizeDB.}`)
+  } catch (err) {
+    console.log('Connection to db not established')
+  }
   
-  
-}
-
-try{
-  await sequelizeDB.authenticate();
-  console.log('Connection to db successfully established.')
-  // console.log(`Connected to ${SequelizeDB.}`)
-} catch (err) {
-  console.error('Connection to db not established')
 }
 
 const db = Object.keys(modelList).reduce((collection, modelName) => {

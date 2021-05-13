@@ -23,7 +23,7 @@ export default (database, DataTypes) => {
   );
 
   Units.associate = function (db) {
-    Units.hasOne(db.incidents, {foreignKey: 'unit_id', sourceKey: 'unit_id', as: 'unit'});
+    Units.hasMany(db.incidents, {foreignKey: 'unit_id', sourceKey: 'unit_id', as: 'unit', onUpdate: 'NO ACTION', onDelete: 'NO ACTION'});
   }
 
   return Units;

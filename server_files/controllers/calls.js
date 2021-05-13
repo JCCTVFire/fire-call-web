@@ -109,6 +109,7 @@ async function getIncidentFromCallID(req, res, next) {
       include: ['call', 'dispatch', 'location', 'unit']
     });
     const reply = getReply(incident);
+    // console.log(reply)
     res.json(reply)
   } catch (err) {
     console.error(err);

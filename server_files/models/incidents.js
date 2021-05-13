@@ -45,7 +45,7 @@ export default (database, DataTypes) => {
     Incidents.belongsTo(db.locations, {foreignKey: 'locations_id', sourceKey: 'locations_id', as: 'location'});
     Incidents.belongsTo(db.calls, {foreignKey: 'call_id', sourceKey: 'call_id', as: 'call'});
     Incidents.belongsTo(db.dispatch, {foreignKey: 'dispatch_id', sourceKey: 'dispatch_id', as: 'dispatch'});
-    Incidents.belongsTo(db.units, {foreignKey: 'unit_id', sourceKey: 'unit_id', as: 'unit'});
+    Incidents.belongsTo(db.units, {foreignKey: 'unit_id', sourceKey: 'unit_id', as: 'unit', onUpdate: 'NO ACTION', onDelete: 'NO ACTION'});
   }
   return Incidents;
 }

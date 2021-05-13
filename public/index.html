@@ -77,30 +77,32 @@
 
           <div class="column">
             <article class="panel">
-              <form id="manageForm" action="#">
-                <p class="panel-heading">
-                  Edit Call
-                </p>
-                <div class="tabs ml-1">
-                  <ul>
-                    <li name="tablinks" class="is-active" id="callTab"><a onclick="openTab(event, 'Call')">Call</a></li>
-                    <li name="tablinks"><a onclick="openTab(event, 'Incident')">Incident</a></li>
-                    <li name="tablinks"><a onclick="openTab(event, 'Dispatch')">Dispatch</a></li>
-                    <li name="tablinks"><a onclick="openTab(event, 'Units')">Units</a></li>
-                  </ul>
-                </div>
-                <div class="column ml-2 tabs-content">
+              <p class="panel-heading">
+                Edit Call
+              </p>
+              <div class="tabs ml-1">
+                <ul>
+                  <li name="tablinks" class="is-active" id="callTab"><a onclick="openTab(event, 'Call')">Call</a></li>
+                  <li name="tablinks"><a onclick="openTab(event, 'Incident')">Incident</a></li>
+                  <li name="tablinks"><a onclick="openTab(event, 'Dispatch')">Dispatch</a></li>
+                  <li name="tablinks"><a onclick="openTab(event, 'Units')">Units</a></li>
+                </ul>
+              </div>
+              <div class="column ml-2 tabs-content">
+                <form action="#" style="margin-bottom: 12px" id="findID">
+                  <label class="label" for="call_id">Call ID</label>
+                  <div class="field is-grouped">
+                    <div class="control">
+                      <input class="input" type="text" value="" name="call_id" id="callID">
+                    </div>
+                    <div class="control">
+                      <button type="submit" id="findIDButton" class="button is-info">Find</button>
+                    </div>
+                  </div> 
+                </form>
+                <form class="block" id="manageForm" action="#">
                   <div id="displayBox">
                     <div name="tabcontent" id="Call">
-                      <label class="label" for="call_id">ID</label>
-                      <div class="field is-grouped">  
-                        <div class="control">
-                          <input class="input" type="text" value="" name="call_id" id="callID">
-                        </div>
-                        <div class="control">
-                          <button type="button" id="findIDButton" class="button is-info">Find</button>
-                        </div>
-                      </div>
                       <div class="field">
                         <label class="label" name="type">Type</label>
                         <div class="control">
@@ -116,7 +118,7 @@
                       <div class="field">
                         <label class="label" name="time">Time</label>
                         <div class="control">
-                          <input name="call_type" class="input" id="callTime" style="width: 450px;" type="text">
+                          <input name="call_type" class="input" id="callTime" style="width: 450px;" type="text" placeholder="HH:MM:SS">
                         </div>
                       </div>
                       <div class="field is-grouped">
@@ -133,7 +135,7 @@
                   <div id="hider" style="display: none;">
                     <div name="tabcontent" id="Incident">
                       <div class="field">
-                        <label class="label" id="incidentID">ID:</label>
+                        <label class="label" id="incidentID">Incident ID:</label>
                       </div>
                       <div class="field">
                         <label class="label" id="incidentDate">Date:</label>
@@ -150,7 +152,7 @@
                     </div>
                     <div name="tabcontent" id="Dispatch">
                       <div class="field">
-                        <label class="label" id="dispatchID">ID:</label>
+                        <label class="label" id="dispatchID">Dispatch ID:</label>
                       </div>
                       <div class="field">
                         <label class="label" id="dispatchTime">Dispatch Time:</label>
@@ -170,7 +172,7 @@
                     </div>
                     <div name="tabcontent" id="Units">
                       <div class="field">
-                        <label class="label" id="unitID">ID:</label>
+                        <label class="label" id="unitID">Unit ID:</label>
                       </div>
                       <div class="field">
                         <label class="label" id="unitNumber">Number:</label>
@@ -180,8 +182,8 @@
                       </div>
                     </div>
                   </div>
-                </div>
-              </form>  
+                </form> 
+              </div> 
             </article>
           </div>
 
@@ -202,22 +204,23 @@
                   <div class="field">
                     <label class="label">Class</label>
                     <div class="control">
-                      <div class="select" id="formClass">
-                        <select>
-                          <option>Fire</option>
+                      <!--div class="select" id="formClass">
+                        <select form="addForm" name="classSelect">
+                          <option selected>Fire</option>
                           <option>HazMat</option>
                           <option>Medical</option>
                           <option>Rescue</option>
                           <option>Other</option>
                         </select>
-                      </div>
+                      </div-->
+                      <input class="input" id="formClass" style="width: 450px;" type="text">
                     </div>
                   </div>
 
                   <div class="field">
                     <label class="label">Time</label>
                     <div class="control">
-                      <input class="input" id="formTime" style="width: 450px;" type="text">
+                      <input class="input" id="formTime" style="width: 450px;" type="text" placeholder="HH:MM:SS">
                     </div>
                   </div>
         

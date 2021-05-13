@@ -20,8 +20,12 @@ async function createNewIncident(req, res, next) {
     const newIncident = await db.incidents.create(req.body, {
       include: ['call', 'dispatch', 'location', 'unit']
     });
-    const id = newIncident.call.call_id
-    res.send({message: `Inserted new entry in "incidents" with call_id ${id}.`});
+    const oldUnit = newIncident.unit.unit_id;
+    newIncident.unit_id = 1;
+    // console.log(oldUnit);
+    newIncident.save();
+    const id = newIncident.call.call_id;
+    res.json({message: `Inserted new entry in "incidents" with call_id ${id}.`, data: [newIncident]});
   } catch (err) {
     console.error(err);
     res.json({error: 'Server error'});

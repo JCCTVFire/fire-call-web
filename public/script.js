@@ -272,7 +272,7 @@ async function populateForm(data) {
   const manageForm = document.getElementById('manageForm');
   manageForm.addEventListener('submit', async function (evt) {
     evt.preventDefault();
-    await sendUpdate('incidents', {call: {call_type: callType.value, call_class: callClass.value, call_time: callTime.value}}, inc.incident_id);
+    await sendUpdate('calls', {call_type: callType.value, call_class: callClass.value, call_time: callTime.value}, call.call_id);
   });
 
   const deleteEntryButton = document.getElementById('delete-entry-button');

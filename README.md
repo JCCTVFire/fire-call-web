@@ -30,7 +30,7 @@ All requests and responses should use JSON headers unless otherwise specified.
 
 `/api/calls/:call_id/incident` - GET - Returns the incident with the corresponding call_id.
 
-`/api/search` 
+`/api/search?endDate=&startDate=&limit=` 
 - GET - Keyword search endpoint passed by the search bar in an application. Can be modified with filter values. Returns JSON with data and size of the return as above. Can be modified by `startDate`, `endDate`, and `limit`. `startDate` and `endDate` should be in YYYY-MM-DD format (i.e. 2021-05-07). 
     >Searches throught following:
     >- Call class

@@ -12,8 +12,6 @@ Starts a dev server on your localhost
 1. Run `npm start` to start the application.
 2. Open http://localhost:3000 on your browser to view the webpage.
 
----
-
 ## API Documentation
 All requests and responses should use JSON headers unless otherwise specified.
 
@@ -47,8 +45,6 @@ For all requests, if there is an error on the back end, the response will be
 `{ error: "Server error" }`.
 
 If a get request returns no results, the response will be `{ message: "No results found." }`.
-
----
 
 ## Known Bugs
 Upon creation of a new entry, does not pan to the new point even though it is marked on the map.
